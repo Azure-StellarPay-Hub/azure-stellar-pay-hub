@@ -1,0 +1,13 @@
+contracts/
+packages/database/src/generated/
+apps/api/
+infrastructure/terraform/
+infrastructure/kubernetes/
+infrastructure/monitoring/
+tests/load/
+*.test.ts
+*.test.tsx
+*.spec.ts
+.env
+.env.local
+.git
