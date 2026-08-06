@@ -1,0 +1,50 @@
+version: '3.9'
+
+# Local development stack. For production use Kubernetes (see infrastructure/kubernetes).
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: stellar-pay-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: stellar_pay
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: stellar-pay-redis
+    command: redis-server --appendonly yes
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # IPFS node for receipt/file storage (optional)
+  ipfs:
+    image: ipfs/kubo:latest
+    container_name: stellar-pay-ipfs
+    ports:
+      - '4001:4001'
+      - '5001:5001'
+      - '8080:8080'
+    volumes:
+      - ipfs_data:/data/ipfs
+
+volumes:
+  postgres_data:
+  redis_data:
+  ipfs_data:

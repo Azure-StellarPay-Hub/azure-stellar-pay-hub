@@ -1,0 +1,9 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+# pnpm 10: hoisted layout maximizes compatibility with Nx, NestJS and Next.js.
+nodeLinker: hoisted
+
+# Packages that legitimately need to run install/build scripts.
+onlyBuiltDependencies: '["prisma","@prisma/client","esbuild","@tailwindcss/oxide","@prisma/engines","nx","unrs-resolver"]'

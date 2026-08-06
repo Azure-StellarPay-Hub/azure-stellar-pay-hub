@@ -1,0 +1,29 @@
+{
+  "name": "@stellar-pay/validation",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Zod schemas for every API input: payments, auth, merchants, invoices, webhooks",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "jest"
+  },
+  "dependencies": {
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.12",
+    "typescript": "~5.9.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": ["**/*.test.ts"],
+    "moduleFileExtensions": ["ts", "js", "json"]
+  }
+}

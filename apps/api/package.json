@@ -1,0 +1,50 @@
+{
+  "name": "@stellar-pay/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Stellar Pay backend API (NestJS)",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "jest --passWithNoTests",
+    "test:e2e": "jest --runInBand --config test/jest-e2e.json",
+    "dev": "tsc -p tsconfig.json --watch --preserveWatchOutput & node --watch dist/main.js",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.28",
+    "@nestjs/config": "^4.0.4",
+    "@nestjs/core": "^11.1.28",
+    "@nestjs/platform-express": "^11.1.28",
+    "@nestjs/platform-socket.io": "^11.1.28",
+    "@nestjs/throttler": "^6.5.0",
+    "@nestjs/websockets": "^11.1.28",
+    "@stellar-pay/authentication": "workspace:*",
+    "@stellar-pay/config": "workspace:*",
+    "@stellar-pay/database": "workspace:*",
+    "@stellar-pay/logger": "workspace:*",
+    "@stellar-pay/notifications": "workspace:*",
+    "@stellar-pay/sdk": "workspace:*",
+    "@stellar-pay/shared": "workspace:*",
+    "@stellar-pay/types": "workspace:*",
+    "@stellar-pay/validation": "workspace:*",
+    "@stellar/stellar-sdk": "^13.3.0",
+    "helmet": "^8.3.0",
+    "ioredis": "^5.11.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "socket.io": "^4.8.3",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^24.0.0",
+    "@types/supertest": "^6.0.0",
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.12",
+    "typescript": "~5.9.3"
+  }
+}

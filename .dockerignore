@@ -1,0 +1,16 @@
+node_modules
+**/node_modules
+dist
+**/dist
+.next
+**/.next
+out
+coverage
+contracts/target
+**/contracts/target
+.git
+.github
+*.log
+.env
+.env.*
+pnpm-lock.yaml

@@ -1,0 +1,582 @@
+// ----------------------------------------------------------------------------
+// Azure StellarPay Hub - Prisma schema (PostgreSQL)
+// Single source of truth for the relational persistence layer.
+// Generate the client with: pnpm db:generate
+// ----------------------------------------------------------------------------
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------- Enums
+
+enum UserRole {
+  USER
+  MERCHANT
+  SUPPORT
+  ADMIN
+}
+
+enum UserStatus {
+  PENDING
+  VERIFIED
+  ACTIVE
+  SUSPENDED
+}
+
+enum WalletProvider {
+  FREIGHTER
+  XBULL
+  ALBEDO
+}
+
+enum WalletStatus {
+  ACTIVE
+  REVOKED
+}
+
+enum SessionStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
+}
+
+enum TransactionStatus {
+  PENDING
+  SUBMITTED
+  SUCCEEDED
+  FAILED
+  CANCELED
+}
+
+enum TransactionDirection {
+  INCOMING
+  OUTGOING
+}
+
+enum AssetType {
+  NATIVE
+  STELLAR
+  CUSTOM
+}
+
+enum TrustlineStatus {
+  ACTIVE
+  DELETED
+}
+
+enum MerchantStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  REJECTED
+}
+
+enum ProductStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  PAID
+  PARTIALLY_PAID
+  EXPIRED
+  CANCELED
+}
+
+enum PaymentLinkStatus {
+  ACTIVE
+  PAUSED
+  EXPIRED
+}
+
+enum NotificationChannel {
+  EMAIL
+  SMS
+  PUSH
+  IN_APP
+  WEBHOOK
+}
+
+enum NotificationType {
+  PAYMENT_SENT
+  PAYMENT_RECEIVED
+  INVOICE_PAID
+  FAILED_TRANSACTION
+  ACCOUNT_ACTIVITY
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  READ
+}
+
+// ---------------------------------------------------------------- Models
+
+model User {
+  id           String     @id @default(uuid())
+  email        String?    @unique
+  passwordHash String?
+  displayName  String?
+  avatarUrl    String?
+  status       UserStatus @default(PENDING)
+  role         UserRole   @default(USER)
+  locale       String     @default("en")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  wallets       Wallet[]
+  contacts      Contact[]
+  sessions      Session[]
+  devices       Device[]
+  notifications Notification[]
+  apiKeys       ApiKey[]
+  beneficiaries Beneficiary[]
+  auditLogs     AuditLog[]
+  transactions  Transaction[]
+  trustlines    Trustline[]
+  merchant      Merchant?
+  preferences   UserPreference?
+
+  @@index([role])
+  @@index([status])
+}
+
+model UserPreference {
+  id                       String   @id @default(uuid())
+  userId                   String   @unique
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currency                 String   @default("USD")
+  notificationPreferences  Json     @default("{}")
+  theme                    String   @default("dark")
+  twoFactorEnabled         Boolean  @default(false)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+}
+
+model Wallet {
+  id          String         @id @default(uuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  publicKey   String         @unique
+  provider    WalletProvider
+  status      WalletStatus   @default(ACTIVE)
+  network     String         @default("testnet")
+  isPrimary   Boolean        @default(false)
+  lastUsedAt  DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([userId])
+}
+
+model Session {
+  id         String        @id @default(uuid())
+  userId     String
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash  String        @unique
+  deviceId   String?
+  ipAddress  String?
+  userAgent  String?
+  expiresAt  DateTime
+  status     SessionStatus @default(ACTIVE)
+  createdAt  DateTime      @default(now())
+  revokedAt  DateTime?
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Device {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  fingerprint  String   @unique
+  ipAddress    String?
+  userAgent    String?
+  lastActiveAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Contact {
+  id         String   @id @default(uuid())
+  ownerId    String
+  owner      User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name       String
+  publicKey  String
+  memo       String?
+  memoType   String   @default("text")
+  isFavorite Boolean  @default(false)
+  network    String   @default("testnet")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([ownerId, publicKey])
+  @@index([ownerId])
+}
+
+model Beneficiary {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  publicKey   String
+  currency    String
+  country     String?
+  bankDetails Json?
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Asset {
+  id            String    @id @default(uuid())
+  code          String
+  issuer        String?
+  type          AssetType @default(STELLAR)
+  name          String
+  description   String?
+  iconUrl       String?
+  decimals      Int       @default(7)
+  isNative      Boolean   @default(false)
+  isEnabled     Boolean   @default(true)
+  isCrossBorder Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  trustlines Trustline[]
+
+  @@unique([code, issuer])
+  @@index([type])
+}
+
+model Trustline {
+  id        String          @id @default(uuid())
+  userId    String
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assetId   String
+  asset     Asset           @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  balance   String          @default("0")
+  status    TrustlineStatus @default(ACTIVE)
+  limit     String          @default("922337203685.4775807")
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@unique([userId, assetId])
+  @@index([userId])
+}
+
+model Transaction {
+  id               String              @id @default(uuid())
+  userId           String?
+  user             User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  hash             String?             @unique
+  stellarTxId      String?
+  fromPublicKey    String?
+  toPublicKey      String?
+  amount           String
+  assetCode        String
+  assetIssuer      String?
+  memo             String?
+  memoType         String              @default("text")
+  status           TransactionStatus   @default(PENDING)
+  direction        TransactionDirection
+  kind             String
+  fee              String?
+  sequence         String?
+  sourceNetwork    String              @default("testnet")
+  meta             Json?
+  errorMessage     String?
+  receiptIpfsCid   String?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  @@index([userId])
+  @@index([toPublicKey])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ScheduledPayment {
+  id            String    @id @default(uuid())
+  userId        String
+  fromPublicKey String
+  toPublicKey   String
+  amount        String
+  assetCode     String
+  assetIssuer   String?
+  memo          String?
+  interval      String? // null = one-off scheduled, otherwise daily|weekly|monthly
+  nextRunAt     DateTime
+  status        String    @default("ACTIVE") // ACTIVE | PAUSED | COMPLETED | CANCELED
+  totalRuns     Int       @default(0)
+  maxRuns       Int?
+  lastRunAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([status, nextRunAt])
+  @@index([userId])
+}
+
+model Merchant {
+  id                    String         @id @default(uuid())
+  userId                String         @unique
+  user                  User           @relation(fields: [userId], references: [id])
+  name                  String
+  slug                  String         @unique
+  description           String?
+  logoUrl               String?
+  websiteUrl            String?
+  currency              String         @default("USD")
+  settlementAssetCode   String         @default("USDC")
+  settlementAssetIssuer String?
+  settlementPublicKey   String
+  status                MerchantStatus @default(PENDING)
+  kycStatus             String         @default("PENDING")
+  webhookUrl            String?
+  webhookSecret         String?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+
+  products     Product[]
+  invoices     Invoice[]
+  paymentLinks PaymentLink[]
+  customers    Customer[]
+  settlements  Settlement[]
+  webhooks     Webhook[]
+
+  @@index([status])
+}
+
+model Product {
+  id           String        @id @default(uuid())
+  merchantId   String
+  merchant     Merchant      @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  name         String
+  description  String?
+  priceAmount  String
+  assetCode    String        @default("USDC")
+  assetIssuer  String?
+  imageUrl     String?
+  status       ProductStatus @default(ACTIVE)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([merchantId])
+}
+
+model Customer {
+  id               String   @id @default(uuid())
+  merchantId       String
+  merchant         Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  publicKey        String
+  email            String?
+  name             String?
+  totalSpent       String   @default("0")
+  transactionCount Int      @default(0)
+  lastPurchaseAt   DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  invoices Invoice[]
+
+  @@unique([merchantId, publicKey])
+  @@index([merchantId])
+}
+
+model Invoice {
+  id                 String        @id @default(uuid())
+  number             String        @unique
+  merchantId         String
+  merchant           Merchant      @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  customerId         String?
+  customer           Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customerPublicKey  String?
+  title              String
+  description        String?
+  items              Json
+  amount             String
+  assetCode          String        @default("USDC")
+  assetIssuer        String?
+  status             InvoiceStatus @default(DRAFT)
+  dueDate            DateTime?
+  paidAt             DateTime?
+  memo               String?
+  paymentTransactionId String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@index([merchantId])
+  @@index([status])
+}
+
+model PaymentLink {
+  id            String           @id @default(uuid())
+  merchantId    String
+  merchant      Merchant         @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  code          String           @unique
+  title         String
+  description   String?
+  amount        String?
+  assetCode     String           @default("USDC")
+  assetIssuer   String?
+  fixedAmount   Boolean          @default(true)
+  status        PaymentLinkStatus @default(ACTIVE)
+  expiresAt     DateTime?
+  redirectUrl   String?
+  totalPayments Int              @default(0)
+  totalCollected String           @default("0")
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([merchantId])
+}
+
+model Settlement {
+  id                 String   @id @default(uuid())
+  merchantId         String
+  merchant           Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  periodStart        DateTime
+  periodEnd          DateTime
+  amount             String
+  assetCode          String
+  assetIssuer        String?
+  status             String   @default("PENDING") // PENDING | PROCESSING | COMPLETED | FAILED
+  payoutTransactionId String?
+  createdAt          DateTime @default(now())
+
+  @@index([merchantId])
+}
+
+model Notification {
+  id        String              @id @default(uuid())
+  userId    String
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  channel   NotificationChannel
+  title     String
+  body      String?
+  payload   Json?
+  status    NotificationStatus  @default(PENDING)
+  readAt    DateTime?
+  createdAt DateTime            @default(now())
+
+  @@index([userId, readAt])
+}
+
+model ApiKey {
+  id         String    @id @default(uuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  keyPrefix  String
+  keyHash    String    @unique
+  scopes     Json      @default("[]")
+  status     String    @default("ACTIVE")
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model AuditLog {
+  id            String   @id @default(uuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  actorPublicKey String?
+  action        String
+  resource      String
+  resourceId    String?
+  ipAddress     String?
+  userAgent     String?
+  metadata      Json?
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([resource])
+  @@index([createdAt])
+}
+
+model Role {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  description String?
+  permissions RolePermission[]
+
+  createdAt DateTime @default(now())
+}
+
+model Permission {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  description String?
+  roles       RolePermission[]
+
+  createdAt DateTime @default(now())
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model Setting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       Json
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Webhook {
+  id        String          @id @default(uuid())
+  merchantId String
+  merchant  Merchant        @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  url       String
+  secret    String
+  events    Json
+  status    String          @default("ACTIVE")
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  deliveries WebhookDelivery[]
+
+  @@index([merchantId])
+}
+
+model WebhookDelivery {
+  id            String   @id @default(uuid())
+  webhookId     String
+  webhook       Webhook  @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  event         String
+  payload       Json
+  status        String   @default("PENDING") // PENDING | DELIVERED | FAILED
+  attempts      Int      @default(0)
+  nextRetryAt   DateTime?
+  lastError     String?
+  responseStatus Int?
+  createdAt     DateTime @default(now())
+  deliveredAt   DateTime?
+
+  @@index([status, nextRetryAt])
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@stellar-pay/sdk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Client SDK: typed API client + Stellar/Horizon transaction helpers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "jest --passWithNoTests"
+  },
+  "dependencies": {
+    "@stellar-pay/shared": "workspace:*",
+    "@stellar-pay/types": "workspace:*",
+    "@stellar/stellar-sdk": "^13.3.0"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.12",
+    "typescript": "~5.9.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": ["**/*.test.ts"],
+    "moduleFileExtensions": ["ts", "js", "json"]
+  }
+}

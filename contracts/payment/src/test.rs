@@ -1,0 +1,143 @@
+#![cfg(test)]
+
+use super::{PaymentContract, PaymentContractClient, PaymentError};
+use soroban_sdk::testutils::{Address as AddressUtils, Events};
+use soroban_sdk::{token, Address, Env, String, Vec};
+
+fn create_token<'e>(env: &'e Env, admin: &Address) -> (token::Client<'e>, Address) {
+    let id = env.register_stellar_asset_contract(admin.clone());
+    (token::Client::new(env, &id), id)
+}
+
+fn mint<'e>(env: &'e Env, token_id: &Address, to: &Address, amount: i128) {
+    token::StellarAssetClient::new(env, token_id).mint(to, &amount);
+}
+
+type Setup<'e> = (
+    Address,
+    Address,
+    Address,
+    Address,
+    token::Client<'e>,
+    Address,
+    PaymentContractClient<'e>,
+);
+
+fn setup<'e>(env: &'e Env) -> Setup<'e> {
+    env.mock_all_auths();
+    let admin = Address::generate(env);
+    let alice = Address::generate(env);
+    let bob = Address::generate(env);
+    let carol = Address::generate(env);
+    let (token, token_id) = create_token(env, &admin);
+    let contract_id = env.register_contract(None, PaymentContract);
+    let client = PaymentContractClient::new(env, &contract_id);
+    client.initialize(&admin);
+    client.set_allowed(&admin, &token_id, &true);
+    mint(env, &token_id, &alice, &1000);
+    (admin, alice, bob, carol, token, token_id, client)
+}
+
+#[test]
+fn test_send_transfers_funds() {
+    let env = Env::default();
+    let (_admin, alice, bob, _carol, token, _token_id, client) = setup(&env);
+
+    client.send(&alice, &bob, &token.address(), &250, &None);
+
+    assert_eq!(token.balance(&bob), 250);
+    assert_eq!(token.balance(&alice), 750);
+}
+
+#[test]
+fn test_send_with_memo() {
+    let env = Env::default();
+    let (_admin, alice, bob, _carol, token, _token_id, client) = setup(&env);
+
+    let memo = String::from_str(&env, "invoice-42");
+    client.send(&alice, &bob, &token.address(), &10, &Some(memo));
+
+    assert_eq!(token.balance(&bob), 10);
+}
+
+#[test]
+fn test_send_rejects_zero_amount() {
+    let env = Env::default();
+    let (_admin, alice, bob, _carol, token, _token_id, client) = setup(&env);
+
+    let result = client.try_send(&alice, &bob, &token.address(), &0, &None);
+    assert_eq!(result, Err(Ok(PaymentError::InvalidAmount)));
+}
+
+#[test]
+fn test_send_rejects_unlisted_token() {
+    let env = Env::default();
+    let admin = Address::generate(&env);
+    let alice = Address::generate(&env);
+    let bob = Address::generate(&env);
+    let (_unlisted, unlisted_id) = create_token(&env, &admin);
+    let contract_id = env.register_contract(None, PaymentContract);
+    let client = PaymentContractClient::new(&env, &contract_id);
+    env.mock_all_auths();
+    client.initialize(&admin);
+    mint(&env, &unlisted_id, &alice, &100);
+
+    let result = client.try_send(&alice, &bob, &unlisted_id, &1, &None);
+    assert_eq!(result, Err(Ok(PaymentError::TokenNotAllowed)));
+}
+
+#[test]
+fn test_send_rejects_when_paused() {
+    let env = Env::default();
+    let (admin, alice, bob, _carol, token, _token_id, client) = setup(&env);
+    client.pause(&admin);
+
+    let result = client.try_send(&alice, &bob, &token.address(), &1, &None);
+    assert_eq!(result, Err(Ok(PaymentError::Paused)));
+
+    client.unpause(&admin);
+    client.send(&alice, &bob, &token.address(), &1, &None);
+    assert_eq!(token.balance(&bob), 1);
+}
+
+#[test]
+fn test_batch_payment() {
+    let env = Env::default();
+    let (_admin, alice, bob, carol, token, _token_id, client) = setup(&env);
+
+    let recipients = Vec::from_array(
+        &env,
+        [
+            (bob.clone(), 100_i128),
+            (carol.clone(), 200_i128),
+            (bob.clone(), 50_i128),
+        ],
+    );
+    client.send_batch(&alice, &token.address(), &recipients);
+
+    assert_eq!(token.balance(&bob), 150);
+    assert_eq!(token.balance(&carol), 200);
+    assert_eq!(token.balance(&alice), 550);
+}
+
+#[test]
+fn test_batch_rejects_empty_recipients() {
+    let env = Env::default();
+    let (_admin, alice, _bob, _carol, token, _token_id, client) = setup(&env);
+
+    let result = client.try_send_batch(&alice, &token.address(), &Vec::new(&env));
+    assert_eq!(result, Err(Ok(PaymentError::EmptyRecipients)));
+}
+
+#[test]
+fn test_emits_payment_event() {
+    let env = Env::default();
+    let (_admin, alice, bob, _carol, token, _token_id, client) = setup(&env);
+
+    client.send(&alice, &bob, &token.address(), &5, &None);
+
+    let events = env.events().all();
+    assert_eq!(events.len(), 2); // initialized token + payment event
+    let last = events.last().unwrap();
+    assert_eq!(last.0, client.address());
+}

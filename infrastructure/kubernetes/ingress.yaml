@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stellar-pay
+  namespace: stellar-pay
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: 8m
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - api.stellar-pay.example
+        - app.stellar-pay.example
+        - admin.stellar-pay.example
+      secretName: stellar-pay-tls
+  rules:
+    - host: api.stellar-pay.example
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: api, port: { number: 80 } }
+    - host: app.stellar-pay.example
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: web, port: { number: 80 } }
+    - host: admin.stellar-pay.example
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: admin, port: { number: 80 } }

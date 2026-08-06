@@ -1,0 +1,34 @@
+{
+  "name": "@stellar-pay/docs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Documentation site for Stellar Pay (Next.js + markdown)",
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev -p 3003",
+    "start": "next start -p 3003",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "jest --passWithNoTests"
+  },
+  "dependencies": {
+    "@stellar-pay/ui": "workspace:*",
+    "gray-matter": "^4.0.3",
+    "lucide-react": "^1.28.0",
+    "next": "^16.3.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.0",
+    "jest": "^30.4.2",
+    "postcss": "^8.5.25",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~5.9.3"
+  }
+}

@@ -1,0 +1,78 @@
+import { Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
+import { Public, CurrentUser, type AuthenticatedUser } from '../common/decorators';
+import { ZodValidationPipe } from '../common/zod-validation.pipe';
+import {
+  adminLoginSchema,
+  challengeRequestSchema,
+  refreshTokenSchema,
+  verifyRequestSchema,
+  type ChallengeRequest,
+  type VerifyRequest,
+  type AdminLogin,
+  type RefreshToken,
+} from '@stellar-pay/validation';
+import { AuthService } from './auth.service';
+import { SessionService } from './session.service';
+
+@Controller('auth')
+export class AuthController {
+  constructor(
+    private readonly auth: AuthService,
+    private readonly sessions: SessionService,
+  ) {}
+
+  @Public()
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  @Post('challenge')
+  challenge(@Body(new ZodValidationPipe({ body: challengeRequestSchema })) body: ChallengeRequest) {
+    return this.auth.createChallenge(body.publicKey);
+  }
+
+  @Public()
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  @Post('verify')
+  verify(@Body(new ZodValidationPipe({ body: verifyRequestSchema })) body: VerifyRequest) {
+    return this.auth.verifyWallet(body);
+  }
+
+  @Public()
+  @Post('refresh')
+  refresh(@Body(new ZodValidationPipe({ body: refreshTokenSchema })) body: RefreshToken) {
+    return this.auth.refresh(body.refreshToken);
+  }
+
+  @Public()
+  @Post('admin/login')
+  adminLogin(@Body(new ZodValidationPipe({ body: adminLoginSchema })) body: AdminLogin) {
+    return this.auth.adminLogin(body);
+  }
+
+  @Post('logout')
+  @HttpCode(204)
+  async logout(@CurrentUser() user: AuthenticatedUser): Promise<void> {
+    await this.auth.logout(user.userId, user.sessionId);
+  }
+
+  @Get('sessions')
+  listSessions(@CurrentUser() user: AuthenticatedUser) {
+    return this.sessions.listSessions(user.userId);
+  }
+
+  @Delete('sessions/:id')
+  async revokeSession(@CurrentUser() user: AuthenticatedUser, @Param('id') sessionId: string) {
+    await this.sessions.revokeSession(user.userId, sessionId);
+    return { ok: true };
+  }
+
+  @Get('devices')
+  devices(@CurrentUser() user: AuthenticatedUser) {
+    return this.sessions.listDevices(user.userId);
+  }
+
+  @Delete('devices/:id')
+  async revokeDevice(@CurrentUser() user: AuthenticatedUser, @Param('id') deviceId: string) {
+    await this.sessions.revokeDevice(user.userId, deviceId);
+    return { ok: true };
+  }
+}

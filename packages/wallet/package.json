@@ -1,0 +1,31 @@
+{
+  "name": "@stellar-pay/wallet",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Multi-wallet React provider: Freighter, xBull and Albedo",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "jest --passWithNoTests"
+  },
+  "dependencies": {
+    "@albedo-link/intent": "^0.13.0",
+    "@creit.tech/xbull-wallet-connect": "^0.4.0",
+    "@stellar-pay/sdk": "workspace:*",
+    "@stellar-pay/shared": "workspace:*",
+    "@stellar-pay/types": "workspace:*",
+    "@stellar/freighter-api": "^2.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "react": "^19.2.8",
+    "typescript": "~5.9.3"
+  }
+}

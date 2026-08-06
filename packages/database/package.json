@@ -1,0 +1,31 @@
+{
+  "name": "@stellar-pay/database",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Prisma schema, generated client and PrismaService for PostgreSQL",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist", "prisma"],
+  "scripts": {
+    "build": "prisma generate && tsc -p tsconfig.json && cp -r src/generated dist/",
+    "typecheck": "prisma generate && tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "jest --passWithNoTests",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset"
+  },
+  "prisma": {
+    "seed": "tsx scripts/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3"
+  },
+  "devDependencies": {
+    "prisma": "^6.19.3",
+    "tsx": "^4.23.8",
+    "typescript": "~5.9.3"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "@stellar-pay/logger",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Structured logging built on pino",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "jest --passWithNoTests"
+  },
+  "dependencies": {
+    "pino": "^9.14.0"
+  },
+  "devDependencies": {
+    "pino-pretty": "^11.3.0",
+    "typescript": "~5.9.3"
+  }
+}
