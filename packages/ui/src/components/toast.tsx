@@ -1,4 +1,14 @@
-import * as React from 'react';
+'use client';
+
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+  type Context,
+  type ReactNode,
+} from 'react';
 import { CheckCircle2, Info, XCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -10,30 +20,42 @@ interface ToastItem {
   description?: string;
 }
 
-const ToastContext = React.createContext<{ push: (t: Omit<ToastItem, 'id'>) => void } | null>(null);
+let _ToastContext: Context<{ push: (t: Omit<ToastItem, 'id'>) => void } | null> | null = null;
+function getToastContext() {
+  if (!_ToastContext) {
+    _ToastContext = createContext<{ push: (t: Omit<ToastItem, 'id'>) => void } | null>(null);
+  }
+  return _ToastContext;
+}
 
-const ICONS: Record<ToastKind, React.ReactNode> = {
-  success: <CheckCircle2 className="h-5 w-5 text-emerald-400" />,
-  error: <XCircle className="h-5 w-5 text-destructive" />,
-  info: <Info className="h-5 w-5 text-sky-400" />,
-};
+function ToastIcon({ kind }: { kind: ToastKind }) {
+  switch (kind) {
+    case 'success':
+      return <CheckCircle2 className="h-5 w-5 text-emerald-400" />;
+    case 'error':
+      return <XCircle className="h-5 w-5 text-destructive" />;
+    case 'info':
+      return <Info className="h-5 w-5 text-sky-400" />;
+  }
+}
 
-export function ToastProvider({ children }: { children: React.ReactNode }) {
-  const [toasts, setToasts] = React.useState<ToastItem[]>([]);
-  const idRef = React.useRef(0);
+export function ToastProvider({ children }: { children: ReactNode }) {
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const idRef = useRef(0);
 
-  const push = React.useCallback((t: Omit<ToastItem, 'id'>) => {
+  const push = useCallback((t: Omit<ToastItem, 'id'>) => {
     const id = ++idRef.current;
     setToasts((prev) => [...prev, { ...t, id }]);
     setTimeout(() => setToasts((prev) => prev.filter((x) => x.id !== id)), 4500);
   }, []);
 
-  const remove = React.useCallback((id: number) => {
+  const remove = useCallback((id: number) => {
     setToasts((prev) => prev.filter((x) => x.id !== id));
   }, []);
 
+  const TContext = getToastContext();
   return (
-    <ToastContext.Provider value={{ push }}>
+    <TContext.Provider value={{ push }}>
       {children}
       <div className="pointer-events-none fixed bottom-4 right-4 z-[100] flex flex-col gap-2">
         {toasts.map((toast) => (
@@ -45,7 +67,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               'animate-in slide-in-from-bottom-2 fade-in-0',
             )}
           >
-            {ICONS[toast.kind]}
+            <ToastIcon kind={toast.kind} />
             <div className="flex-1">
               <p className="text-sm font-medium text-foreground">{toast.title}</p>
               {toast.description ? (
@@ -55,12 +77,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           </button>
         ))}
       </div>
-    </ToastContext.Provider>
+    </TContext.Provider>
   );
 }
 
 export function useToast() {
-  const ctx = React.useContext(ToastContext);
+  const ctx = useContext(getToastContext());
   if (!ctx) {
     throw new Error('useToast must be used within a <ToastProvider>');
   }

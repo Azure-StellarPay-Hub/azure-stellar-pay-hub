@@ -1,3 +1,5 @@
+'use client';
+
 import {
   createContext,
   useCallback,
@@ -6,6 +8,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type Context,
   type ReactNode,
 } from 'react';
 import { createAdapter } from './registry';
@@ -27,7 +30,13 @@ export interface WalletContextValue {
   switchWallet(provider: WalletProviderId): Promise<string>;
 }
 
-const WalletContext = createContext<WalletContextValue | null>(null);
+let _WalletContext: Context<WalletContextValue | null> | null = null;
+function getWalletContext(): Context<WalletContextValue | null> {
+  if (!_WalletContext) {
+    _WalletContext = createContext<WalletContextValue | null>(null);
+  }
+  return _WalletContext;
+}
 
 export interface WalletProviderProps {
   children: ReactNode;
@@ -197,11 +206,12 @@ export function WalletProvider({ children, defaultNetwork = 'testnet', onConnect
     [provider, publicKey, network, preferredNetwork, connecting, error, connect, disconnect, signTx, signMessage, switchWallet],
   );
 
-  return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
+  const WContext = getWalletContext();
+  return <WContext.Provider value={value}>{children}</WContext.Provider>;
 }
 
 export function useWallet(): WalletContextValue {
-  const ctx = useContext(WalletContext);
+  const ctx = useContext(getWalletContext());
   if (!ctx) {
     throw new Error('useWallet must be used within a <WalletProvider>');
   }

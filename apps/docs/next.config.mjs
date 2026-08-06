@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
-  transpilePackages: ['@stellar-pay/ui'],
+  transpilePackages: [],
 };
 
 export default nextConfig;

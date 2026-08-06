@@ -64,9 +64,10 @@ jobs:
       - name: Security scan (npm audit)
         run: pnpm audit --audit-level high || true
 
-      - name: Security scan (zizmor)
+      - name: Install uv for zizmor
         uses: astral-sh/setup-uv@v6
-      - run: uvx zizmor .github/workflows
+      - name: Security scan (zizmor)
+        run: uvx zizmor .github/workflows
 
   build-contracts:
     name: Build Soroban contracts

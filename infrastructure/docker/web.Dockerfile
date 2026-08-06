@@ -32,4 +32,4 @@ COPY --from=build /app/apps/${APP}/.next/standalone /app
 COPY --from=build /app/apps/${APP}/.next/static /app/apps/${APP}/.next/static
 COPY --from=build /app/apps/${APP}/public /app/apps/${APP}/public
 EXPOSE 3000
-CMD ["node", "apps/${APP}/server.js"]
+CMD ["node", "server.js"]

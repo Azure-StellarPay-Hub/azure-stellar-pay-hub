@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "buildCommand": "npx next build",
+  "buildCommand": "cd ../.. && pnpm --filter ...@stellar-pay/docs build",
   "outputDirectory": ".next",
-  "installCommand": "cd ../.. && pnpm install --frozen-lockfile"
+  "installCommand": "pnpm install --frozen-lockfile"
 }
