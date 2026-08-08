@@ -22,6 +22,7 @@ const statusDiv = document.getElementById('status')!;
 const networkBadge = document.getElementById('network-badge')!;
 const openAppLink = document.getElementById('open-app') as HTMLAnchorElement;
 const openOptionsLink = document.getElementById('open-options') as HTMLAnchorElement;
+let isOffline = false;
 
 // ── Init ────────────────────────────────────────────────────
 
@@ -113,6 +114,10 @@ async function refreshData() {
       api.getRecentTransactions({ pageSize: 5 }),
     ]);
 
+    isOffline = false;
+    networkBadge.textContent = 'testnet';
+    networkBadge.style.color = '';
+
     // Display native balance first
     const xlm = balances.find((b) => b.isNative);
     if (xlm) {
@@ -135,7 +140,10 @@ async function refreshData() {
     // Render transaction list
     renderTransactions(txResponse.data ?? []);
   } catch (err) {
-    console.error('Failed to refresh data:', err);
+    if (!isOffline) {
+      console.warn('API unreachable:', (err as Error).message);
+      showOfflineState();
+    }
   }
 }
 
@@ -233,6 +241,19 @@ function showConnected() {
 function showDisconnected() {
   connectedView.classList.add('hidden');
   disconnectedView.classList.remove('hidden');
+}
+
+function showOfflineState() {
+  isOffline = true;
+  networkBadge.textContent = 'offline';
+  networkBadge.style.color = 'var(--text-muted)';
+  balanceAmount.textContent = '—';
+  balanceAsset.textContent = '';
+  txList.innerHTML = '';
+  const li = document.createElement('li');
+  li.textContent = 'API not reachable — check Settings';
+  li.style.cssText = 'color: var(--text-muted); font-size: 12px; padding: 8px 0;';
+  txList.appendChild(li);
 }
 
 function showStatus(msg: string, type: 'success' | 'error') {

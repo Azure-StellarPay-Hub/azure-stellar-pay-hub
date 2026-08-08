@@ -13,37 +13,53 @@ let reconnectDelay = 1000;
 export function connect(): void {
   disconnect();
 
-  getToken().then((token) => {
-    if (!token) return;
+  getToken()
+    .then((token) => {
+      if (!token) return;
 
-    getApiUrl().then((apiUrl) => {
-      const wsUrl = apiUrl.replace(/^http/, 'ws') + '/socket.io/?token=' + encodeURIComponent(token);
-      socket = new WebSocket(wsUrl);
+      getApiUrl()
+        .then((apiUrl) => {
+          const wsUrl = apiUrl.replace(/^http/, 'ws') + '/socket.io/?token=' + encodeURIComponent(token);
 
-      socket.onopen = () => {
-        console.log('[StellarPay] WebSocket connected');
-        reconnectDelay = 1000;
-      };
+          try {
+            socket = new WebSocket(wsUrl);
+          } catch {
+            console.warn('[StellarPay] WebSocket creation failed — retrying later');
+            scheduleReconnect();
+            return;
+          }
 
-      socket.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data as string);
-          handleEvent(data);
-        } catch {
-          // ignore malformed messages
-        }
-      };
+          socket.onopen = () => {
+            console.log('[StellarPay] WebSocket connected');
+            reconnectDelay = 1000;
+          };
 
-      socket.onclose = () => {
-        console.log('[StellarPay] WebSocket disconnected — reconnecting...');
-        scheduleReconnect();
-      };
+          socket.onmessage = (event) => {
+            try {
+              const data = JSON.parse(event.data as string);
+              handleEvent(data);
+            } catch {
+              // ignore malformed messages
+            }
+          };
 
-      socket.onerror = () => {
-        socket?.close();
-      };
+          socket.onclose = () => {
+            console.log('[StellarPay] WebSocket disconnected — reconnecting...');
+            scheduleReconnect();
+          };
+
+          socket.onerror = () => {
+            // Silently close; onclose will trigger reconnect
+            socket?.close();
+          };
+        })
+        .catch(() => {
+          scheduleReconnect();
+        });
+    })
+    .catch(() => {
+      scheduleReconnect();
     });
-  });
 }
 
 export function disconnect(): void {

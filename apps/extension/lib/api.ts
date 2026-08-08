@@ -35,11 +35,23 @@ async function request<T>(
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(`${apiUrl}${path}`, {
-    method: options.method ?? 'GET',
-    headers,
-    body: options.body ? JSON.stringify(options.body) : undefined,
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${apiUrl}${path}`, {
+      method: options.method ?? 'GET',
+      headers,
+      body: options.body ? JSON.stringify(options.body) : undefined,
+      signal: AbortSignal.timeout(10000),
+    });
+  } catch (err) {
+    if ((err as Error).name === 'TimeoutError') {
+      throw new Error('Request timed out — API is not responding');
+    }
+    if ((err as TypeError).message?.includes('fetch')) {
+      throw new Error('Cannot reach API — is the server running? Check your API URL in Settings.');
+    }
+    throw err;
+  }
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ message: res.statusText }));

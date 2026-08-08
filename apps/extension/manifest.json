@@ -23,7 +23,11 @@
   ],
   "host_permissions": [
     "http://localhost:4000/*",
-    "https://*.stellar-pay.example/*"
+    "ws://localhost:4000/*",
+    "https://*.stellar-pay.example/*",
+    "wss://*.stellar-pay.example/*",
+    "https://horizon-testnet.stellar.org/*",
+    "https://horizon.stellar.org/*"
   ],
   "options_page": "options.html"
 }
