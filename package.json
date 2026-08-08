@@ -45,6 +45,7 @@
       "esbuild",
       "nx",
       "prisma",
+      "sharp",
       "unrs-resolver"
     ]
   },
