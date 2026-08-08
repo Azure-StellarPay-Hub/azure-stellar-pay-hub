@@ -1,7 +1,15 @@
 # Azure StellarPay Hub
 
-**A production-ready Stellar payment platform** — a monorepo with Soroban smart contracts, a
-NestJS API, Next.js apps (wallet, admin, explorer, docs), and shared TypeScript packages.
+**The open-source Stellar payments platform for businesses.**
+
+Send and accept instant, low-cost payments on Stellar — backed by on-chain Soroban smart
+contracts for escrow, multisig, subscriptions, invoicing, merchant settlement, and rewards.
+Built for real-world commerce, not just demos.
+
+[![Stellar](https://img.shields.io/badge/Stellar-7B3FE4?logo=stellar&logoColor=white)](https://stellar.org/developers)
+[![Soroban SDK](https://img.shields.io/badge/Soroban_SDK-21.7.1-7B3FE4?logo=stellar&logoColor=white)](https://soroban.stellar.org/docs)
+[![CI](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 | | |
 | --- | --- |
@@ -73,6 +81,12 @@ and each package's `*.test.ts` files. Contracts include per-entry-point Rust tes
 GitHub Actions runs lint, typecheck, tests, contract builds, app builds, image builds and
 deployment on push to `main` (see `.github/workflows/`).
 
+## Contributing
+
+We welcome contributions! See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full process —
+branch naming, PR checklist, commit conventions, and code style. All contributors must
+follow our [Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## Security
 
 See [`SECURITY.md`](SECURITY.md) for the vulnerability reporting process and
@@ -80,4 +94,4 @@ See [`SECURITY.md`](SECURITY.md) for the vulnerability reporting process and
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+MIT © Azure StellarPay Hub contributors — see [`LICENSE`](LICENSE).

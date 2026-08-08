@@ -60,12 +60,12 @@ fn test_renew_advances_period() {
     let sub_id = client.subscribe(&subscriber, &plan_id);
 
     // Not due yet.
-    let result = client.try_renew(&sub_id);
+    let result = client.try_renew(&subscriber, &sub_id);
     assert_eq!(result, Err(Ok(SubscriptionError::NotDue)));
 
     // Advance time and renew.
     env.ledger().set_timestamp(1_000_061);
-    client.renew(&sub_id);
+    client.renew(&subscriber, &sub_id);
     assert_eq!(token.balance(&subscriber), 800);
     assert_eq!(client.get_subscription(&sub_id).unwrap().next_payment_at, 1_000_121);
 }
@@ -81,7 +81,7 @@ fn test_renew_with_insufficient_balance_pauses() {
     token.transfer(&subscriber, &drain_to, &900);
 
     env.ledger().set_timestamp(1_000_061);
-    let result = client.try_renew(&sub_id);
+    let result = client.try_renew(&subscriber, &sub_id);
     assert_eq!(result, Err(Ok(SubscriptionError::TransferFailed)));
     assert!(!client.get_subscription(&sub_id).unwrap().active);
     // No money moved to the merchant.

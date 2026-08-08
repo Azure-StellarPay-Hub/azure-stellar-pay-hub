@@ -62,7 +62,8 @@ jobs:
         run: pnpm test
 
       - name: Security scan (npm audit)
-        run: pnpm audit --audit-level high || true
+        run: pnpm audit --audit-level high
+        continue-on-error: true
 
       - name: Install uv for zizmor
         uses: astral-sh/setup-uv@v6

@@ -149,34 +149,27 @@ export class StellarNetwork {
     return tx.toXDR();
   }
 
-  /** Submit a signed transaction envelope (base64 XDR string). */
+  /** Submit a signed transaction envelope (base64 XDR string). Throws on failure. */
   async submitSignedTransaction(signedXdr: string): Promise<SubmitResult> {
-    try {
-      // v13 submits a decoded Transaction object rather than a raw XDR string.
-      const tx = TransactionBuilder.fromXDR(
-        signedXdr,
-        this.config.networkPassphrase,
-      ) as Transaction;
-      const response = await this.server.submitTransaction(tx);
-      return {
-        hash: response.hash,
-        sequence: tx.sequence,
-        fee: tx.fee,
-        ledger: response.ledger,
-        status: response.successful ? 'SUCCEEDED' : 'FAILED',
-      };
-    } catch (error) {
-      const err = error as { response?: { data?: { extras?: { result_codes?: { transaction?: string } } } } };
-      return {
-        hash: '',
-        sequence: '',
-        fee: BASE_FEE,
-        ledger: null,
-        status: 'FAILED',
-        errorMessage:
-          err.response?.data?.extras?.result_codes?.transaction ?? (error as Error).message,
-      };
+    // v13 submits a decoded Transaction object rather than a raw XDR string.
+    const tx = TransactionBuilder.fromXDR(
+      signedXdr,
+      this.config.networkPassphrase,
+    ) as Transaction;
+    const response = await this.server.submitTransaction(tx);
+    if (!response.successful) {
+      const resultCode =
+        (response as unknown as { result_codes?: { transaction?: string } }).result_codes
+          ?.transaction ?? 'unknown';
+      throw new Error(`Transaction failed: ${resultCode}`);
     }
+    return {
+      hash: response.hash,
+      sequence: tx.sequence,
+      fee: tx.fee,
+      ledger: response.ledger,
+      status: 'SUCCEEDED',
+    };
   }
 
   /** Build a simulated fee estimate without submitting. */

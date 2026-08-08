@@ -66,6 +66,7 @@ impl InvoicesContract {
         token::Client::new(&env, &invoice.token).transfer(&payer, &to, &invoice.amount);
         invoice.paid = true; invoices.set(invoice_id, invoice.clone());
         env.storage().instance().set(&DataKey::Invoices, &invoices);
+        env.storage().instance().extend_ttl(5000, 5000);
         env.events().publish((symbol_short!("paid"),), PaidEvent { id: invoice_id, payer, merchant: to, amount: invoice.amount });
         Ok(())
     }

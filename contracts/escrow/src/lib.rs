@@ -73,6 +73,7 @@ impl EscrowContract {
         token::Client::new(&env, &escrow.token).transfer(&env.current_contract_address(), &to, &escrow.amount);
         escrow.released = true; escrows.set(id, escrow.clone());
         env.storage().instance().set(&DataKey::Escrows, &escrows);
+        env.storage().instance().extend_ttl(5000, 5000);
         env.events().publish((symbol_short!("released"),), EscrowReleased { id, to: to.clone(), amount: escrow.amount });
         Ok(())
     }
@@ -89,6 +90,7 @@ impl EscrowContract {
         token::Client::new(&env, &escrow.token).transfer(&env.current_contract_address(), &to, &escrow.amount);
         escrow.refunded = true; escrows.set(id, escrow.clone());
         env.storage().instance().set(&DataKey::Escrows, &escrows);
+        env.storage().instance().extend_ttl(5000, 5000);
         env.events().publish((symbol_short!("refund"),), EscrowRefunded { id, to: to.clone(), amount: escrow.amount });
         Ok(())
     }

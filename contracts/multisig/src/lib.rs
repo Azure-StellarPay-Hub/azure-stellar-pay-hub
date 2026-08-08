@@ -60,23 +60,39 @@ impl MultisigContract {
         env.storage().instance().get(&DataKey::Threshold).unwrap_or(0)
     }
 
+    /// Modifying the signer set now requires an existing proposal to pass quorum.
+    /// Use submit() to create a signer-change proposal, then approve+execute it.
+    /// For backwards compatibility, direct add/remove by a single signer is deprecated
+    /// and gates on threshold=1 (single-signer mode).
     pub fn add_signer(env: Env, caller: Address, new_signer: Address) -> Result<(), MultisigError> {
-        Self::require_signer(&env, &caller)?; caller.require_auth();
+        Self::require_signer(&env, &caller)?;
+        let threshold = Self::threshold(env.clone());
+        if threshold > 1 {
+            return Err(MultisigError::InvalidThreshold); // Must use proposal flow for multi-sig
+        }
+        caller.require_auth();
         let mut signers = Self::signers(env.clone());
         if signers.contains(&new_signer) { return Ok(()); }
         signers.push_back(new_signer);
         env.storage().instance().set(&DataKey::Signers, &signers);
+        env.storage().instance().extend_ttl(5000, 5000);
         env.events().publish((symbol_short!("signers"),), SignersChangedEvent { signers: signers.clone(), threshold: Self::threshold(env.clone()) });
         Ok(())
     }
 
     pub fn remove_signer(env: Env, caller: Address, signer_to_remove: Address) -> Result<(), MultisigError> {
-        Self::require_signer(&env, &caller)?; caller.require_auth();
+        Self::require_signer(&env, &caller)?;
+        let threshold = Self::threshold(env.clone());
+        if threshold > 1 {
+            return Err(MultisigError::InvalidThreshold); // Must use proposal flow for multi-sig
+        }
+        caller.require_auth();
         let signers = Self::signers(env.clone());
         let mut filtered: Vec<Address> = Vec::new(&env);
         for s in signers.iter() { if s != signer_to_remove { filtered.push_back(s); } }
         if (filtered.len() as u32) < Self::threshold(env.clone()) { return Err(MultisigError::InvalidThreshold); }
         env.storage().instance().set(&DataKey::Signers, &filtered);
+        env.storage().instance().extend_ttl(5000, 5000);
         env.events().publish((symbol_short!("signers"),), SignersChangedEvent { signers: filtered.clone(), threshold: Self::threshold(env.clone()) });
         Ok(())
     }

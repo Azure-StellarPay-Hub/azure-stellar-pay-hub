@@ -18,7 +18,7 @@ const destinationSchema = z
 
 export const createPaymentSchema = z
   .object({
-    type: z.enum(['SEND', 'QR', 'PAYMENT_LINK', 'SCHEDULED', 'RECURRING', 'BATCH', 'SPLIT', 'INVOICE', 'CROSS_BORDER']),
+    type: z.enum(['SEND', 'QR', 'PAYMENT_LINK', 'SCHEDULED', 'RECURRING', 'BATCH', 'SPLIT', 'INVOICE', 'CROSS_BORDER', 'ESCROW', 'SUBSCRIPTION']),
     fromPublicKey: publicKeySchema,
     destinations: z.array(destinationSchema).min(1, 'At least one destination is required'),
     assetCode: assetCodeSchema.default('XLM'),

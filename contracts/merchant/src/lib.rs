@@ -91,16 +91,24 @@ impl MerchantContract {
         Ok(())
     }
 
-    pub fn record_sale(env: Env, id: u64, token: Address, amount: i128) -> Result<(), MerchantError> {
+    /// Record a sale where the caller (payer) sends tokens to the contract.
+    /// Tokens are transferred from the payer to the contract, then credited to the
+    /// merchant's internal balance. The payer must authorize the token transfer.
+    pub fn record_sale(env: Env, payer: Address, id: u64, token: Address, amount: i128) -> Result<(), MerchantError> {
         if amount <= 0 { return Err(MerchantError::InvalidAmount); }
+        payer.require_auth();
         let merchants: Map<u64, MerchantProfile> = env.storage().instance().get(&DataKey::Merchants).unwrap_or_else(|| Map::new(&env));
         let profile = merchants.get(id).ok_or(MerchantError::MerchantNotFound)?;
         if !profile.active { return Err(MerchantError::InactiveMerchant); }
+        // Transfer tokens from the payer into the contract.
+        token::Client::new(&env, &token).transfer(&payer, &env.current_contract_address(), &amount);
+        // Credit the merchant's internal balance.
         let mut balances: Map<u64, Map<Address, i128>> = env.storage().instance().get(&DataKey::Balances).unwrap_or_else(|| Map::new(&env));
         let mut by_token = balances.get(id).unwrap_or_else(|| Map::new(&env));
         let current = by_token.get(token.clone()).unwrap_or(0);
         by_token.set(token.clone(), current + amount); balances.set(id, by_token);
         env.storage().instance().set(&DataKey::Balances, &balances);
+        env.storage().instance().extend_ttl(5000, 5000);
         env.events().publish((symbol_short!("sale"),), SaleRecordedEvent { id, token, amount });
         Ok(())
     }
@@ -118,7 +126,11 @@ impl MerchantContract {
         let net = amount - commission;
         by_token.set(token.clone(), 0); balances.set(id, by_token);
         env.storage().instance().set(&DataKey::Balances, &balances);
+        env.storage().instance().extend_ttl(5000, 5000);
         let to = profile.settlement.clone();
+        // Safety: verify the contract actually holds enough tokens (defense-in-depth).
+        let contract_balance = token::Client::new(&env, &token).balance(&env.current_contract_address());
+        if contract_balance < net + commission { return Err(MerchantError::NoBalance); }
         token::Client::new(&env, &token).transfer(&env.current_contract_address(), &to, &net);
         if commission > 0 {
             let admin: Address = env.storage().instance().get(&DataKey::Admin).unwrap();

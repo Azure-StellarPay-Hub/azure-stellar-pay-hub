@@ -99,6 +99,16 @@ impl RewardsContract {
         Ok(())
     }
 
+    /// Deposit reward tokens into the contract so they can be claimed via redeem().
+    pub fn deposit_rewards(env: Env, from: Address, amount: i128) -> Result<(), RewardsError> {
+        if amount <= 0 { return Err(RewardsError::InvalidAmount); }
+        from.require_auth();
+        let reward_token: Address = env.storage().instance().get(&DataKey::RewardToken).ok_or(RewardsError::NotInitialized)?;
+        token::Client::new(&env, &reward_token).transfer(&from, &env.current_contract_address(), &amount);
+        env.storage().instance().extend_ttl(5000, 5000);
+        Ok(())
+    }
+
     pub fn earn(env: Env, earner: Address, account: Address, base_points: u64) -> Result<(), RewardsError> {
         if base_points == 0 { return Err(RewardsError::InvalidAmount); }
         let earners: Map<Address, bool> = env.storage().instance().get(&DataKey::Earners).unwrap_or_else(|| Map::new(&env));

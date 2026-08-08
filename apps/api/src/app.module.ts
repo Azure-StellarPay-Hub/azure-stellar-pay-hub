@@ -4,6 +4,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { InfraModule } from './infra/infra.module';
 import { JwtAuthGuard } from './common/jwt-auth.guard';
 import { RolesGuard } from './common/roles.guard';
+import { CsrfGuard } from './common/csrf.guard';
 import { AuditInterceptor } from './common/audit.interceptor';
 import { HttpExceptionFilter } from './common/http-exception.filter';
 import { AppController } from './app.controller';
@@ -47,6 +48,7 @@ import { SchedulerModule } from './scheduler/scheduler.module';
   ],
   controllers: [AppController],
   providers: [
+    { provide: APP_GUARD, useClass: CsrfGuard },
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_GUARD, useClass: ThrottlerGuard },

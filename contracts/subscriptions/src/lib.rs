@@ -73,19 +73,25 @@ impl SubscriptionsContract {
         Ok(sub.id)
     }
 
-    pub fn renew(env: Env, subscription_id: u64) -> Result<(), SubscriptionError> {
+    pub fn renew(env: Env, caller: Address, subscription_id: u64) -> Result<(), SubscriptionError> {
         let mut subs: Map<u64, Subscription> = env.storage().instance().get(&DataKey::Subscriptions).unwrap_or_else(|| Map::new(&env));
         let mut sub = subs.get(subscription_id).ok_or(SubscriptionError::SubscriptionNotFound)?;
         if !sub.active { return Err(SubscriptionError::AlreadyCancelled); }
-        let now = env.ledger().timestamp();
-        if now < sub.next_payment_at { return Err(SubscriptionError::NotDue); }
+        // Only the subscriber (or the plan merchant) can trigger a renewal.
         let plans: Map<u64, Plan> = env.storage().instance().get(&DataKey::Plans).unwrap_or_else(|| Map::new(&env));
         let plan = plans.get(sub.plan_id).ok_or(SubscriptionError::PlanNotFound)?;
+        if caller != sub.subscriber && caller != plan.merchant { return Err(SubscriptionError::Unauthorized); }
+        caller.require_auth();
+        let now = env.ledger().timestamp();
+        if now < sub.next_payment_at { return Err(SubscriptionError::NotDue); }
+        // The subscriber must also authorize the token transfer.
+        sub.subscriber.require_auth();
         match token::Client::new(&env, &plan.token).try_transfer(&sub.subscriber, &plan.merchant, &plan.amount) {
             Ok(_) => {
                 sub.next_payment_at = now + plan.interval_seconds;
                 subs.set(subscription_id, sub.clone());
                 env.storage().instance().set(&DataKey::Subscriptions, &subs);
+                env.storage().instance().extend_ttl(5000, 5000);
                 env.events().publish((symbol_short!("renew"),), RenewedEvent { id: subscription_id, plan_id: sub.plan_id, amount: plan.amount, merchant: plan.merchant });
                 Ok(())
             }

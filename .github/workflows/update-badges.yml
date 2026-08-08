@@ -1,0 +1,47 @@
+name: Update Badges
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'contracts/Cargo.toml'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  soroban-badge:
+    name: Update Soroban SDK badge
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run badge update script
+        id: update
+        run: bash scripts/update-soroban-badge.sh
+        continue-on-error: true
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if git diff --quiet README.md; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create PR with badge update
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: 'docs: update Soroban SDK version badge'
+          title: 'docs: update Soroban SDK version badge'
+          body: |
+            Auto-updated the Soroban SDK version badge in `README.md` to match
+            the version declared in `contracts/Cargo.toml`.
+
+            Triggered by a push to `main` that modified `contracts/Cargo.toml`.
+          branch: chore/update-soroban-badge
+          delete-branch: true
+          labels: documentation,chore

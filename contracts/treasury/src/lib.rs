@@ -61,6 +61,7 @@ impl TreasuryContract {
         if !Self::allowlisted(env.clone(), token.clone()) { return Err(TreasuryError::TokenNotAllowed); }
         from.require_auth();
         token::Client::new(&env, &token).transfer(&from, &env.current_contract_address(), &amount);
+        env.storage().instance().extend_ttl(5000, 5000);
         env.events().publish((symbol_short!("deposit"),), DepositedEvent { token, from, amount });
         Ok(())
     }
@@ -73,6 +74,7 @@ impl TreasuryContract {
         let current = token::Client::new(&env, &token).balance(&env.current_contract_address());
         if current < amount { return Err(TreasuryError::InvalidAmount); }
         token::Client::new(&env, &token).transfer(&env.current_contract_address(), &to, &amount);
+        env.storage().instance().extend_ttl(5000, 5000);
         env.events().publish((symbol_short!("withdraw"),), WithdrawnEvent { token, to, amount, by: admin });
         Ok(())
     }

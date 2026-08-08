@@ -1,12 +1,15 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
 import { Observable, tap } from 'rxjs';
 import { PrismaService } from '@stellar-pay/database';
 
 /**
  * Writes an AuditLog row for every mutating request (POST/PUT/PATCH/DELETE).
+ * Failures are logged but do not block the response.
  */
 @Injectable()
 export class AuditInterceptor implements NestInterceptor {
+  private readonly logger = new Logger('AuditInterceptor');
+
   constructor(private readonly prisma: PrismaService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
@@ -29,7 +32,7 @@ export class AuditInterceptor implements NestInterceptor {
       tap({
         next: () => {
           const path = request.route?.path ?? request.path ?? 'unknown';
-          void this.prisma.auditLog
+          this.prisma.auditLog
             .create({
               data: {
                 userId: request.user?.userId,
@@ -42,7 +45,9 @@ export class AuditInterceptor implements NestInterceptor {
                 metadata: { body: request.body } as never,
               },
             })
-            .catch(() => undefined);
+            .catch((err: Error) => {
+              this.logger.error(`Failed to write audit log: ${err.message}`, err.stack);
+            });
         },
       }),
     );

@@ -615,7 +615,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/workspaces/Azure-StellarPay-Hub/packages/database/src/generated/prisma",
+      "value": "/workspaces/azure-stellar-pay-hub/packages/database/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -629,7 +629,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/workspaces/Azure-StellarPay-Hub/packages/database/prisma/schema.prisma",
+    "sourceFilePath": "/workspaces/azure-stellar-pay-hub/packages/database/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

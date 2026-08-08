@@ -9,6 +9,10 @@ export const ROLES_KEY = 'roles';
 /** Restrict a route to the given roles (hierarchy-aware). */
 export const Roles = (...roles: string[]) => SetMetadata(ROLES_KEY, roles);
 
+export const IS_CSRF_BYPASS_KEY = 'csrfBypass';
+/** Mark a route as exempt from CSRF protection (e.g. webhooks, public callbacks). */
+export const CsrfBypass = () => SetMetadata(IS_CSRF_BYPASS_KEY, true);
+
 export interface AuthenticatedUser {
   userId: string;
   publicKey?: string;

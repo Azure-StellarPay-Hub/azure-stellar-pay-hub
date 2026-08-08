@@ -1,0 +1,47 @@
+name: Good First Issue
+description: A beginner-friendly task for new contributors
+title: "good first issue: "
+labels: ["good first issue", "help wanted", "complexity:low"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a task suitable for new contributors. It should be small, well-scoped, and achievable in a few hours.
+  - type: textarea
+    id: description
+    attributes:
+      label: Task description
+      description: What needs to be done? Be specific and scoped.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How do we know this is done?
+      placeholder: |
+        - [ ] Tests pass
+        - [ ] Lint is clean
+        - [ ] Works on testnet
+    validations:
+      required: true
+  - type: textarea
+    id: hints
+    attributes:
+      label: Hints for getting started
+      description: Point new contributors to relevant files, docs, or examples.
+      placeholder: |
+        - Relevant files: `packages/sdk/src/stellar.ts`
+        - See `docs/sdk.md` for context
+        - Look at how `buildPaymentTransaction` is structured for reference
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Documentation
+        - Bug fix
+        - Refactoring
+        - Test coverage
+        - UI polish
+        - Other

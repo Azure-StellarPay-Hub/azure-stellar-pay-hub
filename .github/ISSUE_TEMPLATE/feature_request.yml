@@ -1,0 +1,56 @@
+name: Feature Request
+description: Propose a new feature or enhancement
+title: "feat: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea! Tell us what you'd like to see.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem this solves
+      description: What problem does this feature solve? Is there a related pain point?
+      placeholder: "As a merchant, I can't currently..."
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe what you'd like to see implemented.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any alternative approaches you've thought about?
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Estimated complexity
+      description: Your best guess at how complex this is.
+      options:
+        - "complexity:low (small change, few files)"
+        - "complexity:medium (new feature, multiple files)"
+        - "complexity:high (major refactor, new contract, new app)"
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected component(s)
+      options:
+        - API (apps/api)
+        - Web app (apps/web)
+        - Admin dashboard (apps/admin)
+        - Explorer (apps/explorer)
+        - Smart contracts (contracts/)
+        - SDK (packages/sdk)
+        - Database (packages/database)
+        - Wallet integration
+        - CI/CD
+        - Documentation
+        - Multiple
+    validations:
+      required: true

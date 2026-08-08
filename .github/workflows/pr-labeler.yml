@@ -1,0 +1,53 @@
+name: PR Auto-Labeler
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label:
+    name: Label PR from conventional commit prefix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          # Map conventional commit prefix → label based on CONTRIBUTING.md
+          declare -A PREFIX_MAP=(
+            ["feat:"]="enhancement"
+            ["fix:"]="bug"
+            ["chore:"]="chore"
+            ["docs:"]="documentation"
+            ["refactor:"]="refactor"
+            ["test:"]="test"
+            ["ci:"]="ci"
+            ["style:"]="style"
+          )
+
+          TITLE="$PR_TITLE"
+          LABELS_TO_ADD=""
+
+          for prefix in "${!PREFIX_MAP[@]}"; do
+            if [[ "$TITLE" == "$prefix"* ]]; then
+              LABELS_TO_ADD="${PREFIX_MAP[$prefix]}"
+              break
+            fi
+          done
+
+          if [[ -z "$LABELS_TO_ADD" ]]; then
+            echo "No conventional commit prefix found in PR title: '$TITLE'"
+            echo "Skipping label application."
+            exit 0
+          fi
+
+          echo "Detected prefix → applying label: $LABELS_TO_ADD"
+          gh pr edit "$PR_NUMBER" --add-label "$LABELS_TO_ADD" --repo "$GITHUB_REPOSITORY"
+          echo "Label '$LABELS_TO_ADD' applied to PR #$PR_NUMBER"

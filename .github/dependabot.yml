@@ -1,0 +1,70 @@
+version: 2
+updates:
+  # ── pnpm (npm ecosystem) ──────────────────────────────────────────────────
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: UTC
+    versioning-strategy: increase
+    labels:
+      - dependencies
+      - chore
+    commit-message:
+      prefix: chore
+      prefix-development: chore
+      include: scope
+    groups:
+      production:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+      development:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Major version bumps are handled separately via individual PRs
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+
+  # ── Cargo (Rust / Soroban contracts) ──────────────────────────────────────
+
+  - package-ecosystem: cargo
+    directory: /contracts
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: UTC
+    labels:
+      - dependencies
+      - chore
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      soroban:
+        patterns:
+          - 'soroban-*'
+        update-types:
+          - minor
+          - patch
+      rust:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - 'soroban-*'
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major

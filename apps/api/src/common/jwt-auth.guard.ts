@@ -33,9 +33,14 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('Missing bearer token');
     }
 
+    const jwtSecret = this.config.get<string>('JWT_SECRET');
+    if (!jwtSecret) {
+      throw new UnauthorizedException('Server authentication is not configured');
+    }
+
     let payload: AuthTokenPayload;
     try {
-      payload = verifyAccessToken(token, this.config.get<string>('JWT_SECRET')!);
+      payload = verifyAccessToken(token, jwtSecret);
     } catch {
       throw new UnauthorizedException('Invalid or expired token');
     }

@@ -34,8 +34,10 @@ resource "azurerm_postgresql_flexible_server_database" "main" {
 resource "azurerm_postgresql_flexible_server_firewall_rule" "allow_aks" {
   name             = "allow-aks-egress"
   server_id        = azurerm_postgresql_flexible_server.main.id
-  start_ip_address = "0.0.0.0"
-  end_ip_address   = "0.0.0.0"
+  # Restrict to Azure-region external IPs. Replace with your AKS egress IP(s) in production.
+  # For dev: use the AKS node pool outbound IP. Never use 0.0.0.0 in production.
+  start_ip_address = var.aks_egress_ip
+  end_ip_address   = var.aks_egress_ip
 }
 
 # --------------------------------------------------------------------- Cache

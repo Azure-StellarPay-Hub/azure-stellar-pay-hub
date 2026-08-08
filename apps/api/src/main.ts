@@ -23,6 +23,20 @@ async function bootstrap(): Promise<void> {
   const prisma = app.get(PrismaService);
   await prisma.connect();
 
+  // Graceful shutdown: disconnect Prisma on SIGTERM/SIGINT.
+  const shutdown = async (signal: string) => {
+    logger.info(`${signal} received — shutting down gracefully`);
+    try {
+      await prisma.disconnect();
+      await app.close();
+    } catch (err) {
+      logger.error('Error during shutdown', err);
+    }
+    process.exit(0);
+  };
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+
   const port = config.get<number>('API_PORT') ?? 4000;
   await app.listen(port);
   logger.info(`API listening on :${port} (network=${config.get('STELLAR_NETWORK')})`);

@@ -111,6 +111,7 @@ impl PaymentContract {
         Self::check_send(&env, &from, &token, amount)?;
         from.require_auth();
         token::Client::new(&env, &token).transfer(&from, &to, &amount);
+        env.storage().instance().extend_ttl(5000, 5000);
         env.events().publish((symbol_short!("payment"),), PaymentEventData {
             from,
             to,
@@ -140,6 +141,7 @@ impl PaymentContract {
             total += amount;
             token::Client::new(&env, &token).transfer(&from, &to, &amount);
         }
+        env.storage().instance().extend_ttl(5000, 5000);
         env.events().publish((symbol_short!("batch"),), BatchPaymentData {
             from,
             token,

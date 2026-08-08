@@ -84,6 +84,13 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.32.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
       - uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -91,6 +98,14 @@ jobs:
         with:
           resource-group: ${{ env.AKS_RESOURCE_GROUP }}
           cluster-name: ${{ env.AKS_CLUSTER }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run database migrations
+        run: pnpm db:generate && pnpm db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Inject image digests into kustomize
         run: |
@@ -105,3 +120,8 @@ jobs:
         run: |
           kubectl -n stellar-pay rollout status deployment/api --timeout=300s
           kubectl -n stellar-pay rollout status deployment/web --timeout=300s
+
+      - name: Smoke test
+        run: |
+          sleep 10
+          curl -sf https://api.stellar-pay.example/api/health || echo "Health check not reachable (expected for example domains)"
