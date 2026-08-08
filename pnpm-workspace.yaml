@@ -1,5 +1,6 @@
 packages:
   - 'apps/*'
+  - '!apps/extension'
   - 'packages/*'
 
 # pnpm 10: hoisted layout maximizes compatibility with Nx, NestJS and Next.js.

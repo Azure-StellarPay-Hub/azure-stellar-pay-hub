@@ -4,10 +4,7 @@
   "private": true,
   "description": "StellarPay Hub Chrome extension — payment companion with quick-send and notifications",
   "scripts": {
-    "build": "node build.mjs",
-    "dev": "node build.mjs --watch"
-  },
-  "devDependencies": {
-    "esbuild": "^0.25.0"
+    "build": "npx esbuild popup.ts background.ts options.ts --bundle --outdir=. --format=esm --target=es2022",
+    "dev": "npx esbuild popup.ts background.ts options.ts --bundle --outdir=. --format=esm --target=es2022 --sourcemap --watch"
   }
 }
