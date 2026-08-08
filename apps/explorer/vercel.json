@@ -2,5 +2,21 @@
   "framework": "nextjs",
   "buildCommand": "cd ../.. && pnpm --filter ...@stellar-pay/explorer build",
   "outputDirectory": ".next",
-  "installCommand": "pnpm install --frozen-lockfile"
+  "installCommand": "pnpm install --frozen-lockfile",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://api.stellar-pay.example",
+    "NEXT_PUBLIC_HORIZON_URL": "https://horizon-testnet.stellar.org",
+    "NEXT_PUBLIC_STELLAR_NETWORK": "testnet"
+  }
 }
