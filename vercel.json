@@ -16,7 +16,6 @@
     }
   ],
   "env": {
-    "NEXT_PUBLIC_STELLAR_NETWORK": "testnet",
-    "VERCEL_SKIP_COMMENT_AUTOPATCH": "1"
+    "NEXT_PUBLIC_STELLAR_NETWORK": "testnet"
   }
 }
