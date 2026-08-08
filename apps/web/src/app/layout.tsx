@@ -1,21 +1,11 @@
-import type { Metadata, Viewport } from 'next';
+'use client';
+
 import { WalletProvider } from '@stellar-pay/wallet';
 import { ToastProvider } from '@stellar-pay/ui';
 import { AuthProvider } from '@/lib/auth';
 import { Header } from '@/components/header';
 import { RealtimeProvider } from '@/components/realtime-provider';
 import './globals.css';
-
-export const metadata: Metadata = {
-  title: 'StellarPay Hub — Payments on Stellar',
-  description:
-    'Send and receive XLM & Stellar assets, create payment links and invoices, and power cross-border payments — powered by Soroban.',
-  keywords: ['stellar', 'soroban', 'payments', 'xlm', 'usdc', 'wallet'],
-};
-
-export const viewport: Viewport = {
-  themeColor: '#0a0a12',
-};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

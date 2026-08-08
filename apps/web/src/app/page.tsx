@@ -12,6 +12,9 @@ import {
 } from 'lucide-react';
 import { Button, Card, CardContent } from '@stellar-pay/ui';
 
+// Force dynamic rendering — lucide-react + radix-ui Slot don't play nice with SSR
+export const dynamic = 'force-dynamic';
+
 const FEATURES = [
   {
     icon: Wallet,

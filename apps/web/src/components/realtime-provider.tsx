@@ -1,10 +1,11 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useToast } from '@stellar-pay/ui';
 import { useAuth } from '@/lib/auth';
 import { useRealtime } from '@/lib/ws';
 
-export function RealtimeProvider({ children }: { children: React.ReactNode }) {
+function RealtimeInner() {
   const toast = useToast();
   const { authenticated } = useAuth();
 
@@ -25,5 +26,20 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
 
   // Reconnect when authentication state changes (token now available).
   void authenticated;
-  return <>{children}</>;
+  return null;
+}
+
+export function RealtimeProvider({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return (
+    <>
+      {children}
+      {mounted && <RealtimeInner />}
+    </>
+  );
 }
