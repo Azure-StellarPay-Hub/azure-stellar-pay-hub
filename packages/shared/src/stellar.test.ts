@@ -1,10 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import {
-  isValidAssetCode,
-  isValidMemo,
-  isValidPublicKey,
-  verifyStrkeyChecksum,
-} from './stellar';
+import { isValidAssetCode, isValidMemo, isValidPublicKey, verifyStrkeyChecksum } from './stellar';
 
 // Well-known public key (SDF multi-sig on mainnet).
 const VALID_G = 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN';
