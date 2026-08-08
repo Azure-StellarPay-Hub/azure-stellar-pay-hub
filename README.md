@@ -1,3 +1,8 @@
+[![CI](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Stellar](https://img.shields.io/badge/Stellar-Mainnet%20%26%20Testnet-custom?style=flat&logo=stellar&color=190934)](https://stellar.org)
+[![Soroban SDK](https://img.shields.io/badge/Soroban%20SDK-v21.7.1-blue?logo=stellar)](https://soroban.stellar.org)
+
 # Azure StellarPay Hub
 
 **The open-source Stellar payments platform for businesses.**
