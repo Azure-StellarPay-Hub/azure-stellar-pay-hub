@@ -38,7 +38,15 @@
     "docker:down": "docker compose -f infrastructure/docker/docker-compose.yml down"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["@prisma/engines", "nx", "unrs-resolver"]
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "@tailwindcss/oxide",
+      "esbuild",
+      "nx",
+      "prisma",
+      "unrs-resolver"
+    ]
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
