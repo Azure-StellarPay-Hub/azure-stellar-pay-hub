@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "StellarPay Hub",
+  "version": "0.1.0",
+  "description": "Stellar payment companion — quick-send, balance check, and real-time payment notifications.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "StellarPay Hub"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "storage",
+    "notifications",
+    "alarms"
+  ],
+  "host_permissions": [
+    "http://localhost:4000/*",
+    "https://*.stellar-pay.example/*"
+  ],
+  "options_page": "options.html"
+}

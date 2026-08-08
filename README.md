@@ -93,6 +93,14 @@ payment infrastructure:
 - Search by transaction hash or account public key
 - View balances, trustlines, and transaction history for any Stellar account
 
+### Chrome Extension
+
+- Balance check at a glance from your browser toolbar
+- Quick-send payments without opening the web app
+- Real-time Chrome desktop notifications for incoming payments
+- Freighter wallet integration for transaction signing
+- See [`apps/extension/`](apps/extension/) for install instructions
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -119,7 +127,8 @@ azure-stellar-pay-hub/
 │   ├── web/              End-user wallet & merchant app (Next.js)
 │   ├── admin/            Operator dashboard with RBAC (Next.js)
 │   ├── explorer/         Public transaction/account explorer (Next.js)
-│   └── docs/             Documentation site rendering docs/*.md (Next.js)
+│   ├── docs/             Documentation site rendering docs/*.md (Next.js)
+│   └── extension/        Chrome extension — quick-send, balances, notifications
 │
 ├── contracts/            Soroban smart contracts (Rust)
 │   ├── payment/          Send, batch & split payments
@@ -152,7 +161,7 @@ azure-stellar-pay-hub/
 │   └── monitoring/       Prometheus config, alert rules
 │
 ├── docs/                 Architecture, API, SDK, contracts, database, deployment, contributing
-├── scripts/              Bootstrap scripts (env generation, setup, badge updater)
+├── scripts/              Bootstrap scripts (env gen, setup, badge updater, testnet deploy)
 ├── tests/                End-to-end smoke tests + load testing scripts
 └── .github/              CI/CD workflows, issue/PR templates, Dependabot
 ```
@@ -228,6 +237,7 @@ pnpm dev
 | `pnpm docker:down` | Stop and remove containers |
 | `pnpm generate:env` | Scaffold `.env` files from templates |
 | `pnpm setup` | Full first-time bootstrap |
+| `bash scripts/deploy-testnet.sh` | Deploy contracts + API to Stellar testnet |
 
 ## API Overview
 
@@ -307,6 +317,7 @@ See [`docs/deployment.md`](docs/deployment.md) for full instructions.
 - **Terraform (Azure)**: `infrastructure/terraform/` — provisions AKS, managed Postgres, Redis, Key Vault
 - **Monitoring**: `infrastructure/monitoring/` — Prometheus + Grafana + alert rules
 - **Vercel**: `apps/web/vercel.json`, `apps/admin/vercel.json` — frontends can deploy to Vercel
+- **Testnet (Stellar)**: `bash scripts/deploy-testnet.sh` — one-command deploy to Stellar testnet
 
 ## Documentation
 
@@ -319,6 +330,7 @@ See [`docs/deployment.md`](docs/deployment.md) for full instructions.
 | [`docs/database.md`](docs/database.md) | Schema design, migrations, seeding |
 | [`docs/development.md`](docs/development.md) | Local dev setup, adding packages, scripts |
 | [`docs/deployment.md`](docs/deployment.md) | Docker, Kubernetes, Terraform, monitoring |
+| [`docs/testnet-deploy.md`](docs/testnet-deploy.md) | Step-by-step Stellar testnet deployment guide |
 | [`contracts/README.md`](contracts/README.md) | Contract build, test, deploy instructions |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Branch strategy, PR checklist, commit conventions |
 
