@@ -2,7 +2,12 @@
 
 import { ApiClient } from '@stellar-pay/sdk';
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+// In development, Next.js rewrites proxy /api/* → localhost:4000 so we can use
+// relative URLs. In production (Vercel), use the full API URL from env vars.
+export const API_URL =
+  process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL ?? 'https://api.stellar-pay.example'
+    : '';
 
 const TOKEN_KEY = 'stellar-pay:token';
 const REFRESH_KEY = 'stellar-pay:refresh';

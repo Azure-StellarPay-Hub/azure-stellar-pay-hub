@@ -63,11 +63,23 @@ export class ApiClient {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await this.fetchImpl(url.toString(), {
-      method: options.method ?? 'GET',
-      headers,
-      body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
-    });
+    let response: Response;
+    try {
+      response = await this.fetchImpl(url.toString(), {
+        method: options.method ?? 'GET',
+        headers,
+        body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
+        signal: AbortSignal.timeout(15000),
+      });
+    } catch (err) {
+      if ((err as Error).name === 'TimeoutError') {
+        throw new ApiClientError(0, `Request timed out — API at ${this.baseUrl} is not responding`);
+      }
+      if (err instanceof TypeError) {
+        throw new ApiClientError(0, `Cannot reach API at ${this.baseUrl} — is the server running?`);
+      }
+      throw err;
+    }
 
     if (response.status === 401) {
       this.onUnauthorized?.();
