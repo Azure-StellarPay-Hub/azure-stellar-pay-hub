@@ -11,86 +11,347 @@ Built for real-world commerce, not just demos.
 [![CI](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-| | |
-| --- | --- |
-| **Payments** | XLM, USDC, custom assets · QR + payment links · scheduled/recurring/batch/split |
-| **Wallets** | Freighter · xBull · Albedo · wallet auth (Ed25519 challenge → JWT) |
-| **Merchants** | Onboarding, catalog, invoices, hosted checkout, POS, settlement, analytics |
-| **Smart contracts** | payment · escrow · multisig · treasury · subscriptions · invoices · merchant |
-| **Stack** | Nx + pnpm · NestJS · Next.js (App Router) · PostgreSQL + Prisma · Redis · Zod · Docker |
+---
 
-## Repository structure
+## Why Stellar?
 
-```text
-apps/            web · admin · api · explorer · docs
-contracts/       payment · escrow · multisig · treasury · subscriptions · invoices · merchant
-packages/        sdk · wallet · ui · authentication · database · validation · analytics
-                 notifications · config · logger · shared · types
-infrastructure/  docker · kubernetes · terraform · monitoring
-docs/            architecture · api · sdk · contracts · database · deployment · development · contributing
-scripts/         bootstrap & env tooling
-tests/           end-to-end smoke + load suites
-.github/         CI/CD workflows
+Stellar is a Layer-1 blockchain purpose-built for payments — settlement takes 3-5 seconds
+and costs fractions of a cent. Azure StellarPay Hub leverages Stellar's native multi-asset
+support (XLM, USDC, and custom tokens) and Soroban smart contracts to deliver production-grade
+payment infrastructure:
+
+- **Near-instant settlement** — no waiting for blocks or paying gas spikes
+- **On-chain escrow & multisig** — programmable trust, not just transfers
+- **Built-in compliance** — Stellar's clawback, auth-required, and auth-revocable flags for regulated assets
+- **Real ecosystem** — works with Freighter, xBull, Albedo wallets that millions already use
+
+## Features
+
+### Core Payments
+
+| Feature | Description |
+|---------|-------------|
+| Send / Receive | XLM, USDC, and any Stellar-issued asset |
+| QR codes & payment links | Shareable checkout links with hosted payment pages |
+| Scheduled payments | One-time future-dated transfers |
+| Recurring payments | Daily, weekly, monthly subscription billing |
+| Batch payments | Pay up to 100 recipients in a single transaction |
+| Split payments | Distribute a single payment across multiple recipients |
+| Fee estimation | Real-time fee quotes from Horizon |
+
+### Wallets & Authentication
+
+| Feature | Description |
+|---------|-------------|
+| Freighter | Browser extension wallet |
+| xBull | Browser extension + mobile wallet |
+| Albedo | Web-based identity wallet (no extension needed) |
+| Ed25519 challenge → JWT | Sign a server-issued challenge to authenticate — no passwords |
+| Session management | View and revoke active sessions |
+| Device tracking | Audit which devices accessed your account |
+
+### Merchants
+
+| Feature | Description |
+|---------|-------------|
+| Onboarding | Register a merchant profile with settlement address |
+| Product catalog | Create and manage products for checkout |
+| Invoices | Generate on-chain invoices with due dates and auto-expiry |
+| Payment links | Shareable URLs for fixed or open-amount payments |
+| Hosted checkout | Branded checkout page for your customers |
+| POS mode | In-person checkout optimized for mobile |
+| Settlement | Auto-settle to your bank/wallet with configurable commission |
+| Analytics | Revenue dashboards, customer insights, transaction volume |
+| Webhooks | Real-time callbacks for payment events (paid, cancelled, expired) |
+
+### Smart Contracts (Soroban)
+
+| Contract | Purpose |
+|----------|---------|
+| `payment` | Send XLM/assets, batch & split payments |
+| `escrow` | Timed escrow with release & refund |
+| `multisig` | Multi-signature proposal approval & execution |
+| `treasury` | Allowlisted treasury (deposits/withdrawals) |
+| `subscriptions` | Recurring payment plans |
+| `invoices` | On-chain invoice issuance & payment |
+| `merchant` | Merchant registry with commission & settlement |
+| `rewards` | Loyalty tiers, earn & redeem points |
+
+### Admin Dashboard
+
+- User and merchant management (suspend, verify, assign roles)
+- Transaction monitoring with filtering by status, asset, direction
+- Asset registry (add/remove supported assets)
+- System settings (commission rates, feature flags, contract addresses)
+- Audit log with full request/response tracing
+- Notification broadcast to users
+- Analytics: dashboard metrics, 7/30/90-day volume charts
+
+### Explorer
+
+- Public transaction and account explorer
+- Search by transaction hash or account public key
+- View balances, trustlines, and transaction history for any Stellar account
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Runtime** | Node.js 22, Rust (stable, wasm32 target) |
+| **Monorepo** | Nx + pnpm workspaces |
+| **API** | NestJS (Express), Socket.IO for realtime events |
+| **Web apps** | Next.js 15 (App Router), React 19, Tailwind CSS |
+| **Database** | PostgreSQL 16, Prisma ORM |
+| **Cache / Pub-Sub** | Redis 7 |
+| **Blockchain** | Stellar Horizon API, Soroban RPC |
+| **Smart contracts** | Soroban SDK 21.7.1 (Rust) |
+| **Validation** | Zod (runtime type safety) |
+| **Auth** | Ed25519 signatures, JWT (access + refresh tokens), RBAC |
+| **Testing** | Vitest (JS/TS), Rust test harness (contracts) |
+| **CI/CD** | GitHub Actions, Docker, Kubernetes, Terraform (Azure) |
+
+## Repository Structure
+
+```
+azure-stellar-pay-hub/
+├── apps/
+│   ├── api/              NestJS backend (REST + WebSocket)
+│   ├── web/              End-user wallet & merchant app (Next.js)
+│   ├── admin/            Operator dashboard with RBAC (Next.js)
+│   ├── explorer/         Public transaction/account explorer (Next.js)
+│   └── docs/             Documentation site rendering docs/*.md (Next.js)
+│
+├── contracts/            Soroban smart contracts (Rust)
+│   ├── payment/          Send, batch & split payments
+│   ├── escrow/           Timed escrow with release + refund
+│   ├── multisig/         Proposal-based multi-signature wallet
+│   ├── treasury/         Allowlisted deposit/withdrawal vault
+│   ├── subscriptions/    Recurring payment plans
+│   ├── invoices/         On-chain invoice lifecycle
+│   ├── merchant/         Merchant registry, commission, settlement
+│   └── rewards/          Points-based loyalty system
+│
+├── packages/
+│   ├── sdk/              Typed HTTP client for the API + Stellar Horizon wrapper
+│   ├── wallet/           Multi-wallet adapter (Freighter, xBull, Albedo) + React context
+│   ├── ui/               Shared React component library (Button, Card, Toast, Dialog, etc.)
+│   ├── authentication/   JWT, Ed25519 challenge-sign, RBAC, password hashing
+│   ├── database/         Prisma schema, migrations, seed scripts, PrismaService
+│   ├── validation/       Zod schemas for all API DTOs (auth, payment, merchant, user, etc.)
+│   ├── notifications/    Multi-channel notification providers (email, SMS, push, webhook)
+│   ├── analytics/        Event tracking providers (console, noop, extensible)
+│   ├── config/           Environment variable schema + validation
+│   ├── logger/           Structured logging with configurable levels
+│   ├── shared/           Shared utilities: money (stroops), Stellar URI parser, IDs, pagination
+│   └── types/            Shared TypeScript type definitions
+│
+├── infrastructure/
+│   ├── docker/           Dockerfiles (api, web) + docker-compose for local dev
+│   ├── kubernetes/       Kustomize manifests (deployments, ingress, secrets, config)
+│   ├── terraform/        Azure infrastructure as code (AKS, Postgres, Redis, Key Vault)
+│   └── monitoring/       Prometheus config, alert rules
+│
+├── docs/                 Architecture, API, SDK, contracts, database, deployment, contributing
+├── scripts/              Bootstrap scripts (env generation, setup, badge updater)
+├── tests/                End-to-end smoke tests + load testing scripts
+└── .github/              CI/CD workflows, issue/PR templates, Dependabot
 ```
 
-## Quick start
+## Quick Start
+
+### Prerequisites
+
+- **Node.js** ≥ 20.9 (use `nvm install` — `.nvmrc` included)
+- **pnpm** ≥ 9 (run `corepack enable`)
+- **Docker** (for local Postgres + Redis)
+- **Rust** stable + `wasm32-unknown-unknown` target (for Soroban contracts — optional)
+
+### Setup
 
 ```bash
+# 1. Clone the repo
+git clone https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub.git
+cd azure-stellar-pay-hub
+
+# 2. Install dependencies
 corepack enable
 pnpm install
-pnpm generate:env      # scaffold .env files
-pnpm docker:up         # Postgres + Redis
-pnpm db:generate && pnpm db:push && pnpm db:seed
-pnpm dev               # api:4000 · web:3000 · admin:3001 · explorer:3002 · docs:3003
+
+# 3. Scaffold environment files
+pnpm generate:env
+# Edit .env and apps/*/.env with your values
+
+# 4. Start infrastructure (Postgres + Redis)
+pnpm docker:up
+
+# 5. Set up the database
+pnpm db:generate
+pnpm db:push
+pnpm db:seed
+
+# 6. Start everything
+pnpm dev
 ```
 
-## Scripts
+### Apps at a glance
 
-| Command              | Purpose                                  |
-| -------------------- | ---------------------------------------- |
-| `pnpm dev`           | Run all apps in watch mode               |
-| `pnpm build`         | Build every app & package                |
-| `pnpm test`          | Run all unit/integration tests           |
-| `pnpm lint`          | ESLint across the workspace              |
-| `pnpm typecheck`     | `tsc --noEmit` everywhere                |
-| `pnpm contracts:build` | Compile Soroban contracts to wasm      |
-| `pnpm contracts:test`  | Run Rust contract tests                |
-| `pnpm db:seed`       | Seed admin user + demo data              |
-| `pnpm docker:up`     | Start Postgres + Redis via compose       |
+| App | URL | Command |
+|-----|-----|---------|
+| API | http://localhost:4000 | `pnpm dev:api` |
+| Web | http://localhost:3000 | `pnpm dev:web` |
+| Admin | http://localhost:3001 | `pnpm dev:admin` |
+| Explorer | http://localhost:3002 | `pnpm dev:explorer` |
+| Docs | http://localhost:3003 | `pnpm dev:docs` |
 
-## Documentation
+## Scripts Reference
 
-The full documentation set lives in [`docs/`](docs/) and is rendered by the `docs` app:
+| Command | Purpose |
+|---------|---------|
+| `pnpm dev` | Run all 5 apps in parallel (watch mode) |
+| `pnpm build` | Build all apps and packages |
+| `pnpm build:apps` | Build only the apps |
+| `pnpm build:packages` | Build only the shared packages |
+| `pnpm lint` | ESLint across the entire workspace |
+| `pnpm typecheck` | `tsc --noEmit` on every TypeScript project |
+| `pnpm test` | Run all unit and integration tests |
+| `pnpm test:e2e` | Run the end-to-end smoke test |
+| `pnpm format` | Auto-format with Prettier |
+| `pnpm format:check` | Check formatting without changing files |
+| `pnpm db:generate` | Generate Prisma client from schema |
+| `pnpm db:migrate` | Run Prisma migrations |
+| `pnpm db:push` | Push schema directly to database |
+| `pnpm db:seed` | Seed the database with demo data |
+| `pnpm db:studio` | Open Prisma Studio (database GUI) |
+| `pnpm contracts:build` | Compile Soroban contracts to WASM |
+| `pnpm contracts:test` | Run all Rust contract unit tests |
+| `pnpm docker:up` | Start Postgres + Redis containers |
+| `pnpm docker:down` | Stop and remove containers |
+| `pnpm generate:env` | Scaffold `.env` files from templates |
+| `pnpm setup` | Full first-time bootstrap |
 
-- [Architecture](docs/architecture.md)
-- [API reference](docs/api.md)
-- [SDK](docs/sdk.md)
-- [Smart contracts](docs/contracts.md)
-- [Database](docs/database.md)
-- [Deployment](docs/deployment.md)
-- [Development](docs/development.md)
-- [Contributing](docs/contributing.md)
+## API Overview
+
+The NestJS API serves as the backend for all apps. Key modules:
+
+| Module | Routes | Description |
+|--------|--------|-------------|
+| **Auth** | `/auth/*` | Challenge, verify, refresh, logout, sessions |
+| **Payments** | `/payments/*` | Quote, preview, submit, schedule, recurring, batch, history |
+| **Assets** | `/assets/*` | List assets, create/remove trustlines |
+| **Wallet** | `/wallet/*` | Balances, trustlines, network switching |
+| **Merchants** | `/merchants/*` | Onboarding, profile, products, invoices, settlement |
+| **Checkout** | `/checkout/*` | Public payment link & invoice checkout |
+| **Invoices** | `/invoices/*` | Create, list, public lookup |
+| **Payment Links** | `/payment-links/*` | Create, list, public lookup by code |
+| **Users** | `/users/*` | Profile, contacts, beneficiaries, preferences, devices |
+| **Notifications** | `/notifications/*` | In-app notification inbox |
+| **Webhooks** | `/webhooks/*` | Register and test webhook endpoints |
+| **Admin** | `/admin/*` | RBAC-protected: users, merchants, transactions, analytics, settings |
+| **Realtime** | WebSocket `/socket.io` | Live events: `payment.sent`, `payment.received`, `notification` |
+
+Full API reference: [`docs/api.md`](docs/api.md)
+
+## SDK (`@stellar-pay/sdk`)
+
+The SDK provides two main classes:
+
+```typescript
+import { ApiClient, StellarNetwork } from '@stellar-pay/sdk';
+
+// Typed HTTP client for the API
+const api = new ApiClient({ baseUrl: 'http://localhost:4000', getToken: () => token });
+await api.payments.create({ to: 'G...', amount: '100', assetCode: 'XLM' });
+
+// Stellar Horizon wrapper for direct blockchain interaction
+const network = StellarNetwork.forTestnet();
+const xdr = await network.buildPaymentTransaction({ from: 'G...', to: 'G...', amount: '100', assetCode: 'XLM' });
+// User signs with wallet, then:
+const result = await network.submitSignedTransaction(signedXdr);
+```
+
+Full SDK docs: [`docs/sdk.md`](docs/sdk.md)
 
 ## Testing
 
-Unit, integration, contract, API, and end-to-end suites — see [`tests/`](tests/README.md)
-and each package's `*.test.ts` files. Contracts include per-entry-point Rust tests.
+```bash
+pnpm test              # All unit + integration tests (Vitest)
+pnpm contracts:test    # All Rust contract tests (cargo test)
+pnpm test:e2e          # End-to-end smoke test
+```
+
+Test categories:
+- **Unit tests**: Every package has `*.test.ts` files
+- **Contract tests**: Every Soroban contract has per-entry-point tests in `test.rs`
+- **E2E tests**: `tests/smoke.mjs` — boots the API and verifies the health endpoint
+- **Load tests**: `tests/load/payment-load.js` — Artillery-based load generation
 
 ## CI/CD
 
-GitHub Actions runs lint, typecheck, tests, contract builds, app builds, image builds and
-deployment on push to `main` (see `.github/workflows/`).
+| Workflow | File | Triggers |
+|----------|------|----------|
+| **CI** | `.github/workflows/ci.yml` | Every PR and push to `main` |
+| **Deploy** | `.github/workflows/deploy.yml` | Push to `main` (production) |
+| **PR Auto-Labeler** | `.github/workflows/pr-labeler.yml` | PR opened/edited |
+| **Badge Updater** | `.github/workflows/update-badges.yml` | Push to `main` with Cargo.toml changes |
+| **Dependabot** | `.github/dependabot.yml` | Weekly (npm + Cargo) |
+
+CI runs: lint → typecheck → format check → tests → contract build → contract tests → app builds → security audit.
+
+## Deployment
+
+See [`docs/deployment.md`](docs/deployment.md) for full instructions.
+
+- **Docker Compose**: `pnpm docker:up` + `pnpm dev`
+- **Production Docker**: `infrastructure/docker/api.Dockerfile` and `web.Dockerfile`
+- **Kubernetes**: `infrastructure/kubernetes/` — Kustomize bundle with Postgres, Redis, API, Web, Ingress
+- **Terraform (Azure)**: `infrastructure/terraform/` — provisions AKS, managed Postgres, Redis, Key Vault
+- **Monitoring**: `infrastructure/monitoring/` — Prometheus + Grafana + alert rules
+- **Vercel**: `apps/web/vercel.json`, `apps/admin/vercel.json` — frontends can deploy to Vercel
+
+## Documentation
+
+| Document | Content |
+|----------|---------|
+| [`docs/architecture.md`](docs/architecture.md) | System architecture, data flow, security boundaries |
+| [`docs/api.md`](docs/api.md) | Full REST API reference with all endpoints |
+| [`docs/sdk.md`](docs/sdk.md) | SDK usage guide (ApiClient + StellarNetwork) |
+| [`docs/contracts.md`](docs/contracts.md) | Smart contract architecture and API |
+| [`docs/database.md`](docs/database.md) | Schema design, migrations, seeding |
+| [`docs/development.md`](docs/development.md) | Local dev setup, adding packages, scripts |
+| [`docs/deployment.md`](docs/deployment.md) | Docker, Kubernetes, Terraform, monitoring |
+| [`contracts/README.md`](contracts/README.md) | Contract build, test, deploy instructions |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Branch strategy, PR checklist, commit conventions |
 
 ## Contributing
 
-We welcome contributions! See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full process —
-branch naming, PR checklist, commit conventions, and code style. All contributors must
-follow our [Code of Conduct](CODE_OF_CONDUCT.md).
+We welcome contributions! See [`CONTRIBUTING.md`](CONTRIBUTING.md) for:
+
+- Branch naming (`feat/`, `fix/`, `chore/`, `refactor/`)
+- PR checklist (tests, lint, typecheck, docs, migrations)
+- [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`, etc.)
+- Code style (ESLint + Prettier for TS, rustfmt for Rust)
+
+Browse [open issues](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/issues) filtered by:
+[`good first issue`](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/issues?q=is%3Aopen+label%3A%22good+first+issue%22) ·
+[`complexity:low`](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/issues?q=is%3Aopen+label%3A%22complexity%3Alow%22) ·
+[`complexity:medium`](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/issues?q=is%3Aopen+label%3A%22complexity%3Amedium%22) ·
+[`complexity:high`](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/issues?q=is%3Aopen+label%3A%22complexity%3Ahigh%22)
+
+All contributors must follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Security
 
-See [`SECURITY.md`](SECURITY.md) for the vulnerability reporting process and
-[`docs/architecture.md`](docs/architecture.md) for the security model.
+Found a vulnerability? **Do not open a public issue.** See [`SECURITY.md`](SECURITY.md) for the private reporting process.
+
+Security highlights:
+- Ed25519 wallet-based authentication (no passwords stored)
+- Zod-validated DTOs on every API input
+- Rate limiting on auth and payment endpoints
+- Audit logging on all mutating requests
+- CSRF protection on state-changing endpoints
+- RBAC with role hierarchy (admin > merchant > user)
+- Soroban contracts use `require_auth` for all privileged operations
+- No secrets in code — env vars / K8s secrets / Azure Key Vault
 
 ## License
 
