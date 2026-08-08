@@ -1,7 +1,7 @@
 {
   "framework": "nextjs",
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm --filter @stellar-pay/web build",
+  "buildCommand": "pnpm --filter ...@stellar-pay/web build",
   "outputDirectory": "apps/web/.next",
   "headers": [
     {
