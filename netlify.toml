@@ -1,0 +1,13 @@
+# Netlify deploy config for Stellar Pay web app (monorepo)
+[build]
+  base = "apps/web"
+  command = "cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @stellar-pay/types --filter @stellar-pay/shared --filter @stellar-pay/sdk --filter @stellar-pay/ui --filter @stellar-pay/wallet build && pnpm --filter @stellar-pay/web build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--version"
+  NEXT_PUBLIC_STELLAR_NETWORK = "testnet"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
