@@ -17,7 +17,6 @@ export class NoopAnalyticsProvider implements AnalyticsProvider {
 export class ConsoleAnalyticsProvider implements AnalyticsProvider {
   readonly name = 'console';
   track(event: AnalyticsEvent): void {
-    // eslint-disable-next-line no-console
     console.log(`[analytics] ${event.name}`, event.properties, event.timestamp);
   }
 }
