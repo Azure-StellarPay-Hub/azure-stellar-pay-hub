@@ -193,7 +193,7 @@ export function WalletProvider({
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Intentionally runs once on mount (auto-reconnect); adapter is created from stored state.
   }, []);
 
   const value = useMemo<WalletContextValue>(

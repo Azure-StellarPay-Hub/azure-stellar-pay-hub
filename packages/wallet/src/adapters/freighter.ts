@@ -16,6 +16,7 @@ export class FreighterAdapter implements WalletAdapter {
   readonly id = 'FREIGHTER' as const;
 
   private api(): FreighterApi {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     return require('@stellar/freighter-api') as FreighterApi;
   }
 
