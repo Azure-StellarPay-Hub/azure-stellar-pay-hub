@@ -1,4 +1,4 @@
-import type { NotificationChannel, NotificationType } from '@stellar-pay/types';
+import type { NotificationType } from '@stellar-pay/types';
 import type { ChannelProvider, NotificationMessage } from './providers';
 
 export interface NotificationTemplates {
@@ -53,12 +53,7 @@ export class NotificationService {
         ? DEFAULT_BODIES[message.type as keyof typeof DEFAULT_BODIES](message)
         : message.body);
     const enriched: NotificationMessage = { ...message, title, body: body ?? message.body };
-    try {
-      await provider.send(enriched);
-    } catch (error) {
-      // Delivery failures are surfaced to callers via the return value wrapper.
-      throw error;
-    }
+    await provider.send(enriched);
   }
 
   async dispatchAll(

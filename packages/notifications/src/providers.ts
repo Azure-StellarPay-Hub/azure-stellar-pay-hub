@@ -23,7 +23,6 @@ export class ConsoleChannelProvider implements ChannelProvider {
     this.channel = channel;
   }
   async send(message: NotificationMessage): Promise<void> {
-    // eslint-disable-next-line no-console
     console.log(
       `[notifications:${this.channel}] ${message.type} — ${message.title}${
         message.body ? `: ${message.body}` : ''
@@ -76,7 +75,6 @@ export class SmtpChannelProvider implements ChannelProvider {
   ) {}
   async send(message: NotificationMessage): Promise<void> {
     if (this.config.host === 'smtp.example.com') {
-      // eslint-disable-next-line no-console
       console.log(
         `[notifications:email] would send to ${message.to ?? 'unknown'}: ${message.title}`,
       );
@@ -105,7 +103,6 @@ export class SmtpChannelProvider implements ChannelProvider {
         text: message.body,
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.log(`[notifications:email] fallback: ${message.to ?? 'unknown'}: ${message.title}`);
       if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
         return; // nodemailer not installed - graceful fallback
@@ -143,7 +140,6 @@ export class TwilioSmsProvider implements ChannelProvider {
       });
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
-        // eslint-disable-next-line no-console
         console.log(
           `[notifications:sms] twilio not installed — would send to ${message.to}: ${message.title}`,
         );
@@ -223,7 +219,6 @@ export class VonageSmsProvider implements ChannelProvider {
       });
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
-        // eslint-disable-next-line no-console
         console.log(
           `[notifications:sms] vonage not installed — would send to ${message.to}: ${message.title}`,
         );
