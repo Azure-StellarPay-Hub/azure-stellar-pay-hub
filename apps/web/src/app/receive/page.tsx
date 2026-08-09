@@ -3,7 +3,20 @@
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Copy, Check, QrCode, Loader2 } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@stellar-pay/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@stellar-pay/ui';
 import { useWallet } from '@stellar-pay/wallet';
 import { api } from '@/lib/api';
 import { shortKey } from '@/lib/format';
@@ -83,7 +96,12 @@ export default function ReceivePage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label>Amount</Label>
-                  <Input placeholder="Optional" value={amount} onChange={(e) => setAmount(e.target.value)} className="font-mono" />
+                  <Input
+                    placeholder="Optional"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="font-mono"
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Asset</Label>
@@ -101,10 +119,25 @@ export default function ReceivePage() {
               </div>
               <div className="space-y-1.5">
                 <Label>Memo (optional)</Label>
-                <Input placeholder="invoice-123" value={memo} onChange={(e) => setMemo(e.target.value)} maxLength={28} />
+                <Input
+                  placeholder="invoice-123"
+                  value={memo}
+                  onChange={(e) => setMemo(e.target.value)}
+                  maxLength={28}
+                />
               </div>
-              <Button variant="gradient" className="w-full" size="lg" onClick={() => void generate()} disabled={loading}>
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <QrCode className="h-4 w-4" />}
+              <Button
+                variant="gradient"
+                className="w-full"
+                size="lg"
+                onClick={() => void generate()}
+                disabled={loading}
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <QrCode className="h-4 w-4" />
+                )}
                 Generate QR code
               </Button>
             </CardContent>

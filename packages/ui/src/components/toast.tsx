@@ -87,7 +87,8 @@ export function useToast() {
     throw new Error('useToast must be used within a <ToastProvider>');
   }
   return {
-    success: (title: string, description?: string) => ctx.push({ kind: 'success', title, description }),
+    success: (title: string, description?: string) =>
+      ctx.push({ kind: 'success', title, description }),
     error: (title: string, description?: string) => ctx.push({ kind: 'error', title, description }),
     info: (title: string, description?: string) => ctx.push({ kind: 'info', title, description }),
   };

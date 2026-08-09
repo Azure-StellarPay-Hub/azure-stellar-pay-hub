@@ -78,7 +78,7 @@ export function verifyStrkeyChecksum(publicKey: string): boolean {
   const data = decoded.slice(0, decoded.length - 2);
   const expected = decoded.slice(decoded.length - 2);
   const crc = crc16Xmodem(data);
-  return (crc & 0xff) === expected[0] && (crc >>> 8) === expected[1];
+  return (crc & 0xff) === expected[0] && crc >>> 8 === expected[1];
 }
 
 function crc16Xmodem(bytes: number[]): number {

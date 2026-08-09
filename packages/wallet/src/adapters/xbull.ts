@@ -5,7 +5,9 @@ import type { NetworkId, WalletAdapter } from '../types';
 type XBullBridge = {
   connect: () => Promise<string>;
   getPublicKey?: () => Promise<string>;
-  sign: (input: string | { xdr: string; networkPassphrase?: string; publicKey?: string }) => Promise<string>;
+  sign: (
+    input: string | { xdr: string; networkPassphrase?: string; publicKey?: string },
+  ) => Promise<string>;
   signXdr?: (xdr: string) => Promise<string>;
   signMessage?: (message: string) => Promise<string>;
   close?: () => Promise<void>;
@@ -24,9 +26,7 @@ export class XBullAdapter implements WalletAdapter {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const mod = require('@creit.tech/xbull-wallet-connect') as unknown as Record<string, unknown>;
     const Ctor =
-      (mod.default as unknown) ??
-      (mod.XBullWalletConnect as unknown) ??
-      (mod as unknown);
+      (mod.default as unknown) ?? (mod.XBullWalletConnect as unknown) ?? (mod as unknown);
     if (typeof Ctor !== 'function') {
       throw new Error('xBull wallet SDK could not be loaded');
     }

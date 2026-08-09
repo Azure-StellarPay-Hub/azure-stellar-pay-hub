@@ -8,8 +8,8 @@ data:
   STELLAR_NETWORK: testnet
   HORIZON_URL: https://horizon-testnet.stellar.org
   SOROBAN_RPC_URL: https://soroban-testnet.stellar.org
-  API_PORT: "4000"
-  CORS_ORIGINS: "https://app.stellar-pay.example,https://admin.stellar-pay.example,https://explorer.stellar-pay.example"
+  API_PORT: '4000'
+  CORS_ORIGINS: 'https://app.stellar-pay.example,https://admin.stellar-pay.example,https://explorer.stellar-pay.example'
   WEB_APP_URL: https://app.stellar-pay.example
   ADMIN_APP_URL: https://admin.stellar-pay.example
   EXPLORER_APP_URL: https://explorer.stellar-pay.example

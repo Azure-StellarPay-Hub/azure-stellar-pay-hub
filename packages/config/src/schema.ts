@@ -15,7 +15,12 @@ export const envSchema = z
     CORS_ORIGINS: z
       .string()
       .default('http://localhost:3000')
-      .transform((v) => v.split(',').map((s) => s.trim()).filter(Boolean)),
+      .transform((v) =>
+        v
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean),
+      ),
 
     // Auth
     JWT_SECRET: z.string().min(16).default('development-only-secret-change-me'),
@@ -23,7 +28,10 @@ export const envSchema = z
     SESSION_TTL_SECONDS: z.coerce.number().int().positive().default(604800),
 
     // Database / cache
-    DATABASE_URL: z.string().min(1).default('postgresql://postgres:postgres@localhost:5432/stellar_pay?schema=public'),
+    DATABASE_URL: z
+      .string()
+      .min(1)
+      .default('postgresql://postgres:postgres@localhost:5432/stellar_pay?schema=public'),
     REDIS_URL: z.string().default('redis://localhost:6379'),
 
     // Stellar

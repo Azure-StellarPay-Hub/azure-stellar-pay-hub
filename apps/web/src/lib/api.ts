@@ -6,7 +6,7 @@ import { ApiClient } from '@stellar-pay/sdk';
 // relative URLs. In production (Vercel), use the full API URL from env vars.
 export const API_URL =
   process.env.NODE_ENV === 'production'
-    ? process.env.NEXT_PUBLIC_API_URL ?? 'https://api.stellar-pay.example'
+    ? (process.env.NEXT_PUBLIC_API_URL ?? 'https://api.stellar-pay.example')
     : '';
 
 const TOKEN_KEY = 'stellar-pay:token';

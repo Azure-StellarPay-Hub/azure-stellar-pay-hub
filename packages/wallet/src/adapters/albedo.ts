@@ -4,8 +4,14 @@ import type { NetworkId, WalletAdapter } from '../types';
 // signBlob({blob, network}). Networks: 'test' | 'public'.
 type AlbedoApi = {
   retrievePublicKey: (opts?: Record<string, unknown>) => Promise<string | { publicKey: string }>;
-  signTransaction: (opts: { xdr: string; network?: 'test' | 'public' }) => Promise<string | { signedXdr: string }>;
-  signBlob: (opts: { blob: string; network?: 'test' | 'public' }) => Promise<string | { signature: string }>;
+  signTransaction: (opts: {
+    xdr: string;
+    network?: 'test' | 'public';
+  }) => Promise<string | { signedXdr: string }>;
+  signBlob: (opts: {
+    blob: string;
+    network?: 'test' | 'public';
+  }) => Promise<string | { signature: string }>;
 };
 
 export class AlbedoAdapter implements WalletAdapter {

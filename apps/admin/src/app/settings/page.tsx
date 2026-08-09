@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import { Save } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, useToast } from '@stellar-pay/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  useToast,
+} from '@stellar-pay/ui';
 import { adminApi } from '@/lib/api';
 
 interface SettingRow {
@@ -35,7 +44,9 @@ export default function SettingsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">System settings</h1>
-        <p className="text-sm text-muted-foreground">Runtime configuration stored in the database</p>
+        <p className="text-sm text-muted-foreground">
+          Runtime configuration stored in the database
+        </p>
       </div>
       <Card>
         <CardHeader>
@@ -48,10 +59,14 @@ export default function SettingsPage() {
                 <Label className="font-mono">{setting.key}</Label>
                 <Input
                   value={values[setting.key] ?? ''}
-                  onChange={(e) => setValues((prev) => ({ ...prev, [setting.key]: e.target.value }))}
+                  onChange={(e) =>
+                    setValues((prev) => ({ ...prev, [setting.key]: e.target.value }))
+                  }
                   className="font-mono"
                 />
-                {setting.description && <p className="text-xs text-muted-foreground">{setting.description}</p>}
+                {setting.description && (
+                  <p className="text-xs text-muted-foreground">{setting.description}</p>
+                )}
               </div>
               <Button variant="outline" onClick={() => void save(setting.key)}>
                 <Save className="h-4 w-4" /> Save

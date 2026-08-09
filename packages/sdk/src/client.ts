@@ -130,7 +130,20 @@ export class ApiClient {
 
     logout: () => this.request<{ ok: true }>({ method: 'POST', path: '/auth/logout' }),
 
-    sessions: () => this.request<ApiResponse<Array<{ id: string; deviceName: string | null; ipAddress: string | null; userAgent: string | null; expiresAt: string; status: string; createdAt: string }>>>({ path: '/auth/sessions' }),
+    sessions: () =>
+      this.request<
+        ApiResponse<
+          Array<{
+            id: string;
+            deviceName: string | null;
+            ipAddress: string | null;
+            userAgent: string | null;
+            expiresAt: string;
+            status: string;
+            createdAt: string;
+          }>
+        >
+      >({ path: '/auth/sessions' }),
 
     revokeSession: (sessionId: string) =>
       this.request<{ ok: true }>({ method: 'DELETE', path: `/auth/sessions/${sessionId}` }),
@@ -165,7 +178,9 @@ export class ApiClient {
       this.request<Beneficiary>({ method: 'POST', path: '/users/me/beneficiaries', body }),
 
     devices: () =>
-      this.request<ApiResponse<Array<{ id: string; name: string; lastActiveAt: string }>>>({ path: '/users/me/devices' }),
+      this.request<ApiResponse<Array<{ id: string; name: string; lastActiveAt: string }>>>({
+        path: '/users/me/devices',
+      }),
 
     revokeDevice: (id: string) =>
       this.request<{ ok: true }>({ method: 'DELETE', path: `/users/me/devices/${id}` }),
@@ -178,7 +193,9 @@ export class ApiClient {
       this.request<AssetBalance[]>({ path: `/wallet/${publicKey}/balances` }),
 
     trustlines: (publicKey: string) =>
-      this.request<ApiResponse<Array<{ assetCode: string; balance: string; status: string }>>>({ path: `/wallet/${publicKey}/trustlines` }),
+      this.request<ApiResponse<Array<{ assetCode: string; balance: string; status: string }>>>({
+        path: `/wallet/${publicKey}/trustlines`,
+      }),
 
     addTrustline: (body: { assetCode: string; assetIssuer: string; limit?: string }) =>
       this.request<{ transactionXdr: string; message: string }>({
@@ -201,26 +218,52 @@ export class ApiClient {
     create: (body: Record<string, unknown>) =>
       this.request<PaymentCreateResponse>({ method: 'POST', path: '/payments', body }),
 
-    list: (query?: { page?: number; pageSize?: number; status?: string; direction?: string; assetCode?: string }) =>
-      this.request<ApiResponse<TransactionRecord[]>>({ path: '/payments/history', query }),
+    list: (query?: {
+      page?: number;
+      pageSize?: number;
+      status?: string;
+      direction?: string;
+      assetCode?: string;
+    }) => this.request<ApiResponse<TransactionRecord[]>>({ path: '/payments/history', query }),
 
     get: (id: string) => this.request<TransactionRecord>({ path: `/payments/${id}` }),
 
     receipt: (id: string) =>
-      this.request<{ ipfsCid: string | null; url: string | null }>({ path: `/payments/${id}/receipt` }),
+      this.request<{ ipfsCid: string | null; url: string | null }>({
+        path: `/payments/${id}/receipt`,
+      }),
 
     request: (body: Record<string, unknown>) =>
-      this.request<{ uri: string; qrPayload: string }>({ method: 'POST', path: '/payments/request', body }),
+      this.request<{ uri: string; qrPayload: string }>({
+        method: 'POST',
+        path: '/payments/request',
+        body,
+      }),
 
     simulate: (body: Record<string, unknown>) =>
-      this.request<{ fee: string; expectedHash: string | null; warnings: string[]; assetCode?: string }>({
+      this.request<{
+        fee: string;
+        expectedHash: string | null;
+        warnings: string[];
+        assetCode?: string;
+      }>({
         method: 'POST',
         path: '/payments/simulate',
         body,
       }),
 
     scheduled: () =>
-      this.request<ApiResponse<Array<{ id: string; toPublicKey: string; amount: string; nextRunAt: string; status: string }>>>({ path: '/payments/scheduled' }),
+      this.request<
+        ApiResponse<
+          Array<{
+            id: string;
+            toPublicKey: string;
+            amount: string;
+            nextRunAt: string;
+            status: string;
+          }>
+        >
+      >({ path: '/payments/scheduled' }),
 
     cancelScheduled: (id: string) =>
       this.request<{ ok: true }>({ method: 'DELETE', path: `/payments/scheduled/${id}` }),
@@ -259,7 +302,8 @@ export class ApiClient {
     createInvoice: (body: Record<string, unknown>) =>
       this.request<Invoice>({ method: 'POST', path: '/merchants/me/invoices', body }),
 
-    paymentLinks: () => this.request<ApiResponse<PaymentLink[]>>({ path: '/merchants/me/payment-links' }),
+    paymentLinks: () =>
+      this.request<ApiResponse<PaymentLink[]>>({ path: '/merchants/me/payment-links' }),
 
     createPaymentLink: (body: Record<string, unknown>) =>
       this.request<PaymentLink>({ method: 'POST', path: '/merchants/me/payment-links', body }),
@@ -268,9 +312,18 @@ export class ApiClient {
       this.request<ApiResponse<Settlement[]>>({ path: '/merchants/me/settlements' }),
 
     customers: () =>
-      this.request<ApiResponse<Array<{ id: string; publicKey: string; totalSpent: string; transactionCount: number }>>>({ path: '/merchants/me/customers' }),
+      this.request<
+        ApiResponse<
+          Array<{ id: string; publicKey: string; totalSpent: string; transactionCount: number }>
+        >
+      >({ path: '/merchants/me/customers' }),
 
-    posCheckout: (body: { productIds?: string[]; customerPublicKey?: string; amount?: string; assetCode?: string }) =>
+    posCheckout: (body: {
+      productIds?: string[];
+      customerPublicKey?: string;
+      amount?: string;
+      assetCode?: string;
+    }) =>
       this.request<{ uri: string; qrPayload: string; amount: string; assetCode: string }>({
         method: 'POST',
         path: '/merchants/me/pos-checkout',
@@ -334,19 +387,31 @@ export class ApiClient {
     dashboard: () => this.request<DashboardMetrics>({ path: '/admin/analytics/dashboard' }),
 
     volume: (query?: { range?: '7d' | '30d' | '90d' }) =>
-      this.request<Array<{ date: string; volume: string; transactions: number }>>({ path: '/admin/analytics/volume', query }),
+      this.request<Array<{ date: string; volume: string; transactions: number }>>({
+        path: '/admin/analytics/volume',
+        query,
+      }),
 
     users: (query?: { page?: number; pageSize?: number; search?: string }) =>
       this.request<ApiResponse<Array<Record<string, unknown>>>>({ path: '/admin/users', query }),
 
     merchants: (query?: { page?: number; pageSize?: number }) =>
-      this.request<ApiResponse<Array<Record<string, unknown>>>>({ path: '/admin/merchants', query }),
+      this.request<ApiResponse<Array<Record<string, unknown>>>>({
+        path: '/admin/merchants',
+        query,
+      }),
 
     transactions: (query?: { page?: number; pageSize?: number; status?: string }) =>
-      this.request<ApiResponse<Array<Record<string, unknown>>>>({ path: '/admin/transactions', query }),
+      this.request<ApiResponse<Array<Record<string, unknown>>>>({
+        path: '/admin/transactions',
+        query,
+      }),
 
     auditLogs: (query?: { page?: number; pageSize?: number }) =>
-      this.request<ApiResponse<Array<Record<string, unknown>>>>({ path: '/admin/audit-logs', query }),
+      this.request<ApiResponse<Array<Record<string, unknown>>>>({
+        path: '/admin/audit-logs',
+        query,
+      }),
 
     assets: () => this.request<ApiResponse<Asset[]>>({ path: '/admin/assets' }),
 
@@ -354,9 +419,13 @@ export class ApiClient {
       this.request<Asset>({ method: 'POST', path: '/admin/assets', body }),
 
     notifications: (query?: { page?: number; pageSize?: number }) =>
-      this.request<ApiResponse<Array<Record<string, unknown>>>>({ path: '/admin/notifications', query }),
+      this.request<ApiResponse<Array<Record<string, unknown>>>>({
+        path: '/admin/notifications',
+        query,
+      }),
 
-    settings: () => this.request<Array<{ key: string; value: unknown }>>({ path: '/admin/settings' }),
+    settings: () =>
+      this.request<Array<{ key: string; value: unknown }>>({ path: '/admin/settings' }),
 
     updateSetting: (body: { key: string; value: unknown }) =>
       this.request<{ ok: true }>({ method: 'PUT', path: '/admin/settings', body }),
@@ -365,7 +434,11 @@ export class ApiClient {
       this.request<{ ok: true }>({ method: 'PATCH', path: `/admin/users/${userId}/status`, body }),
 
     updateMerchantStatus: (merchantId: string, body: { status: string; reason?: string }) =>
-      this.request<{ ok: true }>({ method: 'PATCH', path: `/admin/merchants/${merchantId}/status`, body }),
+      this.request<{ ok: true }>({
+        method: 'PATCH',
+        path: `/admin/merchants/${merchantId}/status`,
+        body,
+      }),
 
     assignRole: (body: { userId: string; role: string }) =>
       this.request<{ ok: true }>({ method: 'POST', path: '/admin/roles', body }),
@@ -375,12 +448,24 @@ export class ApiClient {
 
   notifications = {
     list: (query?: { page?: number; pageSize?: number }) =>
-      this.request<ApiResponse<Array<{ id: string; type: string; title: string; body: string | null; readAt: string | null; createdAt: string }>>>({ path: '/notifications', query }),
+      this.request<
+        ApiResponse<
+          Array<{
+            id: string;
+            type: string;
+            title: string;
+            body: string | null;
+            readAt: string | null;
+            createdAt: string;
+          }>
+        >
+      >({ path: '/notifications', query }),
 
     markRead: (id: string) =>
       this.request<{ ok: true }>({ method: 'POST', path: `/notifications/${id}/read` }),
 
-    markAllRead: () => this.request<{ ok: true }>({ method: 'POST', path: '/notifications/read-all' }),
+    markAllRead: () =>
+      this.request<{ ok: true }>({ method: 'POST', path: '/notifications/read-all' }),
   };
 }
 

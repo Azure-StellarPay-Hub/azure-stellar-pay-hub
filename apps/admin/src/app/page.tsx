@@ -79,13 +79,7 @@ function formatInt(value: number | undefined): string {
 
 // ------------------------------------------------------------------ Animated counter
 
-function AnimatedCounter({
-  value,
-  duration = 800,
-}: {
-  value: string;
-  duration?: number;
-}) {
+function AnimatedCounter({ value, duration = 800 }: { value: string; duration?: number }) {
   const [display, setDisplay] = useState(0);
 
   useEffect(() => {
@@ -123,14 +117,7 @@ function SuccessGauge({ rate }: { rate: number }) {
     <div className="flex flex-col items-center">
       <div className="relative">
         <svg width={120} height={120} className="-rotate-90">
-          <circle
-            cx={60}
-            cy={60}
-            r={radius}
-            stroke="#26263a"
-            strokeWidth={8}
-            fill="none"
-          />
+          <circle cx={60} cy={60} r={radius} stroke="#26263a" strokeWidth={8} fill="none" />
           <circle
             cx={60}
             cy={60}
@@ -145,10 +132,7 @@ function SuccessGauge({ rate }: { rate: number }) {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span
-            className="text-2xl font-bold"
-            style={{ color }}
-          >
+          <span className="text-2xl font-bold" style={{ color }}>
             {rate}%
           </span>
           <span className="text-[10px] text-muted-foreground">success</span>
@@ -182,17 +166,14 @@ export default function OverviewPage() {
   }, []);
 
   // Fetch volume data.
-  const fetchVolume = useCallback(
-    (r: '7d' | '30d' | '90d') => {
-      setVolumeLoading(true);
-      void adminApi.admin
-        .volume({ range: r })
-        .then(setVolume)
-        .catch(() => undefined)
-        .finally(() => setVolumeLoading(false));
-    },
-    [],
-  );
+  const fetchVolume = useCallback((r: '7d' | '30d' | '90d') => {
+    setVolumeLoading(true);
+    void adminApi.admin
+      .volume({ range: r })
+      .then(setVolume)
+      .catch(() => undefined)
+      .finally(() => setVolumeLoading(false));
+  }, []);
 
   useEffect(() => {
     fetchMetrics();
@@ -275,19 +256,13 @@ export default function OverviewPage() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Analytics Dashboard
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Real-time platform metrics and insights
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight">Analytics Dashboard</h1>
+          <p className="text-sm text-muted-foreground">Real-time platform metrics and insights</p>
         </div>
         <div className="flex items-center gap-3">
           {metrics && (
             <Badge
-              variant={
-                metrics.paymentSuccessRate >= 95 ? 'success' : 'warning'
-              }
+              variant={metrics.paymentSuccessRate >= 95 ? 'success' : 'warning'}
               className="gap-1.5"
             >
               <Zap className="h-3 w-3" />
@@ -348,10 +323,7 @@ export default function OverviewPage() {
                   {Math.abs(volumeTrend)}%
                 </span>
               )}
-              <Tabs
-                value={range}
-                onValueChange={(v) => setRange(v as '7d' | '30d' | '90d')}
-              >
+              <Tabs value={range} onValueChange={(v) => setRange(v as '7d' | '30d' | '90d')}>
                 <TabsList className="h-7">
                   {RANGE_OPTIONS.map((r) => (
                     <TabsTrigger key={r} value={r} className="px-2.5 text-xs">
@@ -374,38 +346,18 @@ export default function OverviewPage() {
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={280}>
-                <AreaChart
-                  data={volume}
-                  margin={{ top: 8, right: 8, bottom: 0, left: -20 }}
-                >
+                <AreaChart data={volume} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
                   <defs>
                     <linearGradient id="volumeGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#818cf8" stopOpacity={0.5} />
                       <stop offset="100%" stopColor="#818cf8" stopOpacity={0} />
                     </linearGradient>
-                    <linearGradient
-                      id="countGrad"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="0%"
-                        stopColor="#34d399"
-                        stopOpacity={0.35}
-                      />
-                      <stop
-                        offset="100%"
-                        stopColor="#34d399"
-                        stopOpacity={0}
-                      />
+                    <linearGradient id="countGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#34d399" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="#34d399" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke={CHART_THEME.grid}
-                  />
+                  <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
                   <XAxis
                     dataKey="date"
                     stroke={CHART_THEME.axis}
@@ -424,10 +376,7 @@ export default function OverviewPage() {
                       fontSize: 13,
                     }}
                     labelStyle={{ color: '#f4f4f8', fontWeight: 600 }}
-                    formatter={(val: number) => [
-                      `$${val.toLocaleString()}`,
-                      'Volume',
-                    ]}
+                    formatter={(val: any) => [`$${Number(val ?? 0).toLocaleString()}`, 'Volume']}
                   />
                   <Area
                     type="monotone"
@@ -465,9 +414,7 @@ export default function OverviewPage() {
               {loading ? (
                 <Skeleton className="h-[120px] w-[120px] rounded-full" />
               ) : (
-                <SuccessGauge
-                  rate={metrics?.paymentSuccessRate ?? 100}
-                />
+                <SuccessGauge rate={metrics?.paymentSuccessRate ?? 100} />
               )}
             </CardContent>
           </Card>
@@ -490,25 +437,19 @@ export default function OverviewPage() {
               ) : (
                 <>
                   <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2.5">
-                    <span className="text-xs text-muted-foreground">
-                      Volume
-                    </span>
+                    <span className="text-xs text-muted-foreground">Volume</span>
                     <span className="font-mono text-sm font-semibold">
                       {formatCurrency(metrics?.crossBorder.volume)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2.5">
-                    <span className="text-xs text-muted-foreground">
-                      Transactions
-                    </span>
+                    <span className="text-xs text-muted-foreground">Transactions</span>
                     <span className="font-mono text-sm font-semibold">
                       {formatInt(metrics?.crossBorder.transactions)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2.5">
-                    <span className="text-xs text-muted-foreground">
-                      Countries
-                    </span>
+                    <span className="text-xs text-muted-foreground">Countries</span>
                     <span className="font-mono text-sm font-semibold">
                       {metrics?.crossBorder.countries ?? '—'}
                     </span>
@@ -567,9 +508,9 @@ export default function OverviewPage() {
                         borderRadius: 12,
                         fontSize: 13,
                       }}
-                      formatter={(val: number, name: string) => [
-                        `${val} txs`,
-                        name,
+                      formatter={(val: any, name: any) => [
+                        `${Number(val ?? 0)} txs`,
+                        String(name ?? ''),
                       ]}
                     />
                   </PieChart>
@@ -578,25 +519,17 @@ export default function OverviewPage() {
                 {/* Legend */}
                 <div className="flex-1 space-y-1.5">
                   {assetPieData.slice(0, 8).map((item, i) => (
-                    <div
-                      key={item.name}
-                      className="flex items-center justify-between text-xs"
-                    >
+                    <div key={item.name} className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2">
                         <span
                           className="h-2.5 w-2.5 rounded-full"
                           style={{
-                            backgroundColor:
-                              ASSET_COLORS[i % ASSET_COLORS.length],
+                            backgroundColor: ASSET_COLORS[i % ASSET_COLORS.length],
                           }}
                         />
-                        <span className="font-mono font-medium">
-                          {item.name}
-                        </span>
+                        <span className="font-mono font-medium">{item.name}</span>
                       </div>
-                      <span className="tabular-nums text-muted-foreground">
-                        {item.value}
-                      </span>
+                      <span className="tabular-nums text-muted-foreground">{item.value}</span>
                     </div>
                   ))}
                 </div>
@@ -648,9 +581,7 @@ export default function OverviewPage() {
 
                     {/* Name + details */}
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">
-                        {merchant.name}
-                      </p>
+                      <p className="truncate text-sm font-medium">{merchant.name}</p>
                       <p className="truncate font-mono text-[10px] text-muted-foreground">
                         {merchant.merchantId.slice(0, 12)}…
                       </p>
@@ -669,10 +600,7 @@ export default function OverviewPage() {
                         <div
                           className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-700"
                           style={{
-                            width: `${Math.max(
-                              5,
-                              100 - i * 20 - Math.random() * 15,
-                            )}%`,
+                            width: `${Math.max(5, 100 - i * 20 - Math.random() * 15)}%`,
                           }}
                         />
                       </div>
@@ -695,8 +623,7 @@ export default function OverviewPage() {
             <div>
               <p className="text-sm font-medium">Platform is running</p>
               <p className="text-xs text-muted-foreground">
-                v0.1.0 · mainnet-ready scaffolding ·{' '}
-                {new Date().toLocaleDateString()}
+                v0.1.0 · mainnet-ready scaffolding · {new Date().toLocaleDateString()}
               </p>
             </div>
           </div>

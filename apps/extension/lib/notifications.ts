@@ -19,7 +19,8 @@ export function connect(): void {
 
       getApiUrl()
         .then((apiUrl) => {
-          const wsUrl = apiUrl.replace(/^http/, 'ws') + '/socket.io/?token=' + encodeURIComponent(token);
+          const wsUrl =
+            apiUrl.replace(/^http/, 'ws') + '/socket.io/?token=' + encodeURIComponent(token);
 
           try {
             socket = new WebSocket(wsUrl);
@@ -96,10 +97,16 @@ interface WsEvent {
 function handleEvent(event: WsEvent): void {
   switch (event.type) {
     case 'payment.received':
-      showNotification('Payment Received', `${event.amount ?? ''} ${event.asset ?? 'XLM'} from ${shortKey(event.sender ?? '')}`);
+      showNotification(
+        'Payment Received',
+        `${event.amount ?? ''} ${event.asset ?? 'XLM'} from ${shortKey(event.sender ?? '')}`,
+      );
       break;
     case 'payment.sent':
-      showNotification('Payment Sent', `${event.amount ?? ''} ${event.asset ?? 'XLM'} to ${shortKey(event.recipient ?? '')}`);
+      showNotification(
+        'Payment Sent',
+        `${event.amount ?? ''} ${event.asset ?? 'XLM'} to ${shortKey(event.recipient ?? '')}`,
+      );
       break;
     case 'payment.failed':
       showNotification('Payment Failed', event.reason ?? 'Transaction failed on the network');

@@ -19,14 +19,20 @@ export class AdminService {
     const [items, total] = await Promise.all([
       this.prisma.user.findMany({
         where: where as never,
-        include: { wallets: { select: { publicKey: true, provider: true } }, merchant: { select: { id: true, name: true } } },
+        include: {
+          wallets: { select: { publicKey: true, provider: true } },
+          merchant: { select: { id: true, name: true } },
+        },
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * pageSize,
         take: pageSize,
       }),
       this.prisma.user.count({ where: where as never }),
     ]);
-    return { data: items, meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) } };
+    return {
+      data: items,
+      meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    };
   }
 
   async updateUserStatus(userId: string, status: string, reason?: string) {
@@ -51,10 +57,18 @@ export class AdminService {
     const page = Math.max(1, query.page ?? 1);
     const pageSize = Math.min(100, Math.max(1, query.pageSize ?? 20));
     const [items, total] = await Promise.all([
-      this.prisma.merchant.findMany({ include: { user: { select: { email: true } } }, orderBy: { createdAt: 'desc' }, skip: (page - 1) * pageSize, take: pageSize }),
+      this.prisma.merchant.findMany({
+        include: { user: { select: { email: true } } },
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
       this.prisma.merchant.count(),
     ]);
-    return { data: items, meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) } };
+    return {
+      data: items,
+      meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    };
   }
 
   async updateMerchantStatus(merchantId: string, status: string, reason?: string) {
@@ -62,7 +76,10 @@ export class AdminService {
     if (!merchant) {
       throw new NotFoundException('Merchant not found');
     }
-    await this.prisma.merchant.update({ where: { id: merchantId }, data: { status: status as never } });
+    await this.prisma.merchant.update({
+      where: { id: merchantId },
+      data: { status: status as never },
+    });
     return { ok: true, status, reason };
   }
 
@@ -78,17 +95,27 @@ export class AdminService {
       }),
       this.prisma.transaction.count({ where: { status: query.status as never } }),
     ]);
-    return { data: items, meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) } };
+    return {
+      data: items,
+      meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    };
   }
 
   async auditLogs(query: { page?: number; pageSize?: number }) {
     const page = Math.max(1, query.page ?? 1);
     const pageSize = Math.min(100, Math.max(1, query.pageSize ?? 20));
     const [items, total] = await Promise.all([
-      this.prisma.auditLog.findMany({ orderBy: { createdAt: 'desc' }, skip: (page - 1) * pageSize, take: pageSize }),
+      this.prisma.auditLog.findMany({
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
       this.prisma.auditLog.count(),
     ]);
-    return { data: items, meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) } };
+    return {
+      data: items,
+      meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    };
   }
 
   async assets() {
@@ -99,13 +126,28 @@ export class AdminService {
     const page = Math.max(1, query.page ?? 1);
     const pageSize = Math.min(100, Math.max(1, query.pageSize ?? 20));
     const [items, total] = await Promise.all([
-      this.prisma.notification.findMany({ orderBy: { createdAt: 'desc' }, skip: (page - 1) * pageSize, take: pageSize }),
+      this.prisma.notification.findMany({
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
       this.prisma.notification.count(),
     ]);
-    return { data: items, meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) } };
+    return {
+      data: items,
+      meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    };
   }
 
-  async createAsset(input: { code: string; issuer?: string; name: string; description?: string; decimals?: number; isNative?: boolean; isCrossBorder?: boolean }) {
+  async createAsset(input: {
+    code: string;
+    issuer?: string;
+    name: string;
+    description?: string;
+    decimals?: number;
+    isNative?: boolean;
+    isCrossBorder?: boolean;
+  }) {
     return this.prisma.asset.create({
       data: {
         code: input.code,

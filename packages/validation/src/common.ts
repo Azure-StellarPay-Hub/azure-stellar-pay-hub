@@ -14,10 +14,7 @@ export const assetCodeSchema = z.string().regex(/^[a-zA-Z0-9]{1,12}$/);
 
 export const issuerSchema = publicKeySchema.nullable().optional();
 
-export const memoSchema = z
-  .string()
-  .max(28, 'Memo must be at most 28 bytes')
-  .optional();
+export const memoSchema = z.string().max(28, 'Memo must be at most 28 bytes').optional();
 
 export const memoTypeSchema = z.enum(['text', 'hash', 'id']).optional();
 

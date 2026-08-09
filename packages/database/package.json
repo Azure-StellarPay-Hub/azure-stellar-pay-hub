@@ -5,7 +5,10 @@
   "description": "Prisma schema, generated client and PrismaService for PostgreSQL",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist", "prisma"],
+  "files": [
+    "dist",
+    "prisma"
+  ],
   "scripts": {
     "build": "prisma generate && tsc -p tsconfig.json && cp -r src/generated dist/",
     "typecheck": "prisma generate && tsc --noEmit -p tsconfig.json",

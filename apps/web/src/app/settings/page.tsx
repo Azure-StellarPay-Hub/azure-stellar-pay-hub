@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import { Monitor, ShieldCheck, Trash2, User as UserIcon } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, useToast } from '@stellar-pay/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  useToast,
+} from '@stellar-pay/ui';
 import { api } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { formatDate } from '@/lib/format';
@@ -24,13 +33,27 @@ export default function SettingsPage() {
   const [displayName, setDisplayName] = useState(user?.displayName ?? '');
   const [currency, setCurrency] = useState('USD');
   const [sessions, setSessions] = useState<SessionRow[]>([]);
-  const [devices, setDevices] = useState<Array<{ id: string; name: string; lastActiveAt: string }>>([]);
+  const [devices, setDevices] = useState<Array<{ id: string; name: string; lastActiveAt: string }>>(
+    [],
+  );
 
   useEffect(() => {
-    void api.users.me().then(setProfile).catch(() => undefined);
-    void api.users.preferences().then((p) => setCurrency(p.currency)).catch(() => undefined);
-    void api.auth.sessions().then((res) => setSessions(res.data)).catch(() => undefined);
-    void api.users.devices().then((res) => setDevices(res.data)).catch(() => undefined);
+    void api.users
+      .me()
+      .then(setProfile)
+      .catch(() => undefined);
+    void api.users
+      .preferences()
+      .then((p) => setCurrency(p.currency))
+      .catch(() => undefined);
+    void api.auth
+      .sessions()
+      .then((res) => setSessions(res.data))
+      .catch(() => undefined);
+    void api.users
+      .devices()
+      .then((res) => setDevices(res.data))
+      .catch(() => undefined);
   }, []);
 
   const saveProfile = async () => {
@@ -81,7 +104,12 @@ export default function SettingsPage() {
         <CardContent className="space-y-4">
           <div className="space-y-1.5">
             <Label>Display currency</Label>
-            <Input value={currency} onChange={(e) => setCurrency(e.target.value.toUpperCase())} maxLength={3} className="w-24 font-mono" />
+            <Input
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value.toUpperCase())}
+              maxLength={3}
+              className="w-24 font-mono"
+            />
           </div>
           <Button onClick={() => void savePrefs()}>Save preferences</Button>
         </CardContent>
@@ -95,7 +123,10 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           {sessions.map((session) => (
-            <div key={session.id} className="flex items-center justify-between rounded-xl border border-border/60 px-4 py-3">
+            <div
+              key={session.id}
+              className="flex items-center justify-between rounded-xl border border-border/60 px-4 py-3"
+            >
               <div>
                 <p className="text-sm font-medium">{session.status}</p>
                 <p className="text-xs text-muted-foreground">
@@ -103,7 +134,13 @@ export default function SettingsPage() {
                 </p>
               </div>
               {session.status === 'ACTIVE' && (
-                <Button variant="outline" size="sm" onClick={() => void api.auth.revokeSession(session.id).then(() => window.location.reload())}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    void api.auth.revokeSession(session.id).then(() => window.location.reload())
+                  }
+                >
                   Revoke
                 </Button>
               )}
@@ -115,12 +152,23 @@ export default function SettingsPage() {
                 <Monitor className="h-4 w-4 text-muted-foreground" /> Devices
               </p>
               {devices.map((device) => (
-                <div key={device.id} className="flex items-center justify-between rounded-xl border border-border/60 px-4 py-3">
+                <div
+                  key={device.id}
+                  className="flex items-center justify-between rounded-xl border border-border/60 px-4 py-3"
+                >
                   <div>
                     <p className="text-sm font-medium">{device.name}</p>
-                    <p className="text-xs text-muted-foreground">Last active {formatDate(device.lastActiveAt)}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Last active {formatDate(device.lastActiveAt)}
+                    </p>
                   </div>
-                  <Button variant="ghost" size="icon" onClick={() => void api.users.revokeDevice(device.id).then(() => window.location.reload())}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() =>
+                      void api.users.revokeDevice(device.id).then(() => window.location.reload())
+                    }
+                  >
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
                 </div>

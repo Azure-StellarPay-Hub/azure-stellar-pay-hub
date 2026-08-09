@@ -58,7 +58,12 @@ export class StellarNetwork {
   async getBalances(publicKey: string): Promise<AssetBalance[]> {
     const account = await this.server.loadAccount(publicKey);
     return account.balances
-      .filter((b) => b.asset_type === 'native' || b.asset_type === 'credit_alphanum4' || b.asset_type === 'credit_alphanum12')
+      .filter(
+        (b) =>
+          b.asset_type === 'native' ||
+          b.asset_type === 'credit_alphanum4' ||
+          b.asset_type === 'credit_alphanum12',
+      )
       .map((b) => {
         if (b.asset_type === 'native') {
           return {
@@ -152,10 +157,7 @@ export class StellarNetwork {
   /** Submit a signed transaction envelope (base64 XDR string). Throws on failure. */
   async submitSignedTransaction(signedXdr: string): Promise<SubmitResult> {
     // v13 submits a decoded Transaction object rather than a raw XDR string.
-    const tx = TransactionBuilder.fromXDR(
-      signedXdr,
-      this.config.networkPassphrase,
-    ) as Transaction;
+    const tx = TransactionBuilder.fromXDR(signedXdr, this.config.networkPassphrase) as Transaction;
     const response = await this.server.submitTransaction(tx);
     if (!response.successful) {
       const resultCode =

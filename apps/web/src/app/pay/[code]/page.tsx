@@ -18,14 +18,7 @@ import {
   X,
   Zap,
 } from 'lucide-react';
-import {
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  Input,
-  Label,
-} from '@stellar-pay/ui';
+import { Badge, Button, Card, CardContent, Input, Label } from '@stellar-pay/ui';
 import { SUPPORTED_WALLETS, useWallet, type WalletProviderId } from '@stellar-pay/wallet';
 import { api } from '@/lib/api';
 import { shortKey } from '@/lib/format';
@@ -68,11 +61,7 @@ function WalletConnectPopover({
         onClick={() => setOpen((v) => !v)}
         disabled={connecting}
       >
-        {connecting ? (
-          <Loader2 className="h-5 w-5 animate-spin" />
-        ) : (
-          <Wallet className="h-5 w-5" />
-        )}
+        {connecting ? <Loader2 className="h-5 w-5 animate-spin" /> : <Wallet className="h-5 w-5" />}
         Connect wallet to pay
       </Button>
 
@@ -82,7 +71,10 @@ function WalletConnectPopover({
             <div className="mb-2 rounded-lg border border-rose-500/20 bg-rose-500/5 px-3 py-2">
               <div className="flex items-center justify-between">
                 <p className="text-xs text-rose-400">{error}</p>
-                <button onClick={onDismissError} className="ml-2 shrink-0 rounded p-0.5 text-rose-400/60 hover:text-rose-400">
+                <button
+                  onClick={onDismissError}
+                  className="ml-2 shrink-0 rounded p-0.5 text-rose-400/60 hover:text-rose-400"
+                >
                   <X className="h-3 w-3" />
                 </button>
               </div>
@@ -117,15 +109,12 @@ function WalletConnectPopover({
 
 // ------------------------------------------------------------------ QR modal
 
-function QrModal({
-  url,
-  onClose,
-}: {
-  url: string;
-  onClose: () => void;
-}) {
+function QrModal({ url, onClose }: { url: string; onClose: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4 backdrop-blur-sm" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <div
         className="relative w-full max-w-xs rounded-2xl border border-border bg-card p-6 shadow-2xl animate-in fade-in-0 zoom-in-95"
         onClick={(e) => e.stopPropagation()}
@@ -143,7 +132,9 @@ function QrModal({
         <div className="flex justify-center rounded-2xl bg-white p-4 shadow-lg">
           <QRCodeSVG value={url} size={180} level="M" />
         </div>
-        <p className="mt-4 text-center font-mono text-[10px] text-muted-foreground break-all">{url}</p>
+        <p className="mt-4 text-center font-mono text-[10px] text-muted-foreground break-all">
+          {url}
+        </p>
       </div>
     </div>
   );
@@ -183,7 +174,9 @@ export default function PayLinkPage({ params }: { params: Promise<{ code: string
         setError((err as Error).message);
         setStatus('error');
       });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [code]);
 
   // Handle wallet connect
@@ -258,7 +251,9 @@ export default function PayLinkPage({ params }: { params: Promise<{ code: string
             </div>
             <div>
               <h1 className="text-xl font-bold">Payment unavailable</h1>
-              <p className="mt-1 text-sm text-muted-foreground">{error || 'This payment link does not exist or has expired.'}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {error || 'This payment link does not exist or has expired.'}
+              </p>
             </div>
             <Button asChild variant="outline" className="mt-4">
               <Link href="/">Return home</Link>
@@ -292,9 +287,7 @@ export default function PayLinkPage({ params }: { params: Promise<{ code: string
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="w-full">
-                <Link href="/">
-                  Return home
-                </Link>
+                <Link href="/">Return home</Link>
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
@@ -323,13 +316,19 @@ export default function PayLinkPage({ params }: { params: Promise<{ code: string
         {/* Merchant header */}
         <div className="text-center">
           {checkout?.merchantLogo ? (
-            <img src={checkout.merchantLogo} alt={merchantName} className="mx-auto h-12 w-12 rounded-xl object-cover shadow-lg" />
+            <img
+              src={checkout.merchantLogo}
+              alt={merchantName}
+              className="mx-auto h-12 w-12 rounded-xl object-cover shadow-lg"
+            />
           ) : (
             <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-fuchsia-500 shadow-lg shadow-purple-500/30">
               <Store className="h-6 w-6 text-white" />
             </span>
           )}
-          <p className="mt-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">{merchantName}</p>
+          <p className="mt-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            {merchantName}
+          </p>
         </div>
 
         {/* Main card */}
@@ -389,16 +388,19 @@ export default function PayLinkPage({ params }: { params: Promise<{ code: string
             ) : (
               <div className="text-center">
                 <p className="text-xs uppercase tracking-wider text-muted-foreground">Amount due</p>
-                <p className="mt-1 font-mono text-5xl font-bold tracking-tight">
-                  {amount}
-                </p>
+                <p className="mt-1 font-mono text-5xl font-bold tracking-tight">{amount}</p>
                 <p className="mt-0.5 text-sm text-muted-foreground">{checkout?.assetCode}</p>
               </div>
             )}
 
             {/* Wallet connection */}
             {!connected || !publicKey ? (
-              <WalletConnectPopover onSelect={handleConnect} connecting={status === 'connecting'} error={connectError} onDismissError={() => setConnectError('')} />
+              <WalletConnectPopover
+                onSelect={handleConnect}
+                connecting={status === 'connecting'}
+                error={connectError}
+                onDismissError={() => setConnectError('')}
+              />
             ) : (
               <div className="space-y-3">
                 {/* Connected wallet info */}
@@ -409,11 +411,15 @@ export default function PayLinkPage({ params }: { params: Promise<{ code: string
                     </span>
                     <div>
                       <p className="text-xs font-medium text-emerald-400">Wallet connected</p>
-                      <p className="font-mono text-[11px] text-muted-foreground">{shortKey(publicKey, 8, 4)}</p>
+                      <p className="font-mono text-[11px] text-muted-foreground">
+                        {shortKey(publicKey, 8, 4)}
+                      </p>
                     </div>
                   </div>
                   <button
-                    onClick={() => { void disconnect(); }}
+                    onClick={() => {
+                      void disconnect();
+                    }}
                     className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                     title="Disconnect"
                   >
@@ -434,9 +440,7 @@ export default function PayLinkPage({ params }: { params: Promise<{ code: string
                   ) : (
                     <ShieldCheck className="h-5 w-5" />
                   )}
-                  {isPaying
-                    ? 'Processing payment…'
-                    : `Pay ${amount} ${checkout?.assetCode}`}
+                  {isPaying ? 'Processing payment…' : `Pay ${amount} ${checkout?.assetCode}`}
                 </Button>
               </div>
             )}
@@ -455,7 +459,10 @@ export default function PayLinkPage({ params }: { params: Promise<{ code: string
                   variant="outline"
                   size="sm"
                   className="mt-3 w-full"
-                  onClick={() => { setStatus('ready'); setError(''); }}
+                  onClick={() => {
+                    setStatus('ready');
+                    setError('');
+                  }}
                 >
                   <RefreshCw className="h-3.5 w-3.5" /> Try again
                 </Button>
@@ -468,7 +475,9 @@ export default function PayLinkPage({ params }: { params: Promise<{ code: string
               {checkout && (checkout.totalPayments ?? 0) > 0 && (
                 <div className="flex items-center justify-between rounded-lg border border-border/60 bg-background/40 px-3 py-2">
                   <span className="text-xs text-muted-foreground">Times paid</span>
-                  <Badge variant="outline" className="font-mono text-xs">{checkout.totalPayments}</Badge>
+                  <Badge variant="outline" className="font-mono text-xs">
+                    {checkout.totalPayments}
+                  </Badge>
                 </div>
               )}
 

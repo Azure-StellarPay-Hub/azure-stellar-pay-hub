@@ -54,7 +54,8 @@ export function parsePaymentUri(uri: string): PaymentUriParams | null {
       assetCode: query.get('asset_code') ?? undefined,
       assetIssuer: query.get('asset_issuer') ?? undefined,
       memo: query.get('memo') ?? undefined,
-      memoType: memoType === 'hash' || memoType === 'id' || memoType === 'text' ? memoType : undefined,
+      memoType:
+        memoType === 'hash' || memoType === 'id' || memoType === 'text' ? memoType : undefined,
       message: query.get('msg') ?? undefined,
     };
     if (result.memo && !isValidMemo(result.memo)) {

@@ -7,5 +7,10 @@ export function shortKey(key: string | null | undefined, head = 8, tail = 6): st
 
 export function formatDateTime(input: string | Date): string {
   const date = typeof input === 'string' ? new Date(input) : input;
-  return date.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return date.toLocaleString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }

@@ -18,7 +18,10 @@ export const trustlineSchema = z
     assetCode: z.string().regex(/^[a-zA-Z0-9]{1,12}$/),
     assetIssuer: publicKeySchema,
     /** Trust limit in units (defaults to max). */
-    limit: z.string().regex(/^[0-9]+(\.[0-9]+)?$/).optional(),
+    limit: z
+      .string()
+      .regex(/^[0-9]+(\.[0-9]+)?$/)
+      .optional(),
   })
   .strict();
 

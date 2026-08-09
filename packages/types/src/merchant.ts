@@ -1,9 +1,4 @@
-import type {
-  InvoiceStatus,
-  MerchantStatus,
-  PaymentLinkStatus,
-  ProductStatus,
-} from './common';
+import type { InvoiceStatus, MerchantStatus, PaymentLinkStatus, ProductStatus } from './common';
 import type { AmountString } from './common';
 
 export interface Merchant {

@@ -19,7 +19,7 @@ export default function AuditPage() {
   const [logs, setLogs] = useState<AuditRow[]>([]);
 
   useEffect(() => {
-    void adminApi.admin.auditLogs().then((res) => setLogs(res.data as AuditRow[]));
+    void adminApi.admin.auditLogs().then((res) => setLogs(res.data as unknown as AuditRow[]));
   }, []);
 
   return (
@@ -28,7 +28,9 @@ export default function AuditPage() {
         <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight">
           <ShieldCheck className="h-5 w-5 text-indigo-400" /> Audit logs
         </h1>
-        <p className="text-sm text-muted-foreground">Immutable record of admin and user mutations</p>
+        <p className="text-sm text-muted-foreground">
+          Immutable record of admin and user mutations
+        </p>
       </div>
       <Card>
         <CardContent className="p-0">
@@ -39,7 +41,10 @@ export default function AuditPage() {
           ) : (
             <div className="divide-y divide-border/60">
               {logs.map((log) => (
-                <div key={log.id} className="flex flex-wrap items-center justify-between gap-3 px-6 py-3">
+                <div
+                  key={log.id}
+                  className="flex flex-wrap items-center justify-between gap-3 px-6 py-3"
+                >
                   <div>
                     <p className="font-mono text-sm">{log.action}</p>
                     <p className="text-xs text-muted-foreground">

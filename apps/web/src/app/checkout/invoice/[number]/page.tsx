@@ -21,12 +21,14 @@ export default function InvoiceCheckoutPage({ params }: { params: Promise<{ numb
   const { number } = use(params);
   const { connect, publicKey, signTx, connected } = useWallet();
   const [invoice, setInvoice] = useState<InvoiceCheckout | null>(null);
-  const [status, setStatus] = useState<'loading' | 'ready' | 'paying' | 'success' | 'error'>('loading');
+  const [status, setStatus] = useState<'loading' | 'ready' | 'paying' | 'success' | 'error'>(
+    'loading',
+  );
   const [error, setError] = useState('');
 
   useEffect(() => {
-    void api
-      .checkout.invoice(number)
+    void api.checkout
+      .invoice(number)
       .then((data) => {
         setInvoice(data as unknown as InvoiceCheckout);
         setStatus(data.status === 'PAID' ? 'success' : 'ready');
@@ -91,7 +93,9 @@ export default function InvoiceCheckoutPage({ params }: { params: Promise<{ numb
         <CardContent className="space-y-5 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">{invoice?.merchantName}</p>
+              <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                {invoice?.merchantName}
+              </p>
               <h1 className="text-xl font-bold">{invoice?.title}</h1>
             </div>
             <span className="font-mono text-xs text-muted-foreground">{invoice?.number}</span>
@@ -117,11 +121,22 @@ export default function InvoiceCheckoutPage({ params }: { params: Promise<{ numb
           </div>
 
           {!connected ? (
-            <Button variant="gradient" className="w-full" size="lg" onClick={() => void connect('FREIGHTER')}>
+            <Button
+              variant="gradient"
+              className="w-full"
+              size="lg"
+              onClick={() => void connect('FREIGHTER')}
+            >
               Connect wallet to pay
             </Button>
           ) : (
-            <Button variant="gradient" className="w-full" size="lg" onClick={() => void pay()} disabled={status === 'paying'}>
+            <Button
+              variant="gradient"
+              className="w-full"
+              size="lg"
+              onClick={() => void pay()}
+              disabled={status === 'paying'}
+            >
               {status === 'paying' ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               Pay {invoice?.amount} {invoice?.assetCode}
             </Button>

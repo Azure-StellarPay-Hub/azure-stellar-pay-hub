@@ -8,9 +8,9 @@ const TOKEN = __ENV.TOKEN || '';
 
 export const options = {
   stages: [
-    { duration: '30s', target: 20 },  // ramp up
-    { duration: '1m', target: 50 },   // steady
-    { duration: '30s', target: 0 },   // ramp down
+    { duration: '30s', target: 20 }, // ramp up
+    { duration: '1m', target: 50 }, // steady
+    { duration: '30s', target: 0 }, // ramp down
   ],
   thresholds: {
     http_req_failed: ['rate<0.01'],

@@ -1,5 +1,9 @@
 import { describe, expect, it } from '@jest/globals';
-import { verifyMessageSignature, verifyFreighterMessageSignature, verifySignedXdrOwner } from './signature';
+import {
+  verifyMessageSignature,
+  verifyFreighterMessageSignature,
+  verifySignedXdrOwner,
+} from './signature';
 
 const VALID_KEY = 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN';
 

@@ -69,16 +69,16 @@ main            ← production-ready only
 
 We use [Conventional Commits](https://www.conventionalcommits.org/):
 
-| Prefix     | When                          |
-| ---------- | ----------------------------- |
-| `feat:`    | New feature                   |
-| `fix:`     | Bug fix                       |
-| `chore:`   | Tooling, deps, config         |
-| `docs:`    | Documentation only            |
-| `refactor:`| Restructuring without behavior change |
-| `test:`    | Adding or improving tests     |
-| `ci:`      | CI / deployment changes       |
-| `style:`   | Formatting, whitespace        |
+| Prefix      | When                                  |
+| ----------- | ------------------------------------- |
+| `feat:`     | New feature                           |
+| `fix:`      | Bug fix                               |
+| `chore:`    | Tooling, deps, config                 |
+| `docs:`     | Documentation only                    |
+| `refactor:` | Restructuring without behavior change |
+| `test:`     | Adding or improving tests             |
+| `ci:`       | CI / deployment changes               |
+| `style:`    | Formatting, whitespace                |
 
 Example: `feat: add invoice expiry to Soroban contract`
 

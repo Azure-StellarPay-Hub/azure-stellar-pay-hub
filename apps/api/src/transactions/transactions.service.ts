@@ -6,7 +6,13 @@ export class TransactionsService {
   constructor(private readonly prisma: PrismaService) {}
 
   /** Public explorer queries (transaction data is public on Stellar). */
-  async list(query: { page?: number; pageSize?: number; status?: string; assetCode?: string; search?: string }) {
+  async list(query: {
+    page?: number;
+    pageSize?: number;
+    status?: string;
+    assetCode?: string;
+    search?: string;
+  }) {
     const page = Math.max(1, query.page ?? 1);
     const pageSize = Math.min(100, Math.max(1, query.pageSize ?? 20));
     const where: Record<string, unknown> = {};
@@ -32,7 +38,10 @@ export class TransactionsService {
       }),
       this.prisma.transaction.count({ where: where as never }),
     ]);
-    return { data: items, meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) } };
+    return {
+      data: items,
+      meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    };
   }
 
   async getById(id: string) {
@@ -63,7 +72,10 @@ export class TransactionsService {
         where: { OR: [{ fromPublicKey: publicKey }, { toPublicKey: publicKey }] },
       }),
     ]);
-    return { data: items, meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) } };
+    return {
+      data: items,
+      meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    };
   }
 
   async stats() {

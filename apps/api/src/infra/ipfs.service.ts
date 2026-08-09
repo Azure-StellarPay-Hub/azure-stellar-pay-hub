@@ -43,8 +43,7 @@ export class IpfsService {
   private readonly provider: string;
 
   constructor(private readonly config: ConfigService) {
-    this.gateway =
-      this.config.get<string>('IPFS_GATEWAY') ?? 'https://ipfs.io/ipfs/';
+    this.gateway = this.config.get<string>('IPFS_GATEWAY') ?? 'https://ipfs.io/ipfs/';
     this.provider = this.config.get<string>('IPFS_PROVIDER') ?? 'local';
   }
 
@@ -99,8 +98,7 @@ export class IpfsService {
   // -- Local IPFS node (Kubo RPC API) -----------------------------------------
 
   private async pinToLocal(content: string): Promise<string> {
-    const apiUrl =
-      this.config.get<string>('IPFS_API_URL') ?? 'http://127.0.0.1:5001/api/v0';
+    const apiUrl = this.config.get<string>('IPFS_API_URL') ?? 'http://127.0.0.1:5001/api/v0';
 
     try {
       const formData = new FormData();
@@ -132,9 +130,7 @@ export class IpfsService {
 
   private async pinToPinata(content: string): Promise<string> {
     const jwt =
-      this.config.get<string>('PINATA_JWT') ??
-      this.config.get<string>('IPFS_API_KEY') ??
-      '';
+      this.config.get<string>('PINATA_JWT') ?? this.config.get<string>('IPFS_API_KEY') ?? '';
 
     if (!jwt) {
       this.logger.warn('PINATA_JWT not configured — falling back to local');
@@ -142,24 +138,21 @@ export class IpfsService {
     }
 
     try {
-      const response = await fetch(
-        'https://api.pinata.cloud/pinning/pinJSONToIPFS',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${jwt}`,
-          },
-          body: JSON.stringify({
-            pinataContent: JSON.parse(content),
-            pinataMetadata: {
-              name: `stellar-pay-receipt-${Date.now()}`,
-              keyvalues: { app: 'stellar-pay', schema: 'receipt-v1' },
-            },
-          }),
-          signal: AbortSignal.timeout(15_000),
+      const response = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwt}`,
         },
-      );
+        body: JSON.stringify({
+          pinataContent: JSON.parse(content),
+          pinataMetadata: {
+            name: `stellar-pay-receipt-${Date.now()}`,
+            keyvalues: { app: 'stellar-pay', schema: 'receipt-v1' },
+          },
+        }),
+        signal: AbortSignal.timeout(15_000),
+      });
 
       if (!response.ok) {
         const errBody = await response.text().catch(() => '');
@@ -173,9 +166,7 @@ export class IpfsService {
       if ((error as Error).message.includes('Pinata pin failed')) {
         throw error;
       }
-      this.logger.warn(
-        `Pinata unavailable, using deterministic CID — ${(error as Error).message}`,
-      );
+      this.logger.warn(`Pinata unavailable, using deterministic CID — ${(error as Error).message}`);
       return this.deterministicCid(content);
     }
   }
@@ -186,9 +177,7 @@ export class IpfsService {
     const token = this.config.get<string>('WEB3_STORAGE_TOKEN') ?? '';
 
     if (!token) {
-      this.logger.warn(
-        'WEB3_STORAGE_TOKEN not configured — falling back to local',
-      );
+      this.logger.warn('WEB3_STORAGE_TOKEN not configured — falling back to local');
       return this.pinToLocal(content);
     }
 
@@ -212,9 +201,7 @@ export class IpfsService {
 
       if (!response.ok) {
         const errBody = await response.text().catch(() => '');
-        throw new Error(
-          `web3.storage upload failed (${response.status}): ${errBody}`,
-        );
+        throw new Error(`web3.storage upload failed (${response.status}): ${errBody}`);
       }
 
       const result = (await response.json()) as { cid: string };

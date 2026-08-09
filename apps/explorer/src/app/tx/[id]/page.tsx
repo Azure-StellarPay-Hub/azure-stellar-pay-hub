@@ -49,9 +49,29 @@ export default function TxDetailPage({ params }: { params: Promise<{ id: string 
   }
 
   const rows: Array<[string, React.ReactNode]> = [
-    ['Transaction ID', <span key="id" className="font-mono">{tx.id}</span>],
-    ['Hash', <span key="hash" className="font-mono">{tx.hash ? shortKey(tx.hash, 20, 10) : '—'}</span>],
-    ['Status', <Badge key="status" variant={tx.status === 'SUCCEEDED' ? 'success' : tx.status === 'FAILED' ? 'destructive' : 'warning'}>{tx.status}</Badge>],
+    [
+      'Transaction ID',
+      <span key="id" className="font-mono">
+        {tx.id}
+      </span>,
+    ],
+    [
+      'Hash',
+      <span key="hash" className="font-mono">
+        {tx.hash ? shortKey(tx.hash, 20, 10) : '—'}
+      </span>,
+    ],
+    [
+      'Status',
+      <Badge
+        key="status"
+        variant={
+          tx.status === 'SUCCEEDED' ? 'success' : tx.status === 'FAILED' ? 'destructive' : 'warning'
+        }
+      >
+        {tx.status}
+      </Badge>,
+    ],
     ['Kind', tx.kind],
     ['Direction', tx.direction],
     ['Network', tx.sourceNetwork],
@@ -65,7 +85,9 @@ export default function TxDetailPage({ params }: { params: Promise<{ id: string 
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Transaction</h1>
-        <p className="font-mono text-sm text-muted-foreground">{shortKey(tx.hash ?? tx.id, 16, 10)}</p>
+        <p className="font-mono text-sm text-muted-foreground">
+          {shortKey(tx.hash ?? tx.id, 16, 10)}
+        </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -98,7 +120,11 @@ export default function TxDetailPage({ params }: { params: Promise<{ id: string 
           <p className="font-mono text-4xl font-bold">
             {tx.amount} <span className="text-lg text-muted-foreground">{tx.assetCode}</span>
           </p>
-          {tx.assetIssuer && <p className="mt-1 font-mono text-xs text-muted-foreground">issued by {shortKey(tx.assetIssuer)}</p>}
+          {tx.assetIssuer && (
+            <p className="mt-1 font-mono text-xs text-muted-foreground">
+              issued by {shortKey(tx.assetIssuer)}
+            </p>
+          )}
         </CardContent>
       </Card>
 
@@ -116,7 +142,8 @@ export default function TxDetailPage({ params }: { params: Promise<{ id: string 
       </Card>
 
       <p className="flex items-center gap-2 text-xs text-muted-foreground">
-        <Hash className="h-3 w-3" /> View the authoritative record on Stellar Expert / Horizon using the hash.
+        <Hash className="h-3 w-3" /> View the authoritative record on Stellar Expert / Horizon using
+        the hash.
       </p>
     </div>
   );

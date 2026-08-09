@@ -88,7 +88,13 @@ export class AuthService {
       const linked = user.wallets.some((w) => w.publicKey === payload.publicKey);
       if (!linked) {
         await this.prisma.wallet.create({
-          data: { userId: user.id, publicKey: payload.publicKey, provider, network, isPrimary: false },
+          data: {
+            userId: user.id,
+            publicKey: payload.publicKey,
+            provider,
+            network,
+            isPrimary: false,
+          },
         });
       }
       await this.prisma.wallet.updateMany({
@@ -98,7 +104,9 @@ export class AuthService {
     }
 
     // 4. Create a revocable session + device record.
-    const expiresAt = new Date(Date.now() + (this.config.get<number>('SESSION_TTL_SECONDS') ?? 604800) * 1000);
+    const expiresAt = new Date(
+      Date.now() + (this.config.get<number>('SESSION_TTL_SECONDS') ?? 604800) * 1000,
+    );
     const session = await this.prisma.session.create({
       data: {
         userId: user.id,
@@ -112,12 +120,22 @@ export class AuthService {
 
     const expiresIn = this.config.get<string>('JWT_EXPIRES_IN') ?? '7d';
     const accessToken = signAccessToken(
-      { sub: user.id, publicKey: payload.publicKey, role: user.role as UserRole, sessionId: session.id },
+      {
+        sub: user.id,
+        publicKey: payload.publicKey,
+        role: user.role as UserRole,
+        sessionId: session.id,
+      },
       this.secret(),
       expiresIn,
     );
     const refreshToken = signRefreshToken(
-      { sub: user.id, publicKey: payload.publicKey, role: user.role as UserRole, sessionId: session.id },
+      {
+        sub: user.id,
+        publicKey: payload.publicKey,
+        role: user.role as UserRole,
+        sessionId: session.id,
+      },
       this.secret(),
     );
 
@@ -126,12 +144,19 @@ export class AuthService {
 
   async refresh(refreshToken: string): Promise<TokenPair> {
     const payload = verifyRefreshToken(refreshToken, this.secret());
-    const session = await this.prisma.session.findUnique({ where: { id: payload.sessionId ?? '' } });
+    const session = await this.prisma.session.findUnique({
+      where: { id: payload.sessionId ?? '' },
+    });
     if (!session || session.status !== 'ACTIVE') {
       throw new UnauthorizedException('Session revoked');
     }
     const accessToken = signAccessToken(
-      { sub: payload.sub, publicKey: payload.publicKey, role: payload.role, sessionId: payload.sessionId },
+      {
+        sub: payload.sub,
+        publicKey: payload.publicKey,
+        role: payload.role,
+        sessionId: payload.sessionId,
+      },
       this.secret(),
       this.config.get<string>('JWT_EXPIRES_IN') ?? '7d',
     );
@@ -145,7 +170,10 @@ export class AuthService {
         data: { status: 'REVOKED', revokedAt: new Date() },
       });
     } else {
-      await this.prisma.session.updateMany({ where: { userId }, data: { status: 'REVOKED', revokedAt: new Date() } });
+      await this.prisma.session.updateMany({
+        where: { userId },
+        data: { status: 'REVOKED', revokedAt: new Date() },
+      });
     }
   }
 

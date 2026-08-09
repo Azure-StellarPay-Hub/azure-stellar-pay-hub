@@ -17,7 +17,7 @@ function ConnectButton() {
 
 <WalletProvider defaultNetwork="testnet">
   <App />
-</WalletProvider>
+</WalletProvider>;
 ```
 
 Features: connect / disconnect / auto-reconnect (localStorage), wallet

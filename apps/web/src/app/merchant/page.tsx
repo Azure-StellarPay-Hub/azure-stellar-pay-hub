@@ -28,7 +28,6 @@ import type { Invoice, Merchant, PaymentLink, Product, Settlement } from '@stell
 import { OnboardingForm } from './onboarding';
 
 export default function MerchantPage() {
-  const toast = useToast();
   const [merchant, setMerchant] = useState<Merchant | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -82,7 +81,9 @@ export default function MerchantPage() {
           </p>
           <h1 className="text-3xl font-bold tracking-tight">{merchant.name}</h1>
         </div>
-        <Badge variant={merchant.status === 'ACTIVE' ? 'success' : 'warning'}>{merchant.status}</Badge>
+        <Badge variant={merchant.status === 'ACTIVE' ? 'success' : 'warning'}>
+          {merchant.status}
+        </Badge>
       </div>
 
       <Tabs defaultValue="products">
@@ -163,11 +164,20 @@ function ProductPanel({ products, onChanged }: { products: Product[]; onChanged:
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <Label>Name</Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ethiopia Single Origin" />
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ethiopia Single Origin"
+                />
               </div>
               <div className="space-y-1.5">
                 <Label>Price (USDC)</Label>
-                <Input value={price} onChange={(e) => setPrice(e.target.value)} placeholder="14.50" className="font-mono" />
+                <Input
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="14.50"
+                  className="font-mono"
+                />
               </div>
               <Button onClick={() => void add()} className="w-full">
                 Save product
@@ -248,11 +258,20 @@ function PaymentLinkPanel({ links, onChanged }: { links: PaymentLink[]; onChange
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <Label>Title</Label>
-                <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Buy me a coffee" />
+                <Input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Buy me a coffee"
+                />
               </div>
               <div className="space-y-1.5">
                 <Label>Amount (USDC, optional)</Label>
-                <Input value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="5.00" className="font-mono" />
+                <Input
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="5.00"
+                  className="font-mono"
+                />
               </div>
               <Button onClick={() => void create()} className="w-full">
                 Create link
@@ -267,7 +286,9 @@ function PaymentLinkPanel({ links, onChanged }: { links: PaymentLink[]; onChange
             <CardContent className="space-y-2 p-5">
               <div className="flex items-center justify-between">
                 <p className="font-medium">{link.title}</p>
-                <Badge variant={link.status === 'ACTIVE' ? 'success' : 'outline'}>{link.status}</Badge>
+                <Badge variant={link.status === 'ACTIVE' ? 'success' : 'outline'}>
+                  {link.status}
+                </Badge>
               </div>
               <p className="font-mono text-sm">
                 {link.amount ? `${link.amount} ${link.assetCode}` : 'Any amount'}
@@ -306,14 +327,17 @@ function InvoicePanel({ invoices }: { invoices: Invoice[] }) {
                 <div>
                   <p className="font-medium">{invoice.title}</p>
                   <p className="font-mono text-xs text-muted-foreground">
-                    {invoice.number} · {invoice.customerPublicKey ? shortKey(invoice.customerPublicKey) : 'walk-in'}
+                    {invoice.number} ·{' '}
+                    {invoice.customerPublicKey ? shortKey(invoice.customerPublicKey) : 'walk-in'}
                   </p>
                 </div>
                 <div className="text-right">
                   <p className="font-mono text-sm font-semibold">
                     {invoice.amount} {invoice.assetCode}
                   </p>
-                  <Badge variant={invoice.status === 'PAID' ? 'success' : 'outline'}>{invoice.status}</Badge>
+                  <Badge variant={invoice.status === 'PAID' ? 'success' : 'outline'}>
+                    {invoice.status}
+                  </Badge>
                 </div>
               </div>
             ))}
@@ -333,8 +357,8 @@ function PosPanel({ merchant }: { merchant: Merchant }) {
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">
-          Scan to charge <span className="font-medium text-foreground">{merchant.name}</span> customers
-          directly to your settlement address.
+          Scan to charge <span className="font-medium text-foreground">{merchant.name}</span>{' '}
+          customers directly to your settlement address.
         </p>
         <Button
           variant="gradient"
@@ -348,7 +372,9 @@ function PosPanel({ merchant }: { merchant: Merchant }) {
         {uri && (
           <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-background/40 p-6">
             <span className="font-mono text-xs text-muted-foreground">{uri}</span>
-            <p className="text-xs text-muted-foreground">Settlement: {shortKey(merchant.settlementPublicKey)}</p>
+            <p className="text-xs text-muted-foreground">
+              Settlement: {shortKey(merchant.settlementPublicKey)}
+            </p>
           </div>
         )}
       </CardContent>

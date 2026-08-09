@@ -20,7 +20,13 @@ export class WebhooksService {
     return this.prisma.webhook.upsert({
       where: { id: `${merchantId}:${input.url}` },
       update: { url: input.url, events: input.events as never, secret },
-      create: { id: `${merchantId}:${input.url}`, merchantId, url: input.url, events: input.events as never, secret },
+      create: {
+        id: `${merchantId}:${input.url}`,
+        merchantId,
+        url: input.url,
+        events: input.events as never,
+        secret,
+      },
     });
   }
 
@@ -42,9 +48,7 @@ export class WebhooksService {
     const webhooks = await this.prisma.webhook.findMany({
       where: { status: 'ACTIVE' },
     });
-    const subscribed = webhooks.filter((w) =>
-      ((w.events as string[]) ?? []).includes(event),
-    );
+    const subscribed = webhooks.filter((w) => ((w.events as string[]) ?? []).includes(event));
     for (const webhook of subscribed) {
       const delivery = await this.prisma.webhookDelivery.create({
         data: {
@@ -76,7 +80,13 @@ export class WebhooksService {
       });
       await this.prisma.webhookDelivery.update({
         where: { id: deliveryId },
-        data: { status: response.ok ? 'DELIVERED' : 'FAILED', responseStatus: response.status, attempts: { increment: 1 }, deliveredAt: response.ok ? new Date() : undefined, lastError: response.ok ? undefined : `HTTP ${response.status}` },
+        data: {
+          status: response.ok ? 'DELIVERED' : 'FAILED',
+          responseStatus: response.status,
+          attempts: { increment: 1 },
+          deliveredAt: response.ok ? new Date() : undefined,
+          lastError: response.ok ? undefined : `HTTP ${response.status}`,
+        },
       });
     } catch (err) {
       await this.prisma.webhookDelivery.update({

@@ -13,11 +13,13 @@ interface StorageData {
 
 async function getStorage(): Promise<StorageData> {
   const result = await chrome.storage.local.get(STORAGE_KEY);
-  return (result[STORAGE_KEY] as StorageData) ?? {
-    apiUrl: 'http://localhost:4000',
-    token: null,
-    publicKey: null,
-  };
+  return (
+    (result[STORAGE_KEY] as StorageData) ?? {
+      apiUrl: 'http://localhost:4000',
+      token: null,
+      publicKey: null,
+    }
+  );
 }
 
 async function setStorage(data: Partial<StorageData>): Promise<void> {
@@ -64,10 +66,10 @@ async function request<T>(
 // ── Public API ────────────────────────────────────────────────
 
 export async function getChallenge(publicKey: string) {
-  return request<{ nonce: string; message: string; expiresAt: string }>(
-    '/auth/challenge',
-    { method: 'POST', body: { publicKey } },
-  );
+  return request<{ nonce: string; message: string; expiresAt: string }>('/auth/challenge', {
+    method: 'POST',
+    body: { publicKey },
+  });
 }
 
 export async function verifySignature(body: {
@@ -77,10 +79,11 @@ export async function verifySignature(body: {
   nonce: string;
   provider: string;
 }) {
-  return request<{ accessToken: string; refreshToken: string; user: { id: string; publicKey: string } }>(
-    '/auth/verify',
-    { method: 'POST', body },
-  );
+  return request<{
+    accessToken: string;
+    refreshToken: string;
+    user: { id: string; publicKey: string };
+  }>('/auth/verify', { method: 'POST', body });
 }
 
 export async function getBalances(publicKey: string) {
@@ -102,21 +105,14 @@ export async function getRecentTransactions(query?: { page?: number; pageSize?: 
   }>(`/payments/history?${new URLSearchParams(query as Record<string, string>).toString()}`);
 }
 
-export async function createPayment(body: {
-  to: string;
-  amount: string;
-  assetCode: string;
-}) {
+export async function createPayment(body: { to: string; amount: string; assetCode: string }) {
   return request<{ id: string; unsignedXdr: string }>('/payments', {
     method: 'POST',
     body,
   });
 }
 
-export async function submitPayment(body: {
-  signedXdr: string;
-  paymentId: string;
-}) {
+export async function submitPayment(body: { signedXdr: string; paymentId: string }) {
   return request<{ id: string; status: string; hash: string }>('/payments/submit', {
     method: 'POST',
     body,

@@ -53,21 +53,45 @@ export function OnboardingForm({ onDone }: { onDone: () => void }) {
           <div className="w-full space-y-4">
             <div className="space-y-1.5">
               <Label>Business name</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Demo Coffee Co." />
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Demo Coffee Co."
+              />
             </div>
             <div className="space-y-1.5">
               <Label>Slug</Label>
-              <Input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="demo-coffee-co" className="font-mono" />
+              <Input
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                placeholder="demo-coffee-co"
+                className="font-mono"
+              />
             </div>
             <div className="space-y-1.5">
               <Label>Settlement public key</Label>
-              <Input value={settlement} onChange={(e) => setSettlement(e.target.value)} placeholder="G..." className="font-mono" />
+              <Input
+                value={settlement}
+                onChange={(e) => setSettlement(e.target.value)}
+                placeholder="G..."
+                className="font-mono"
+              />
             </div>
             <div className="space-y-1.5">
               <Label>Website (optional)</Label>
-              <Input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://…" />
+              <Input
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                placeholder="https://…"
+              />
             </div>
-            <Button variant="gradient" size="lg" className="w-full" onClick={() => void submit()} disabled={busy}>
+            <Button
+              variant="gradient"
+              size="lg"
+              className="w-full"
+              onClick={() => void submit()}
+              disabled={busy}
+            >
               Register merchant
             </Button>
           </div>

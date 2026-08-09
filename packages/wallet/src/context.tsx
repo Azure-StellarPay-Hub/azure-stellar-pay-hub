@@ -55,7 +55,11 @@ function readStored(): PersistedWallet | null {
   }
 }
 
-export function WalletProvider({ children, defaultNetwork = 'testnet', onConnected }: WalletProviderProps) {
+export function WalletProvider({
+  children,
+  defaultNetwork = 'testnet',
+  onConnected,
+}: WalletProviderProps) {
   const [provider, setProvider] = useState<WalletProviderId | null>(null);
   const [publicKey, setPublicKey] = useState<string | null>(null);
   const [network, setNetwork] = useState<NetworkId>(defaultNetwork);
@@ -89,7 +93,8 @@ export function WalletProvider({ children, defaultNetwork = 'testnet', onConnect
         const adapter = createAdapter(target);
         const key = await adapter.requestAccess();
         const detected = await adapter.getNetworkId();
-        const active = opts?.preferredNetwork ?? (detected !== 'unknown' ? detected : defaultNetwork);
+        const active =
+          opts?.preferredNetwork ?? (detected !== 'unknown' ? detected : defaultNetwork);
         setProvider(target);
         setPublicKey(key);
         setNetwork(active);
@@ -120,12 +125,15 @@ export function WalletProvider({ children, defaultNetwork = 'testnet', onConnect
     }
   }, [provider, preferredNetwork, clearStored]);
 
-  const signTx = useCallback(async (xdr: string): Promise<string> => {
-    if (!provider) {
-      throw new Error('No wallet connected');
-    }
-    return createAdapter(provider).signTx(xdr);
-  }, [provider]);
+  const signTx = useCallback(
+    async (xdr: string): Promise<string> => {
+      if (!provider) {
+        throw new Error('No wallet connected');
+      }
+      return createAdapter(provider).signTx(xdr);
+    },
+    [provider],
+  );
 
   const signMessage = useCallback(
     async (message: string): Promise<string> => {
@@ -203,7 +211,19 @@ export function WalletProvider({ children, defaultNetwork = 'testnet', onConnect
       signMessage,
       switchWallet,
     }),
-    [provider, publicKey, network, preferredNetwork, connecting, error, connect, disconnect, signTx, signMessage, switchWallet],
+    [
+      provider,
+      publicKey,
+      network,
+      preferredNetwork,
+      connecting,
+      error,
+      connect,
+      disconnect,
+      signTx,
+      signMessage,
+      switchWallet,
+    ],
   );
 
   const WContext = getWalletContext();

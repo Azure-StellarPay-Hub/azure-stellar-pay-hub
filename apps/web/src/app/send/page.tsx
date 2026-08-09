@@ -167,7 +167,9 @@ function ContactPicker({
               <Check className="h-3.5 w-3.5" />
             </span>
           )}
-          <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`} />
+          <ChevronDown
+            className={`h-4 w-4 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`}
+          />
         </div>
       </div>
 
@@ -193,12 +195,17 @@ function ContactPicker({
               <User className="mx-auto h-6 w-6 text-muted-foreground/60" />
               <p className="text-sm text-muted-foreground">No contacts yet</p>
               <p className="text-xs text-muted-foreground/70">
-                Paste a public key or <a href="/contacts" className="text-indigo-400 underline">add a contact</a>
+                Paste a public key or{' '}
+                <a href="/contacts" className="text-indigo-400 underline">
+                  add a contact
+                </a>
               </p>
             </div>
           )}
           {!loading && contacts.length > 0 && filtered.length === 0 && (
-            <div className="px-3 py-6 text-center text-sm text-muted-foreground">No contacts match &ldquo;{query}&rdquo;</div>
+            <div className="px-3 py-6 text-center text-sm text-muted-foreground">
+              No contacts match &ldquo;{query}&rdquo;
+            </div>
           )}
           {filtered.map((contact) => {
             const isSelected = contact.publicKey === value;
@@ -211,34 +218,51 @@ function ContactPicker({
                   isSelected ? 'bg-emerald-500/10 ring-1 ring-emerald-500/20' : ''
                 }`}
               >
-                <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-semibold text-xs ${
-                  isSelected ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gradient-to-br from-indigo-500/30 to-purple-500/30 text-indigo-300'
-                }`}>
+                <span
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-semibold text-xs ${
+                    isSelected
+                      ? 'bg-emerald-500/20 text-emerald-400'
+                      : 'bg-gradient-to-br from-indigo-500/30 to-purple-500/30 text-indigo-300'
+                  }`}
+                >
                   {(contact.name[0] ?? '?').toUpperCase()}
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
                     <span className="truncate font-medium">{contact.name}</span>
-                    {contact.isFavorite && <Star className="h-3 w-3 shrink-0 fill-amber-400 text-amber-400" />}
+                    {contact.isFavorite && (
+                      <Star className="h-3 w-3 shrink-0 fill-amber-400 text-amber-400" />
+                    )}
                   </div>
                   <p className="truncate font-mono text-xs text-muted-foreground">
                     {shortKey(contact.publicKey, 10, 6)}
-                    {contact.memo ? <span className="ml-1.5 rounded bg-muted px-1 py-0.5 text-[10px]">memo: {contact.memo}</span> : null}
+                    {contact.memo ? (
+                      <span className="ml-1.5 rounded bg-muted px-1 py-0.5 text-[10px]">
+                        memo: {contact.memo}
+                      </span>
+                    ) : null}
                   </p>
                 </div>
                 {isSelected && <Check className="h-4 w-4 shrink-0 text-emerald-400" />}
               </button>
             );
           })}
-          {query && query.length >= 56 && isValidPublicKey(query) && !contacts.some((c) => c.publicKey === query) && (
-            <button
-              type="button"
-              onClick={() => { onChange(query); setOpen(false); setQuery(''); }}
-              className="mt-1 flex w-full items-center gap-2 rounded-lg border border-dashed border-indigo-500/30 px-2.5 py-2 text-sm text-indigo-400 transition-colors hover:bg-indigo-500/10"
-            >
-              <User className="h-4 w-4" /> Use raw key: {shortKey(query, 12, 8)}
-            </button>
-          )}
+          {query &&
+            query.length >= 56 &&
+            isValidPublicKey(query) &&
+            !contacts.some((c) => c.publicKey === query) && (
+              <button
+                type="button"
+                onClick={() => {
+                  onChange(query);
+                  setOpen(false);
+                  setQuery('');
+                }}
+                className="mt-1 flex w-full items-center gap-2 rounded-lg border border-dashed border-indigo-500/30 px-2.5 py-2 text-sm text-indigo-400 transition-colors hover:bg-indigo-500/10"
+              >
+                <User className="h-4 w-4" /> Use raw key: {shortKey(query, 12, 8)}
+              </button>
+            )}
         </div>
       )}
     </div>
@@ -268,9 +292,16 @@ export default function SendPage() {
   const [balanceLoading, setBalanceLoading] = useState(false);
 
   useEffect(() => {
-    if (!connected) { setContactsLoading(false); return; }
+    if (!connected) {
+      setContactsLoading(false);
+      return;
+    }
     setContactsLoading(true);
-    void api.users.contacts({ pageSize: 100 }).then((res) => setContacts(res.data)).catch(() => undefined).finally(() => setContactsLoading(false));
+    void api.users
+      .contacts({ pageSize: 100 })
+      .then((res) => setContacts(res.data))
+      .catch(() => undefined)
+      .finally(() => setContactsLoading(false));
   }, [connected]);
 
   // Derived
@@ -297,8 +328,14 @@ export default function SendPage() {
 
   // ---- Step: Review → call simulate + fetch balances ----
   const handleReview = async () => {
-    if (!publicKey || !connected) { toast.error('Connect a wallet first'); return; }
-    if (!isFormValid) { toast.error('Check recipient keys and amounts'); return; }
+    if (!publicKey || !connected) {
+      toast.error('Connect a wallet first');
+      return;
+    }
+    if (!isFormValid) {
+      toast.error('Check recipient keys and amounts');
+      return;
+    }
 
     setSimulating(true);
     setBalanceLoading(true);
@@ -383,10 +420,14 @@ export default function SendPage() {
       <div className="mx-auto max-w-2xl space-y-6 px-4 py-10">
         {/* Step indicator */}
         <div className="flex items-center gap-3">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 text-xs font-bold text-emerald-400">1</span>
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 text-xs font-bold text-emerald-400">
+            1
+          </span>
           <span className="text-sm text-emerald-400">Details filled</span>
           <span className="h-px flex-1 bg-border" />
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-bold text-indigo-400">2</span>
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-bold text-indigo-400">
+            2
+          </span>
           <span className="text-sm text-indigo-400">Review & sign</span>
         </div>
 
@@ -405,12 +446,19 @@ export default function SendPage() {
             </div>
             {/* To */}
             {destinations.map((d, i) => (
-              <div key={i} className="flex items-center justify-between rounded-xl border border-border/60 bg-background/40 px-4 py-3">
-                <span className="text-sm text-muted-foreground">To {type === 'SPLIT' ? `#${i + 1}` : ''}</span>
+              <div
+                key={i}
+                className="flex items-center justify-between rounded-xl border border-border/60 bg-background/40 px-4 py-3"
+              >
+                <span className="text-sm text-muted-foreground">
+                  To {type === 'SPLIT' ? `#${i + 1}` : ''}
+                </span>
                 <div className="text-right">
                   <p className="font-mono text-sm">{shortKey(d.publicKey, 10, 6)}</p>
                   {contacts.find((c) => c.publicKey === d.publicKey) && (
-                    <p className="text-xs text-emerald-400">{contacts.find((c) => c.publicKey === d.publicKey)!.name}</p>
+                    <p className="text-xs text-emerald-400">
+                      {contacts.find((c) => c.publicKey === d.publicKey)!.name}
+                    </p>
                   )}
                 </div>
               </div>
@@ -419,7 +467,8 @@ export default function SendPage() {
             <div className="flex items-center justify-between rounded-xl border border-border/60 bg-background/40 px-4 py-3">
               <span className="text-sm text-muted-foreground">Amount</span>
               <span className="font-mono text-lg font-semibold">
-                {total.toLocaleString()} <span className="text-sm text-muted-foreground">{assetCode}</span>
+                {total.toLocaleString()}{' '}
+                <span className="text-sm text-muted-foreground">{assetCode}</span>
               </span>
             </div>
             {memo && (
@@ -452,9 +501,13 @@ export default function SendPage() {
             </div>
 
             {/* XLM balance */}
-            <div className={`flex items-center justify-between rounded-lg border px-4 py-3 ${hasEnoughXlm ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-rose-500/20 bg-rose-500/5'}`}>
+            <div
+              className={`flex items-center justify-between rounded-lg border px-4 py-3 ${hasEnoughXlm ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-rose-500/20 bg-rose-500/5'}`}
+            >
               <div className="flex items-center gap-2">
-                <Wallet className={`h-4 w-4 ${hasEnoughXlm ? 'text-emerald-400' : 'text-rose-400'}`} />
+                <Wallet
+                  className={`h-4 w-4 ${hasEnoughXlm ? 'text-emerald-400' : 'text-rose-400'}`}
+                />
                 <span className="text-sm text-muted-foreground">XLM balance (for fees)</span>
               </div>
               <div className="text-right">
@@ -462,7 +515,9 @@ export default function SendPage() {
                   <Skeleton className="h-4 w-16" />
                 ) : (
                   <>
-                    <p className={`font-mono text-sm font-semibold ${hasEnoughXlm ? 'text-emerald-400' : 'text-rose-400'}`}>
+                    <p
+                      className={`font-mono text-sm font-semibold ${hasEnoughXlm ? 'text-emerald-400' : 'text-rose-400'}`}
+                    >
                       {xlmBalance.toLocaleString()} XLM
                     </p>
                     {!hasEnoughXlm && (
@@ -475,9 +530,13 @@ export default function SendPage() {
 
             {/* Asset balance */}
             {assetCode !== 'XLM' && (
-              <div className={`flex items-center justify-between rounded-lg border px-4 py-3 ${hasEnoughAsset ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-rose-500/20 bg-rose-500/5'}`}>
+              <div
+                className={`flex items-center justify-between rounded-lg border px-4 py-3 ${hasEnoughAsset ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-rose-500/20 bg-rose-500/5'}`}
+              >
                 <div className="flex items-center gap-2">
-                  <Coins className={`h-4 w-4 ${hasEnoughAsset ? 'text-emerald-400' : 'text-rose-400'}`} />
+                  <Coins
+                    className={`h-4 w-4 ${hasEnoughAsset ? 'text-emerald-400' : 'text-rose-400'}`}
+                  />
                   <span className="text-sm text-muted-foreground">{assetCode} balance</span>
                 </div>
                 <div className="text-right">
@@ -485,10 +544,14 @@ export default function SendPage() {
                     <Skeleton className="h-4 w-16" />
                   ) : (
                     <>
-                      <p className={`font-mono text-sm font-semibold ${hasEnoughAsset ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      <p
+                        className={`font-mono text-sm font-semibold ${hasEnoughAsset ? 'text-emerald-400' : 'text-rose-400'}`}
+                      >
                         {Number(assetBalance?.balance ?? 0).toLocaleString()} {assetCode}
                       </p>
-                      {!hasEnoughAsset && <p className="text-xs text-rose-400">Insufficient balance</p>}
+                      {!hasEnoughAsset && (
+                        <p className="text-xs text-rose-400">Insufficient balance</p>
+                      )}
                     </>
                   )}
                 </div>
@@ -517,8 +580,15 @@ export default function SendPage() {
               <div className="flex items-start gap-2 rounded-lg border border-rose-500/20 bg-rose-500/5 px-4 py-3">
                 <Info className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
                 <div className="text-xs text-rose-300/80">
-                  {!hasEnoughXlm && <p>You need at least {feeXlm.toFixed(7)} XLM to cover network fees. Fund your wallet on the Stellar testnet faucet.</p>}
-                  {assetCode !== 'XLM' && !hasEnoughAsset && <p className="mt-1">Your {assetCode} balance is too low for this transfer.</p>}
+                  {!hasEnoughXlm && (
+                    <p>
+                      You need at least {feeXlm.toFixed(7)} XLM to cover network fees. Fund your
+                      wallet on the Stellar testnet faucet.
+                    </p>
+                  )}
+                  {assetCode !== 'XLM' && !hasEnoughAsset && (
+                    <p className="mt-1">Your {assetCode} balance is too low for this transfer.</p>
+                  )}
                 </div>
               </div>
             )}
@@ -547,7 +617,8 @@ export default function SendPage() {
           </Button>
         </div>
         <p className="text-center text-xs text-muted-foreground">
-          You will be asked to approve the transaction in your wallet. It will settle on the Stellar network in ~5 seconds.
+          You will be asked to approve the transaction in your wallet. It will settle on the Stellar
+          network in ~5 seconds.
         </p>
       </div>
     );
@@ -568,40 +639,74 @@ export default function SendPage() {
           <div className="flex items-center justify-between">
             <CardTitle>Details</CardTitle>
             <div className="flex gap-2">
-              <Badge variant={type === 'SEND' ? 'info' : 'outline'} className="cursor-pointer" onClick={() => setType('SEND')}>Single</Badge>
-              <Badge variant={type === 'SPLIT' ? 'info' : 'outline'} className="cursor-pointer" onClick={() => setType('SPLIT')}>Split / batch</Badge>
+              <Badge
+                variant={type === 'SEND' ? 'info' : 'outline'}
+                className="cursor-pointer"
+                onClick={() => setType('SEND')}
+              >
+                Single
+              </Badge>
+              <Badge
+                variant={type === 'SPLIT' ? 'info' : 'outline'}
+                className="cursor-pointer"
+                onClick={() => setType('SPLIT')}
+              >
+                Split / batch
+              </Badge>
             </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {destinations.map((destination, index) => (
-            <div key={index} className={`flex gap-3 rounded-xl border p-3 ${destination.publicKey && isValidPublicKey(destination.publicKey) ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-transparent'}`}>
+            <div
+              key={index}
+              className={`flex gap-3 rounded-xl border p-3 ${destination.publicKey && isValidPublicKey(destination.publicKey) ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-transparent'}`}
+            >
               <div className="flex-1 space-y-1.5">
                 <div className="flex items-center justify-between">
                   <Label>Recipient {type === 'SPLIT' ? `#${index + 1}` : ''}</Label>
-                  {contactsLoading ? null : contacts.length > 0 && (
-                    <span className="text-[10px] text-muted-foreground">{contacts.length} contact{contacts.length !== 1 ? 's' : ''} available</span>
-                  )}
+                  {contactsLoading
+                    ? null
+                    : contacts.length > 0 && (
+                        <span className="text-[10px] text-muted-foreground">
+                          {contacts.length} contact{contacts.length !== 1 ? 's' : ''} available
+                        </span>
+                      )}
                 </div>
-                <ContactPicker value={destination.publicKey} contacts={contacts} loading={contactsLoading}
+                <ContactPicker
+                  value={destination.publicKey}
+                  contacts={contacts}
+                  loading={contactsLoading}
                   onSelect={(contact) => handleContactSelect(index, contact)}
                   onChange={(publicKey) => updateDestination(index, { publicKey })}
                 />
               </div>
               <div className="w-32 space-y-1.5">
                 <Label>Amount</Label>
-                <Input placeholder="0.0" value={destination.amount} onChange={(e) => updateDestination(index, { amount: e.target.value })} className="font-mono" />
+                <Input
+                  placeholder="0.0"
+                  value={destination.amount}
+                  onChange={(e) => updateDestination(index, { amount: e.target.value })}
+                  className="font-mono"
+                />
               </div>
               {destinations.length > 1 && (
-                <button className="mt-7 text-muted-foreground transition-colors hover:text-destructive"
-                  onClick={() => setDestinations((prev) => prev.filter((_, i) => i !== index))} title="Remove recipient">
+                <button
+                  className="mt-7 text-muted-foreground transition-colors hover:text-destructive"
+                  onClick={() => setDestinations((prev) => prev.filter((_, i) => i !== index))}
+                  title="Remove recipient"
+                >
                   <Trash2 className="h-4 w-4" />
                 </button>
               )}
             </div>
           ))}
           {type === 'SPLIT' && (
-            <Button variant="outline" size="sm" onClick={() => setDestinations((prev) => [...prev, { publicKey: '', amount: '' }])}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setDestinations((prev) => [...prev, { publicKey: '', amount: '' }])}
+            >
               <Plus className="h-4 w-4" /> Add recipient
             </Button>
           )}
@@ -610,7 +715,9 @@ export default function SendPage() {
             <div className="space-y-1.5">
               <Label>Asset</Label>
               <Select value={assetCode} onValueChange={setAssetCode}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="XLM">XLM</SelectItem>
                   <SelectItem value="USDC">USDC</SelectItem>
@@ -620,16 +727,26 @@ export default function SendPage() {
             </div>
             <div className="space-y-1.5">
               <Label>Memo (optional)</Label>
-              <Input placeholder="invoice-123" value={memo} onChange={(e) => setMemo(e.target.value)} maxLength={28} />
+              <Input
+                placeholder="invoice-123"
+                value={memo}
+                onChange={(e) => setMemo(e.target.value)}
+                maxLength={28}
+              />
             </div>
           </div>
 
           <div className="flex items-center justify-between rounded-xl border border-border bg-background/40 px-4 py-3">
             <span className="text-sm text-muted-foreground">Total</span>
-            <span className="font-mono text-lg font-semibold">{total.toLocaleString()} {assetCode}</span>
+            <span className="font-mono text-lg font-semibold">
+              {total.toLocaleString()} {assetCode}
+            </span>
           </div>
 
-          <Button variant="gradient" size="lg" className="w-full"
+          <Button
+            variant="gradient"
+            size="lg"
+            className="w-full"
             onClick={() => void handleReview()}
             disabled={simulating || !isFormValid}
           >

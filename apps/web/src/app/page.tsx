@@ -65,9 +65,8 @@ export default function LandingPage() {
           Payments on Stellar, <span className="text-gradient">beautifully simple</span>
         </h1>
         <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-          Send XLM and Stellar assets, collect with payment links and invoices,
-          and move money across borders — with wallet-first authentication and
-          on-chain settlement.
+          Send XLM and Stellar assets, collect with payment links and invoices, and move money
+          across borders — with wallet-first authentication and on-chain settlement.
         </p>
         <div className="mt-10 flex items-center justify-center gap-4">
           <Button asChild size="lg">
@@ -99,7 +98,10 @@ export default function LandingPage() {
       <section className="relative mx-auto max-w-6xl px-4 pb-24">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((feature) => (
-            <Card key={feature.title} className="group transition-all hover:-translate-y-1 hover:border-indigo-500/40">
+            <Card
+              key={feature.title}
+              className="group transition-all hover:-translate-y-1 hover:border-indigo-500/40"
+            >
               <CardContent className="p-6">
                 <feature.icon className="h-6 w-6 text-indigo-400 transition-transform group-hover:scale-110" />
                 <h3 className="mt-4 font-semibold">{feature.title}</h3>
@@ -116,12 +118,15 @@ export default function LandingPage() {
           <Users className="h-8 w-8 text-fuchsia-400" />
           <h2 className="text-3xl font-bold">Bring your favorite wallet</h2>
           <p className="max-w-md text-muted-foreground">
-            One adapter interface, three providers. Sign transactions with
-            Freighter, xBull or Albedo — your keys stay with you.
+            One adapter interface, three providers. Sign transactions with Freighter, xBull or
+            Albedo — your keys stay with you.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {['Freighter', 'xBull', 'Albedo'].map((name) => (
-              <span key={name} className="rounded-full border border-border bg-background/60 px-4 py-2 text-sm">
+              <span
+                key={name}
+                className="rounded-full border border-border bg-background/60 px-4 py-2 text-sm"
+              >
                 {name}
               </span>
             ))}

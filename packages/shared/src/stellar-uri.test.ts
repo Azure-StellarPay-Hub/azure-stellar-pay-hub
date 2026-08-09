@@ -36,7 +36,8 @@ describe('Stellar URI utilities', () => {
 
   describe('parsePaymentUri', () => {
     it('parses a valid payment URI', () => {
-      const url = 'web+stellar:pay?destination=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&amount=100';
+      const url =
+        'web+stellar:pay?destination=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN&amount=100';
       const parsed = parsePaymentUri(url);
       expect(parsed?.destination).toBe('GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN');
       expect(parsed?.amount).toBe('100');

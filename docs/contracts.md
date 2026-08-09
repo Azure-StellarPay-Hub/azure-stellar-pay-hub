@@ -11,15 +11,15 @@ All contracts live in `contracts/` and are written in Rust with
 
 ## Contracts
 
-| Contract        | Purpose                                                        |
-| --------------- | -------------------------------------------------------------- |
-| `payment`       | Direct XLM/asset transfers with memo and receipt events        |
-| `escrow`        | Conditional escrow with depositor/beneficiary/arbiter          |
-| `multisig`      | Threshold-signature transactions and treasury control          |
-| `treasury`      | Custody of funds with member spending limits and voting        |
-| `subscriptions` | Recurring billing with plan management and cancellation        |
-| `invoices`      | On-chain invoice registry with paid/expired states             |
-| `merchant`      | Merchant registry + settlement distribution to multiple wallets|
+| Contract        | Purpose                                                         |
+| --------------- | --------------------------------------------------------------- |
+| `payment`       | Direct XLM/asset transfers with memo and receipt events         |
+| `escrow`        | Conditional escrow with depositor/beneficiary/arbiter           |
+| `multisig`      | Threshold-signature transactions and treasury control           |
+| `treasury`      | Custody of funds with member spending limits and voting         |
+| `subscriptions` | Recurring billing with plan management and cancellation         |
+| `invoices`      | On-chain invoice registry with paid/expired states              |
+| `merchant`      | Merchant registry + settlement distribution to multiple wallets |
 
 ## Common conventions
 

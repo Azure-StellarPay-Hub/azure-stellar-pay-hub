@@ -18,18 +18,12 @@ export class CheckoutController {
   }
 
   @Post('payment-link/:code/pay')
-  payLink(
-    @Param('code') code: string,
-    @Body() body: { publicKey: string; amount?: string },
-  ) {
+  payLink(@Param('code') code: string, @Body() body: { publicKey: string; amount?: string }) {
     return this.checkout.payPaymentLink(code, body.publicKey, body.amount);
   }
 
   @Post('invoice/:number/pay')
-  payInvoice(
-    @Param('number') number: string,
-    @Body() body: { publicKey: string },
-  ) {
+  payInvoice(@Param('number') number: string, @Body() body: { publicKey: string }) {
     return this.checkout.payInvoice(number, body.publicKey);
   }
 

@@ -12,5 +12,10 @@ export function formatDate(input: string | Date): string {
 
 export function formatDateTime(input: string | Date): string {
   const date = typeof input === 'string' ? new Date(input) : input;
-  return date.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return date.toLocaleString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }

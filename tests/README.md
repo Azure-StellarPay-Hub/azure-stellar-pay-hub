@@ -1,13 +1,13 @@
 # Test Suites
 
-| Suite                    | Location                          | Command                          |
-| ------------------------ | --------------------------------- | -------------------------------- |
-| Package unit tests       | `packages/*/src/*.test.ts`        | `pnpm test`                      |
-| API integration (Nest)   | `apps/api/test/app.e2e-spec.ts`   | `pnpm --filter @stellar-pay/api test:e2e` |
-| Soroban contract tests   | `contracts/*/src/test.rs`         | `pnpm contracts:test`            |
-| End-to-end smoke         | `tests/smoke.mjs`                 | `pnpm test:e2e`                  |
-| Load test (k6)           | `tests/load/payment-load.js`      | `k6 run tests/load/payment-load.js` |
-| Security checks          | `.github/workflows/ci.yml`        | zizmor + npm audit (CI)          |
+| Suite                  | Location                        | Command                                   |
+| ---------------------- | ------------------------------- | ----------------------------------------- |
+| Package unit tests     | `packages/*/src/*.test.ts`      | `pnpm test`                               |
+| API integration (Nest) | `apps/api/test/app.e2e-spec.ts` | `pnpm --filter @stellar-pay/api test:e2e` |
+| Soroban contract tests | `contracts/*/src/test.rs`       | `pnpm contracts:test`                     |
+| End-to-end smoke       | `tests/smoke.mjs`               | `pnpm test:e2e`                           |
+| Load test (k6)         | `tests/load/payment-load.js`    | `k6 run tests/load/payment-load.js`       |
+| Security checks        | `.github/workflows/ci.yml`      | zizmor + npm audit (CI)                   |
 
 ## Running everything
 

@@ -10,16 +10,16 @@ and frontend apps — to Stellar testnet.
 
 ## Prerequisites
 
-| Requirement | How to get it |
-|-------------|---------------|
-| **Stellar testnet account** | Create at [laboratory.stellar.org](https://laboratory.stellar.org/#create-account?network=test) |
-| **Funded with XLM** | Fund at [laboratory.stellar.org](https://laboratory.stellar.org/#create-account?network=test) or use Friendbot: `curl "https://friendbot.stellar.org?addr=G..."` |
-| **Secret key** | Save the secret key (starts with `S...`) — you'll need it for contract deployment |
-| **Node.js ≥ 20.9** | `nvm install && nvm use` |
-| **pnpm ≥ 9** | `corepack enable` |
-| **Rust + wasm32 target** | `rustup target add wasm32-unknown-unknown` |
-| **soroban-cli** | `cargo install soroban-cli` |
-| **Docker** | For local Postgres + Redis |
+| Requirement                 | How to get it                                                                                                                                                    |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Stellar testnet account** | Create at [laboratory.stellar.org](https://laboratory.stellar.org/#create-account?network=test)                                                                  |
+| **Funded with XLM**         | Fund at [laboratory.stellar.org](https://laboratory.stellar.org/#create-account?network=test) or use Friendbot: `curl "https://friendbot.stellar.org?addr=G..."` |
+| **Secret key**              | Save the secret key (starts with `S...`) — you'll need it for contract deployment                                                                                |
+| **Node.js ≥ 20.9**          | `nvm install && nvm use`                                                                                                                                         |
+| **pnpm ≥ 9**                | `corepack enable`                                                                                                                                                |
+| **Rust + wasm32 target**    | `rustup target add wasm32-unknown-unknown`                                                                                                                       |
+| **soroban-cli**             | `cargo install soroban-cli`                                                                                                                                      |
+| **Docker**                  | For local Postgres + Redis                                                                                                                                       |
 
 ## Quick Deploy (One Command)
 
@@ -32,6 +32,7 @@ bash scripts/deploy-testnet.sh
 ```
 
 The script will:
+
 1. Verify prerequisites (soroban-cli, Node, pnpm, Docker, funded account)
 2. Install dependencies
 3. Start Postgres + Redis
@@ -169,6 +170,7 @@ curl "https://friendbot.stellar.org?addr=GXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 You can also use the [Stellar Laboratory](https://laboratory.stellar.org/#create-account?network=test):
+
 1. Select "Test" network
 2. Click "Create Account"
 3. Fund with Friendbot

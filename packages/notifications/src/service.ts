@@ -15,10 +15,13 @@ const DEFAULT_TITLES: Record<NotificationType, string> = {
 };
 
 const DEFAULT_BODIES: Record<NotificationType, (m: NotificationMessage) => string> = {
-  PAYMENT_SENT: (m) => `Your payment of ${String(m.payload?.amount ?? '')} ${String(m.payload?.assetCode ?? '')} was sent.`,
-  PAYMENT_RECEIVED: (m) => `You received ${String(m.payload?.amount ?? '')} ${String(m.payload?.assetCode ?? '')}.`,
+  PAYMENT_SENT: (m) =>
+    `Your payment of ${String(m.payload?.amount ?? '')} ${String(m.payload?.assetCode ?? '')} was sent.`,
+  PAYMENT_RECEIVED: (m) =>
+    `You received ${String(m.payload?.amount ?? '')} ${String(m.payload?.assetCode ?? '')}.`,
   INVOICE_PAID: (m) => `Invoice ${String(m.payload?.invoiceNumber ?? '')} was paid.`,
-  FAILED_TRANSACTION: (m) => String(m.payload?.reason ?? 'Your transaction could not be completed.'),
+  FAILED_TRANSACTION: (m) =>
+    String(m.payload?.reason ?? 'Your transaction could not be completed.'),
   ACCOUNT_ACTIVITY: () => 'There is new activity on your account.',
 };
 
@@ -58,7 +61,9 @@ export class NotificationService {
     }
   }
 
-  async dispatchAll(messages: NotificationMessage[]): Promise<Array<{ ok: boolean; error?: string }>> {
+  async dispatchAll(
+    messages: NotificationMessage[],
+  ): Promise<Array<{ ok: boolean; error?: string }>> {
     return Promise.all(
       messages.map(async (message) => {
         try {

@@ -56,7 +56,8 @@ export class PaymentsService {
    */
   async create(userId: string, dto: CreatePayment) {
     await this.wallet.assertWalletOwnership(userId, dto.fromPublicKey);
-    const asset = dto.assetCode === 'XLM' ? Asset.native() : new Asset(dto.assetCode, dto.assetIssuer ?? '');
+    const asset =
+      dto.assetCode === 'XLM' ? Asset.native() : new Asset(dto.assetCode, dto.assetIssuer ?? '');
 
     if (dto.type === 'SCHEDULED' || dto.type === 'RECURRING') {
       const first = dto.destinations[0];
@@ -151,7 +152,21 @@ export class PaymentsService {
     return updated;
   }
 
-  private async afterSuccess(tx: { id: string; toPublicKey: string | null; amount: string; assetCode: string; userId: string | null; kind: string; meta: unknown; hash: string | null; fromPublicKey: string | null; assetIssuer: string | null; memo: string | null; sourceNetwork: string; createdAt: Date }) {
+  private async afterSuccess(tx: {
+    id: string;
+    toPublicKey: string | null;
+    amount: string;
+    assetCode: string;
+    userId: string | null;
+    kind: string;
+    meta: unknown;
+    hash: string | null;
+    fromPublicKey: string | null;
+    assetIssuer: string | null;
+    memo: string | null;
+    sourceNetwork: string;
+    createdAt: Date;
+  }) {
     const meta = (tx.meta ?? {}) as { type?: PaymentType };
     // Update invoice / payment-link / customer bookkeeping.
     if (meta.type === 'INVOICE' || tx.kind === 'invoice') {
@@ -181,7 +196,12 @@ export class PaymentsService {
     });
   }
 
-  private async afterFailure(tx: { id: string; amount: string; assetCode: string; userId: string | null }) {
+  private async afterFailure(tx: {
+    id: string;
+    amount: string;
+    assetCode: string;
+    userId: string | null;
+  }) {
     await this.notifications.paymentFailed({
       userId: tx.userId!,
       amount: tx.amount,
@@ -191,7 +211,11 @@ export class PaymentsService {
     this.realtime.emitToUser(tx.userId!, 'transaction.updated', { id: tx.id, status: 'FAILED' });
   }
 
-  private async reconcileInvoicePayment(tx: { id: string; amount: string; toPublicKey: string | null }) {
+  private async reconcileInvoicePayment(tx: {
+    id: string;
+    amount: string;
+    toPublicKey: string | null;
+  }) {
     const invoice = await this.prisma.invoice.findFirst({
       where: { customerPublicKey: tx.toPublicKey, status: { in: ['ISSUED', 'DRAFT'] } },
       orderBy: { createdAt: 'desc' },
@@ -203,8 +227,13 @@ export class PaymentsService {
       where: { id: invoice.id },
       data: { status: 'PAID', paidAt: new Date(), paymentTransactionId: tx.id },
     });
-    await this.notifications.invoicePaid({ merchantId: invoice.merchantId, invoiceNumber: invoice.number });
-    await this.webhooks.dispatch('invoice.paid' as WebhookEventType, { invoiceNumber: invoice.number });
+    await this.notifications.invoicePaid({
+      merchantId: invoice.merchantId,
+      invoiceNumber: invoice.number,
+    });
+    await this.webhooks.dispatch('invoice.paid' as WebhookEventType, {
+      invoiceNumber: invoice.number,
+    });
   }
 
   private async reconcilePaymentLinkPayment(tx: { amount: string; toPublicKey: string | null }) {
@@ -223,10 +252,7 @@ export class PaymentsService {
     });
   }
 
-  private async buildBatchXdr(
-    dto: CreatePayment,
-    asset: Asset,
-  ): Promise<string> {
+  private async buildBatchXdr(dto: CreatePayment, asset: Asset): Promise<string> {
     const account = await this.network().server.loadAccount(dto.fromPublicKey);
     const builder = new TransactionBuilder(account, {
       fee: BASE_FEE,
@@ -279,7 +305,16 @@ export class PaymentsService {
     return { uri, qrPayload: uri };
   }
 
-  async history(userId: string, query: { page?: number; pageSize?: number; status?: string; direction?: string; assetCode?: string }) {
+  async history(
+    userId: string,
+    query: {
+      page?: number;
+      pageSize?: number;
+      status?: string;
+      direction?: string;
+      assetCode?: string;
+    },
+  ) {
     const page = Math.max(1, query.page ?? 1);
     const pageSize = Math.min(100, Math.max(1, query.pageSize ?? 20));
     const [items, total] = await Promise.all([
@@ -296,7 +331,10 @@ export class PaymentsService {
       }),
       this.prisma.transaction.count({ where: { userId } }),
     ]);
-    return { data: items, meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) } };
+    return {
+      data: items,
+      meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    };
   }
 
   async get(userId: string, id: string) {
@@ -347,7 +385,10 @@ export class PaymentsService {
   }
 
   async scheduled(userId: string) {
-    return this.prisma.scheduledPayment.findMany({ where: { userId }, orderBy: { nextRunAt: 'asc' } });
+    return this.prisma.scheduledPayment.findMany({
+      where: { userId },
+      orderBy: { nextRunAt: 'asc' },
+    });
   }
 
   async cancelScheduled(userId: string, id: string) {

@@ -19,7 +19,9 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<AdminNotification[]>([]);
 
   useEffect(() => {
-    void adminApi.admin.notifications().then((res) => setNotifications(res.data as AdminNotification[]));
+    void adminApi.admin
+      .notifications()
+      .then((res) => setNotifications(res.data as unknown as AdminNotification[]));
   }, []);
 
   return (
@@ -37,7 +39,10 @@ export default function NotificationsPage() {
           ) : (
             <div className="divide-y divide-border/60">
               {notifications.map((notification) => (
-                <div key={notification.id} className="flex items-center justify-between gap-4 px-6 py-4">
+                <div
+                  key={notification.id}
+                  className="flex items-center justify-between gap-4 px-6 py-4"
+                >
                   <div>
                     <p className="text-sm font-medium">{notification.title}</p>
                     <p className="text-xs text-muted-foreground">
@@ -48,7 +53,9 @@ export default function NotificationsPage() {
                     <Badge variant={notification.status === 'SENT' ? 'success' : 'outline'}>
                       {notification.status}
                     </Badge>
-                    <span className="text-xs text-muted-foreground">{formatDateTime(notification.createdAt)}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {formatDateTime(notification.createdAt)}
+                    </span>
                   </div>
                 </div>
               ))}

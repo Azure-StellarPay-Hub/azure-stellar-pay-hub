@@ -1,7 +1,7 @@
 name: Bug Report
 description: File a bug report to help us improve
-title: "bug: "
-labels: ["bug", "triage"]
+title: 'bug: '
+labels: ['bug', 'triage']
 body:
   - type: markdown
     attributes:
@@ -12,7 +12,7 @@ body:
     attributes:
       label: Describe the bug
       description: A clear and concise description of what the bug is.
-      placeholder: "When I try to submit a payment with..."
+      placeholder: 'When I try to submit a payment with...'
     validations:
       required: true
   - type: textarea
@@ -55,8 +55,8 @@ body:
     id: environment
     attributes:
       label: Environment
-      description: "Node version, OS, browser, Stellar network (testnet/mainnet), etc."
-      placeholder: "Node 22, macOS, Chrome 130, Stellar testnet"
+      description: 'Node version, OS, browser, Stellar network (testnet/mainnet), etc.'
+      placeholder: 'Node 22, macOS, Chrome 130, Stellar testnet'
   - type: textarea
     id: logs
     attributes:

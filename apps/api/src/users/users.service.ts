@@ -1,6 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@stellar-pay/database';
-import type { UpdateProfile, CreateContact, CreateBeneficiary, UpdatePreferences } from '@stellar-pay/validation';
+import type {
+  UpdateProfile,
+  CreateContact,
+  CreateBeneficiary,
+  UpdatePreferences,
+} from '@stellar-pay/validation';
 import { toUserDto } from '../auth/auth.service';
 
 @Injectable()
@@ -32,7 +37,8 @@ export class UsersService {
     const prefs = await this.prisma.userPreference.findUnique({ where: { userId } });
     return {
       currency: prefs?.currency ?? 'USD',
-      notificationPreferences: (prefs?.notificationPreferences as Record<string, boolean> | null) ?? {},
+      notificationPreferences:
+        (prefs?.notificationPreferences as Record<string, boolean> | null) ?? {},
       theme: prefs?.theme ?? 'dark',
       twoFactorEnabled: prefs?.twoFactorEnabled ?? false,
     };
@@ -50,7 +56,8 @@ export class UsersService {
     });
     return {
       currency: prefs.currency,
-      notificationPreferences: (prefs.notificationPreferences as Record<string, boolean> | null) ?? {},
+      notificationPreferences:
+        (prefs.notificationPreferences as Record<string, boolean> | null) ?? {},
       theme: prefs.theme,
       twoFactorEnabled: prefs.twoFactorEnabled,
     };
@@ -66,7 +73,10 @@ export class UsersService {
       }),
       this.prisma.contact.count({ where: { ownerId: userId } }),
     ]);
-    return { data: items, meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) } };
+    return {
+      data: items,
+      meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    };
   }
 
   async createContact(userId: string, input: CreateContact) {

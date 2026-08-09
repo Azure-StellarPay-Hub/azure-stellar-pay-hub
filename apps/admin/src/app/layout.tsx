@@ -1,6 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Activity, Bell, CreditCard, LayoutDashboard, Settings, Shield, Store, Users } from 'lucide-react';
+import {
+  Activity,
+  Bell,
+  CreditCard,
+  LayoutDashboard,
+  Settings,
+  Shield,
+  Store,
+  Users,
+} from 'lucide-react';
 import { ToastProvider } from '@stellar-pay/ui';
 import './globals.css';
 

@@ -85,9 +85,17 @@ async function seedRolesAndPermissions(): Promise<void> {
     });
     for (const perm of perms) {
       await prisma.rolePermission.upsert({
-        where: { roleId_permissionId: { roleId: role.id, permissionId: (await prisma.permission.findUnique({ where: { name: perm } }))!.id } },
+        where: {
+          roleId_permissionId: {
+            roleId: role.id,
+            permissionId: (await prisma.permission.findUnique({ where: { name: perm } }))!.id,
+          },
+        },
         update: {},
-        create: { roleId: role.id, permissionId: (await prisma.permission.findUnique({ where: { name: perm } }))!.id },
+        create: {
+          roleId: role.id,
+          permissionId: (await prisma.permission.findUnique({ where: { name: perm } }))!.id,
+        },
       });
     }
   }

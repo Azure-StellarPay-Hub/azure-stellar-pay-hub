@@ -62,7 +62,8 @@ export class PaymentsController {
   @Get('history')
   history(
     @CurrentUser() user: AuthenticatedUser,
-    @Query(new ZodValidationPipe({ query: transactionListQuerySchema })) query: TransactionListQuery,
+    @Query(new ZodValidationPipe({ query: transactionListQuerySchema }))
+    query: TransactionListQuery,
   ) {
     return this.payments.history(user.userId, query);
   }

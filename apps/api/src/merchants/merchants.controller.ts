@@ -78,7 +78,12 @@ export class MerchantsController {
   posCheckout(
     @CurrentUser() user: AuthenticatedUser,
     @Body()
-    body: { productIds?: string[]; amount?: string; assetCode?: string; customerPublicKey?: string },
+    body: {
+      productIds?: string[];
+      amount?: string;
+      assetCode?: string;
+      customerPublicKey?: string;
+    },
   ) {
     return this.merchants.posCheckout(user.userId, body);
   }

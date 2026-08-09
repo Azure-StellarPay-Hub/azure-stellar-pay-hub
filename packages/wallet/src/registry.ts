@@ -17,8 +17,9 @@ export function createAdapter(provider: WalletProviderId): WalletAdapter {
   return factory();
 }
 
-export const SUPPORTED_WALLETS: Array<{ id: WalletProviderId; name: string; description: string }> = [
-  { id: 'FREIGHTER', name: 'Freighter', description: 'The Stellar browser extension wallet' },
-  { id: 'XBULL', name: 'xBull', description: 'Lightweight Stellar wallet for web & mobile' },
-  { id: 'ALBEDO', name: 'Albedo', description: 'Web wallet with a clean signing flow' },
-];
+export const SUPPORTED_WALLETS: Array<{ id: WalletProviderId; name: string; description: string }> =
+  [
+    { id: 'FREIGHTER', name: 'Freighter', description: 'The Stellar browser extension wallet' },
+    { id: 'XBULL', name: 'xBull', description: 'Lightweight Stellar wallet for web & mobile' },
+    { id: 'ALBEDO', name: 'Albedo', description: 'Web wallet with a clean signing flow' },
+  ];
