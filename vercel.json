@@ -1,6 +1,5 @@
 {
   "framework": "nextjs",
-  "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm --filter @stellar-pay/types --filter @stellar-pay/shared --filter @stellar-pay/sdk --filter @stellar-pay/ui --filter @stellar-pay/wallet build && pnpm --filter @stellar-pay/web build",
   "outputDirectory": "apps/web/.next",
   "headers": [
