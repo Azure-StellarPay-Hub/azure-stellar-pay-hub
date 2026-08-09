@@ -1,5 +1,9 @@
 # Azure StellarPay Hub
 
+<p align="center">
+  <img src="apps/web/public/logo.svg" alt="StellarPay Hub" width="260" />
+</p>
+
 **The open-source Stellar payments platform for businesses.**
 
 Send and accept instant, low-cost payments on Stellar — backed by on-chain Soroban smart
