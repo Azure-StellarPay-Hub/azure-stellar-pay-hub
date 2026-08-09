@@ -43,7 +43,6 @@ async function bootstrap(): Promise<void> {
 }
 
 void bootstrap().catch((err) => {
-  // eslint-disable-next-line no-console
   console.error(err);
   process.exit(1);
 });

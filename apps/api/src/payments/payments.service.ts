@@ -1,13 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  Account,
-  Asset,
-  BASE_FEE,
-  Memo,
-  Operation,
-  TransactionBuilder,
-} from '@stellar/stellar-sdk';
+import { Asset, BASE_FEE, Memo, Operation, TransactionBuilder } from '@stellar/stellar-sdk';
 import { PrismaService } from '@stellar-pay/database';
 import { createStellarNetwork } from '../infra/stellar';
 import { createId } from '@stellar-pay/shared';

@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
@@ -228,7 +229,6 @@ export class IpfsService {
    * Uses Node.js `crypto` for the SHA-256 digest — no external dependency.
    */
   private deterministicCid(content: string): string {
-    const { createHash } = require('node:crypto') as typeof import('node:crypto');
     const hash = createHash('sha256').update(content).digest();
 
     // Build a CIDv1: <cidv1><raw><sha2-256><multihash>
@@ -240,12 +240,6 @@ export class IpfsService {
     const cidBytes = Buffer.concat([Buffer.from([0x01, 0x55]), multihash]);
 
     // Base32 (RFC 4648 lowercase, no padding) — standard IPFS CIDv1 encoding.
-    const base32 = cidBytes
-      .toString('base64')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
-    // Actually, we need proper base32 lowercase, not base64url. Let's use a simple approach:
     const alphabet = 'abcdefghijklmnopqrstuvwxyz234567';
     let result = '';
     let bits = 0;
