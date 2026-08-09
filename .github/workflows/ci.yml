@@ -78,7 +78,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
-      - uses: stellar/soroban-cli-action@v1
       - name: Build contracts
         run: pnpm contracts:build
       - name: Test contracts
