@@ -42,16 +42,15 @@ import {
 import { adminApi } from '@/lib/api';
 import type { DashboardMetrics } from '@stellar-pay/types';
 
-// ------------------------------------------------------------------ Color palette
 const ASSET_COLORS = [
-  '#818cf8', // indigo
-  '#c084fc', // purple
-  '#34d399', // emerald
-  '#fbbf24', // amber
-  '#f472b6', // pink
-  '#38bdf8', // sky
-  '#fb923c', // orange
-  '#a78bfa', // violet
+  '#818cf8',
+  '#c084fc',
+  '#34d399',
+  '#fbbf24',
+  '#f472b6',
+  '#38bdf8',
+  '#fb923c',
+  '#a78bfa',
 ];
 
 const CHART_THEME = {
@@ -59,8 +58,6 @@ const CHART_THEME = {
   axis: '#9b9bb0',
   tooltip: { bg: '#16161f', border: '#26263a' },
 };
-
-// ------------------------------------------------------------------ Helpers
 
 function formatCurrency(value: string | undefined): string {
   if (!value || value === '0') return '$0.00';
@@ -77,11 +74,8 @@ function formatInt(value: number | undefined): string {
   return String(value);
 }
 
-// ------------------------------------------------------------------ Animated counter
-
 function AnimatedCounter({ value, duration = 800 }: { value: string; duration?: number }) {
   const [display, setDisplay] = useState(0);
-
   useEffect(() => {
     const num = Number(value);
     if (isNaN(num)) {
@@ -95,24 +89,18 @@ function AnimatedCounter({ value, duration = 800 }: { value: string; duration?: 
       if (start >= num) {
         setDisplay(num);
         clearInterval(timer);
-      } else {
-        setDisplay(start);
-      }
+      } else setDisplay(start);
     }, 16);
     return () => clearInterval(timer);
   }, [value, duration]);
-
   return <>{display.toLocaleString()}</>;
 }
-
-// ------------------------------------------------------------------ Success rate gauge
 
 function SuccessGauge({ rate }: { rate: number }) {
   const radius = 44;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - rate / 100);
   const color = rate >= 95 ? '#34d399' : rate >= 85 ? '#fbbf24' : '#f87171';
-
   return (
     <div className="flex flex-col items-center">
       <div className="relative">
@@ -142,8 +130,6 @@ function SuccessGauge({ rate }: { rate: number }) {
   );
 }
 
-// ------------------------------------------------------------------ Main component
-
 const RANGE_OPTIONS = ['7d', '30d', '90d'] as const;
 
 export default function OverviewPage() {
@@ -155,7 +141,6 @@ export default function OverviewPage() {
   const [loading, setLoading] = useState(true);
   const [volumeLoading, setVolumeLoading] = useState(true);
 
-  // Fetch dashboard metrics.
   const fetchMetrics = useCallback(() => {
     setLoading(true);
     void adminApi.admin
@@ -165,7 +150,6 @@ export default function OverviewPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Fetch volume data.
   const fetchVolume = useCallback((r: '7d' | '30d' | '90d') => {
     setVolumeLoading(true);
     void adminApi.admin
@@ -180,7 +164,6 @@ export default function OverviewPage() {
     fetchVolume(range);
   }, [fetchMetrics, fetchVolume, range]);
 
-  // Derived data.
   const assetPieData = useMemo(() => {
     if (!metrics?.assetUsage) return [];
     return Object.entries(metrics.assetUsage)
@@ -196,7 +179,6 @@ export default function OverviewPage() {
     return Math.round(((last - first) / first) * 100);
   }, [volume]);
 
-  // KPI cards config.
   const kpiCards = useMemo(
     () => [
       {
@@ -253,7 +235,6 @@ export default function OverviewPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Analytics Dashboard</h1>
@@ -272,7 +253,6 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* KPI cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {kpiCards.map((card) => (
           <Card
@@ -299,9 +279,7 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* Main charts row */}
       <div className="grid gap-4 lg:grid-cols-3">
-        {/* Volume area chart */}
         <Card className="lg:col-span-2">
           <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="flex items-center gap-2 text-base">
@@ -311,9 +289,7 @@ export default function OverviewPage() {
             <div className="flex items-center gap-2">
               {volume.length > 0 && (
                 <span
-                  className={`flex items-center gap-0.5 text-xs ${
-                    volumeTrend >= 0 ? 'text-emerald-400' : 'text-rose-400'
-                  }`}
+                  className={`flex items-center gap-0.5 text-xs ${volumeTrend >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}
                 >
                   {volumeTrend >= 0 ? (
                     <ArrowUp className="h-3 w-3" />
@@ -400,9 +376,7 @@ export default function OverviewPage() {
           </CardContent>
         </Card>
 
-        {/* Right column: success gauge + cross-border */}
         <div className="space-y-4">
-          {/* Success rate gauge */}
           <Card className="text-center">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center justify-center gap-2 text-sm">
@@ -418,8 +392,6 @@ export default function OverviewPage() {
               )}
             </CardContent>
           </Card>
-
-          {/* Cross-border card */}
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-sm">
@@ -461,9 +433,7 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* Bottom row: pie chart + top merchants */}
       <div className="grid gap-4 lg:grid-cols-2">
-        {/* Asset distribution pie chart */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
@@ -515,17 +485,13 @@ export default function OverviewPage() {
                     />
                   </PieChart>
                 </ResponsiveContainer>
-
-                {/* Legend */}
                 <div className="flex-1 space-y-1.5">
                   {assetPieData.slice(0, 8).map((item, i) => (
                     <div key={item.name} className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2">
                         <span
                           className="h-2.5 w-2.5 rounded-full"
-                          style={{
-                            backgroundColor: ASSET_COLORS[i % ASSET_COLORS.length],
-                          }}
+                          style={{ backgroundColor: ASSET_COLORS[i % ASSET_COLORS.length] }}
                         />
                         <span className="font-mono font-medium">{item.name}</span>
                       </div>
@@ -538,7 +504,6 @@ export default function OverviewPage() {
           </CardContent>
         </Card>
 
-        {/* Top merchants + recent activity */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
@@ -564,44 +529,27 @@ export default function OverviewPage() {
                     key={merchant.merchantId}
                     className="flex items-center gap-3 rounded-lg px-3 py-3 transition-colors hover:bg-accent/50"
                   >
-                    {/* Rank */}
                     <span
-                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                        i === 0
-                          ? 'bg-amber-500/20 text-amber-400'
-                          : i === 1
-                            ? 'bg-slate-400/20 text-slate-300'
-                            : i === 2
-                              ? 'bg-orange-700/20 text-orange-400'
-                              : 'bg-muted text-muted-foreground'
-                      }`}
+                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${i === 0 ? 'bg-amber-500/20 text-amber-400' : i === 1 ? 'bg-slate-400/20 text-slate-300' : i === 2 ? 'bg-orange-700/20 text-orange-400' : 'bg-muted text-muted-foreground'}`}
                     >
                       {i + 1}
                     </span>
-
-                    {/* Name + details */}
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{merchant.name}</p>
                       <p className="truncate font-mono text-[10px] text-muted-foreground">
                         {merchant.merchantId.slice(0, 12)}…
                       </p>
                     </div>
-
-                    {/* Volume */}
                     <div className="text-right">
                       <p className="text-sm font-semibold tabular-nums">
                         {formatCurrency(merchant.volume)}
                       </p>
                     </div>
-
-                    {/* Progress bar */}
                     <div className="hidden w-16 sm:block">
                       <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
                         <div
                           className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-700"
-                          style={{
-                            width: `${Math.max(5, 100 - i * 20 - Math.random() * 15)}%`,
-                          }}
+                          style={{ width: `${Math.max(5, 100 - i * 20 - Math.random() * 15)}%` }}
                         />
                       </div>
                     </div>
@@ -613,7 +561,6 @@ export default function OverviewPage() {
         </Card>
       </div>
 
-      {/* Quick stats bar */}
       <Card className="bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-fuchsia-500/5">
         <CardContent className="flex flex-wrap items-center justify-between gap-4 py-5">
           <div className="flex items-center gap-3">

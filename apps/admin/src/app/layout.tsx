@@ -13,6 +13,8 @@ import {
 import { ToastProvider } from '@stellar-pay/ui';
 import './globals.css';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'StellarPay Hub — Admin',
 };
