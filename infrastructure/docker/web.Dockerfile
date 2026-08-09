@@ -21,7 +21,7 @@ RUN pnpm --filter @stellar-pay/types build && \
     pnpm --filter @stellar-pay/wallet build && \
     pnpm --filter @stellar-pay/ui build
 RUN pnpm --filter @stellar-pay/${APP} build
-RUN pnpm --filter @stellar-pay/${APP} --prod deploy /out/node_modules
+RUN pnpm --filter @stellar-pay/${APP} --prod --legacy deploy /out/node_modules
 
 # --- Runtime stage ----------------------------------------------------------
 FROM node:22-alpine AS runtime

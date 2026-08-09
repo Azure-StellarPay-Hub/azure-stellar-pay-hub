@@ -15,7 +15,7 @@ WORKDIR /app
 # Generate the Prisma client, then compile packages + api in dependency order.
 RUN pnpm --filter @stellar-pay/database build
 RUN pnpm --filter @stellar-pay/api build
-RUN pnpm --filter @stellar-pay/api --prod deploy /out/node_modules
+RUN pnpm --filter @stellar-pay/api --prod --legacy deploy /out/node_modules
 
 # --- Runtime stage ----------------------------------------------------------
 FROM node:22-alpine AS runtime
