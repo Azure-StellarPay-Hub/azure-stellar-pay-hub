@@ -6,4 +6,15 @@ packages:
 # pnpm 10: hoisted layout maximizes compatibility with Nx, NestJS and Next.js.
 nodeLinker: hoisted
 
-# Build scripts are allowed for packages listed in package.json → pnpm.onlyBuiltDependencies
+# pnpm 10: build scripts are allowed only for these dependencies.
+# NOTE: this must live here (pnpm-workspace.yaml) — pnpm 10 ignores the
+# "pnpm" field in package.json entirely.
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - '@tailwindcss/oxide'
+  - 'esbuild'
+  - 'nx'
+  - 'prisma'
+  - 'sharp'
+  - 'unrs-resolver'
