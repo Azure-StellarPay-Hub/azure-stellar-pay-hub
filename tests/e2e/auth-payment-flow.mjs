@@ -49,25 +49,23 @@ function summary() {
 
 async function bootApi() {
   console.log('Booting API for E2E test…');
-  const child = spawn(
-    'pnpm',
-    ['--filter', '@stellar-pay/api', 'start'],
-    {
-      stdio: 'inherit',
-      env: {
-        ...process.env,
-        PORT: '4100',
-        NODE_ENV: 'development',
-        JWT_SECRET: 'e2e-test-secret-at-least-16-chars',
-        DATABASE_URL: process.env.DATABASE_URL ?? 'postgresql://postgres:postgres@localhost:5432/stellar_pay?schema=public',
-        REDIS_URL: process.env.REDIS_URL ?? 'redis://localhost:6379',
-        STELLAR_NETWORK: 'testnet',
-        ADMIN_EMAIL: 'e2e@test.dev',
-        ADMIN_PASSWORD: 'E2eTest123!',
-      },
-      shell: false,
+  const child = spawn('pnpm', ['--filter', '@stellar-pay/api', 'start'], {
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      PORT: '4100',
+      NODE_ENV: 'development',
+      JWT_SECRET: 'e2e-test-secret-at-least-16-chars',
+      DATABASE_URL:
+        process.env.DATABASE_URL ??
+        'postgresql://postgres:postgres@localhost:5432/stellar_pay?schema=public',
+      REDIS_URL: process.env.REDIS_URL ?? 'redis://localhost:6379',
+      STELLAR_NETWORK: 'testnet',
+      ADMIN_EMAIL: 'e2e@test.dev',
+      ADMIN_PASSWORD: 'E2eTest123!',
     },
-  );
+    shell: false,
+  });
 
   // Wait for the API to boot (NestJS takes a few seconds with Prisma + Redis)
   for (let i = 0; i < 30; i++) {
@@ -111,8 +109,11 @@ async function run() {
     // -- Step 2: Generate test keypair ------------------------------------------
     console.log('\n2. Generate testnet keypair');
     const kp = Keypair.random();
-    check('Keypair generated', !!kp.secret() && !!kp.publicKey(),
-      `publicKey=${kp.publicKey().slice(0, 8)}…`);
+    check(
+      'Keypair generated',
+      !!kp.secret() && !!kp.publicKey(),
+      `publicKey=${kp.publicKey().slice(0, 8)}…`,
+    );
 
     // -- Step 3: Request auth challenge -----------------------------------------
     console.log('\n3. Request auth challenge');
@@ -122,9 +123,11 @@ async function run() {
     try {
       challenge = await client.auth.challenge(kp.publicKey());
       check('Challenge received', !!challenge?.nonce && !!challenge?.message);
-      check('Challenge has correct format',
+      check(
+        'Challenge has correct format',
         challenge?.message?.startsWith('stellar-pay:auth:'),
-        challenge?.message?.slice(0, 40));
+        challenge?.message?.slice(0, 40),
+      );
     } catch (err) {
       check('Challenge received', false, err.message);
       return;
@@ -135,8 +138,7 @@ async function run() {
     const messageBytes = Buffer.from(challenge.message, 'utf8');
     const signatureBytes = kp.sign(messageBytes);
     const signature = Buffer.from(signatureBytes).toString('hex');
-    check('Challenge signed', signature.length >= 128,
-      `sig=${signature.slice(0, 16)}…`);
+    check('Challenge signed', signature.length >= 128, `sig=${signature.slice(0, 16)}…`);
 
     // -- Step 5: Verify and get JWT ---------------------------------------------
     console.log('\n5. Verify & get JWT');
@@ -150,8 +152,11 @@ async function run() {
         provider: 'FREIGHTER',
         deviceName: 'e2e-test',
       });
-      check('Auth verified', !!authResult?.accessToken,
-        `user=${authResult?.user?.id?.slice(0, 8)}…`);
+      check(
+        'Auth verified',
+        !!authResult?.accessToken,
+        `user=${authResult?.user?.id?.slice(0, 8)}…`,
+      );
       check('Refresh token present', !!authResult?.refreshToken);
       check('User created/returned', !!authResult?.user?.id);
     } catch (err) {
@@ -180,8 +185,11 @@ async function run() {
         memo: 'e2e-test-payment',
       });
       check('Payment created', !!payment?.id, `id=${payment?.id?.slice(0, 8)}…`);
-      check('Payment has transactionXdr', !!payment?.transactionXdr,
-        `xdr=${payment?.transactionXdr?.slice(0, 20)}…`);
+      check(
+        'Payment has transactionXdr',
+        !!payment?.transactionXdr,
+        `xdr=${payment?.transactionXdr?.slice(0, 20)}…`,
+      );
     } catch (err) {
       check('Payment created', false, err.message);
       return;
@@ -226,12 +234,10 @@ async function run() {
       const account = await network.getAccount(
         'GCYOTZR3A4JERO4SRKC2TG3LFVGZZ2AEUIYXXF6KXT2E2YDNPYRMQ5S5',
       );
-      check('Testnet Horizon reachable', !!account,
-        `sequence=${account?.sequenceNumber()}`);
+      check('Testnet Horizon reachable', !!account, `sequence=${account?.sequenceNumber()}`);
     } catch (err) {
       check('Testnet Horizon reachable', false, err.message);
     }
-
   } finally {
     summary();
     if (child) {

@@ -114,12 +114,12 @@ payment infrastructure:
 
 Deployed and publicly accessible on Vercel:
 
-| App                 | URL                                                                                           | Status                                                                            |
-| ------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| **Admin Dashboard** | [azure-stellar-pay-hub-admin.vercel.app](https://azure-stellar-pay-hub-admin-kfc3.vercel.app) | ![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white) |
-| **Web App**         | (preview builds on push)                                                                      | —                                                                                 |
-| **Explorer**        | (preview builds on push)                                                                      | —                                                                                 |
-| **Soroban Contracts** | [Stellar Testnet](docs/testnet-deploy.md)                                                   | [![Testnet](https://img.shields.io/badge/Testnet-8_contracts_deployed-34d399?logo=stellar&logoColor=white)](docs/testnet-deploy.md) |
+| App                   | URL                                                                                           | Status                                                                                                                              |
+| --------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Admin Dashboard**   | [azure-stellar-pay-hub-admin.vercel.app](https://azure-stellar-pay-hub-admin-kfc3.vercel.app) | ![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white)                                                   |
+| **Web App**           | (preview builds on push)                                                                      | —                                                                                                                                   |
+| **Explorer**          | (preview builds on push)                                                                      | —                                                                                                                                   |
+| **Soroban Contracts** | [Stellar Testnet](docs/testnet-deploy.md)                                                     | [![Testnet](https://img.shields.io/badge/Testnet-8_contracts_deployed-34d399?logo=stellar&logoColor=white)](docs/testnet-deploy.md) |
 
 ### Admin Dashboard
 

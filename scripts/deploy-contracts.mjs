@@ -1,5 +1,13 @@
 // deploy-contracts.mjs — Deploy Soroban contracts to Stellar testnet
-import { Server, TransactionBuilder, Operation, Networks, Keypair, nativeToScVal, xdr } from 'soroban-client';
+import {
+  Server,
+  TransactionBuilder,
+  Operation,
+  Networks,
+  Keypair,
+  nativeToScVal,
+  xdr,
+} from 'soroban-client';
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -44,21 +52,29 @@ async function deploy(name, wasmPath) {
     fee: '100000',
     networkPassphrase: Networks.TESTNET,
   })
-    .addOperation(Operation.invokeHostFunction({
-      func: xdr.HostFunction.hostFunctionTypeUploadContractWasm(wasmBytes),
-      auth: [],
-    }))
-    .addOperation(Operation.invokeHostFunction({
-      func: xdr.HostFunction.hostFunctionTypeCreateContractV2({
-        contractIdPreimage: xdr.ContractIdPreimage.contractIdPreimageFromAddress(
-          xdr.ContractIdPreimageFromAddress.fromXDR(
-            { address: xdr.ScAddress.scAddressTypeContract(wasmBytes.slice(0, 32)), salt: Buffer.alloc(32) }, 'base64'
-          )
-        ),
-        // Use the current source account ID + salt as preimage
+    .addOperation(
+      Operation.invokeHostFunction({
+        func: xdr.HostFunction.hostFunctionTypeUploadContractWasm(wasmBytes),
+        auth: [],
       }),
-      auth: [],
-    }))
+    )
+    .addOperation(
+      Operation.invokeHostFunction({
+        func: xdr.HostFunction.hostFunctionTypeCreateContractV2({
+          contractIdPreimage: xdr.ContractIdPreimage.contractIdPreimageFromAddress(
+            xdr.ContractIdPreimageFromAddress.fromXDR(
+              {
+                address: xdr.ScAddress.scAddressTypeContract(wasmBytes.slice(0, 32)),
+                salt: Buffer.alloc(32),
+              },
+              'base64',
+            ),
+          ),
+          // Use the current source account ID + salt as preimage
+        }),
+        auth: [],
+      }),
+    )
     .setTimeout(300)
     .build();
 
@@ -74,14 +90,16 @@ async function deploy(name, wasmPath) {
   const result = await server.sendTransaction(prepared);
 
   if (result.status === 'ERROR') {
-    throw new Error(`Transaction failed: ${result.errorResult?.result() || JSON.stringify(result)}`);
+    throw new Error(
+      `Transaction failed: ${result.errorResult?.result() || JSON.stringify(result)}`,
+    );
   }
 
   // Wait for confirmation and get contract ID
   console.log('   Waiting for confirmation...');
   let contractId = null;
   for (let i = 0; i < 15; i++) {
-    await new Promise(r => setTimeout(r, 3000));
+    await new Promise((r) => setTimeout(r, 3000));
     const txInfo = await server.getTransaction(result.hash);
     if (txInfo.status === 'SUCCESS') {
       // Extract contract ID from result
@@ -122,4 +140,7 @@ async function main() {
   console.log(`\n📝 ${OUTPUT_FILE}`);
 }
 
-main().catch(err => { console.error(err); process.exit(1); });
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

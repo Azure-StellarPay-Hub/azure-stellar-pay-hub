@@ -10,16 +10,16 @@ and frontend apps — to Stellar testnet.
 
 ## Prerequisites
 
-| Requirement                 | How to get it                                                                                                                                                    |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Stellar testnet account** | Create at [laboratory.stellar.org](https://laboratory.stellar.org/#create-account?network=test)                                                                  |
-| **Funded with XLM**         | Fund at [laboratory.stellar.org](https://laboratory.stellar.org/#create-account?network=test) or use Friendbot: `curl "https://friendbot.stellar.org?addr=G..."` |
-| **Secret key**              | Save the secret key (starts with `S...`) — you'll need it for contract deployment                                                                                |
-| **Node.js ≥ 20.9**          | `nvm install && nvm use`                                                                                                                                         |
-| **pnpm ≥ 9**                | `corepack enable`                                                                                                                                                |
-| **Rust + wasm32v1-none target** | `rustup target add wasm32v1-none`                                                                                                                              |
-| **stellar-cli**             | `cargo install stellar-cli`                                                                                                                                      |
-| **Docker**                  | For local Postgres + Redis                                                                                                                                       |
+| Requirement                     | How to get it                                                                                                                                                    |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Stellar testnet account**     | Create at [laboratory.stellar.org](https://laboratory.stellar.org/#create-account?network=test)                                                                  |
+| **Funded with XLM**             | Fund at [laboratory.stellar.org](https://laboratory.stellar.org/#create-account?network=test) or use Friendbot: `curl "https://friendbot.stellar.org?addr=G..."` |
+| **Secret key**                  | Save the secret key (starts with `S...`) — you'll need it for contract deployment                                                                                |
+| **Node.js ≥ 20.9**              | `nvm install && nvm use`                                                                                                                                         |
+| **pnpm ≥ 9**                    | `corepack enable`                                                                                                                                                |
+| **Rust + wasm32v1-none target** | `rustup target add wasm32v1-none`                                                                                                                                |
+| **stellar-cli**                 | `cargo install stellar-cli`                                                                                                                                      |
+| **Docker**                      | For local Postgres + Redis                                                                                                                                       |
 
 ## Quick Deploy (One Command)
 
@@ -167,16 +167,16 @@ curl -X POST http://localhost:4000/api/payments \
 
 ## Deployed Contract Addresses (Current Testnet)
 
-| Contract | Address |
-|----------|---------|
-| Payment | [`CC5UU...VHLCA`](https://stellar.expert/explorer/testnet/contract/CC5UUVJCU3WRXDPDE3MEP65BN7XASQDV6O5IWVQRT53D5UKJ63UVHLCA) |
-| Escrow | [`CA2KM...M23GOY`](https://stellar.expert/explorer/testnet/contract/CA2KMJRW3VDB65U5CLN7VF7AKDQXZ7OYIVUEDBA673UAECUYR6M23GOY) |
-| Multisig | [`CAPHT...J6TGUH`](https://stellar.expert/explorer/testnet/contract/CAPHTEX57F3P5DHX67TV7CDHEHEC5COHQ7TDBSYYNN4MN6PCF6J6TGUH) |
-| Treasury | [`CB3FI...KY2TH`](https://stellar.expert/explorer/testnet/contract/CB3FI5CKQAO2INOWFIMFLZXCXDUK3EMJNA5B5WEPRMGSP75NTX3KY2TH) |
-| Subscriptions | [`CDU4A...7QK46K`](https://stellar.expert/explorer/testnet/contract/CDU4ANSQWZMVPZDNSE2FWCXSOBIVJWGODC3CLCZGIILKUIMW3M7QK46K) |
-| Invoices | [`CCQFA...2QBGR5`](https://stellar.expert/explorer/testnet/contract/CCQFABKSRSVAZGAXHQIR5FPPMFPNS5BHTKYRLAVKMMJE76546Q2QBGR5) |
-| Merchant | [`CBT3H...Q3SX3I7`](https://stellar.expert/explorer/testnet/contract/CBT3HOK5WJ6UTO6S3I5ZE3JHB5IPIJBWCFXZZGO26T6T7OXPWQ3SX3I7) |
-| Rewards | [`CBE3J...B37Z4IU`](https://stellar.expert/explorer/testnet/contract/CBE3JCWEH4D6INRELW62CPVK4ZHFUZRPGLKCTGAH2B4IALINFB37Z4IU) |
+| Contract      | Address                                                                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Payment       | [`CC5UU...VHLCA`](https://stellar.expert/explorer/testnet/contract/CC5UUVJCU3WRXDPDE3MEP65BN7XASQDV6O5IWVQRT53D5UKJ63UVHLCA)   |
+| Escrow        | [`CA2KM...M23GOY`](https://stellar.expert/explorer/testnet/contract/CA2KMJRW3VDB65U5CLN7VF7AKDQXZ7OYIVUEDBA673UAECUYR6M23GOY)  |
+| Multisig      | [`CAPHT...J6TGUH`](https://stellar.expert/explorer/testnet/contract/CAPHTEX57F3P5DHX67TV7CDHEHEC5COHQ7TDBSYYNN4MN6PCF6J6TGUH)  |
+| Treasury      | [`CB3FI...KY2TH`](https://stellar.expert/explorer/testnet/contract/CB3FI5CKQAO2INOWFIMFLZXCXDUK3EMJNA5B5WEPRMGSP75NTX3KY2TH)   |
+| Subscriptions | [`CDU4A...7QK46K`](https://stellar.expert/explorer/testnet/contract/CDU4ANSQWZMVPZDNSE2FWCXSOBIVJWGODC3CLCZGIILKUIMW3M7QK46K)  |
+| Invoices      | [`CCQFA...2QBGR5`](https://stellar.expert/explorer/testnet/contract/CCQFABKSRSVAZGAXHQIR5FPPMFPNS5BHTKYRLAVKMMJE76546Q2QBGR5)  |
+| Merchant      | [`CBT3H...Q3SX3I7`](https://stellar.expert/explorer/testnet/contract/CBT3HOK5WJ6UTO6S3I5ZE3JHB5IPIJBWCFXZZGO26T6T7OXPWQ3SX3I7) |
+| Rewards       | [`CBE3J...B37Z4IU`](https://stellar.expert/explorer/testnet/contract/CBE3JCWEH4D6INRELW62CPVK4ZHFUZRPGLKCTGAH2B4IALINFB37Z4IU) |
 
 Full addresses are in [`.deployed-contracts.env`](../.deployed-contracts.env).
 

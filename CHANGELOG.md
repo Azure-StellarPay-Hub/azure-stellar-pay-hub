@@ -78,11 +78,11 @@ Tags follow the format `v0.1.0`, `v0.2.0`, etc.
 
 ## Types of Changes
 
-| Prefix      | Description                              |
-| ----------- | ---------------------------------------- |
-| `Added`     | New features                             |
-| `Changed`   | Changes in existing functionality        |
-| `Deprecated`| Soon-to-be removed features              |
-| `Removed`   | Removed features                         |
-| `Fixed`     | Bug fixes                                |
-| `Security`  | Vulnerability fixes                      |
+| Prefix       | Description                       |
+| ------------ | --------------------------------- |
+| `Added`      | New features                      |
+| `Changed`    | Changes in existing functionality |
+| `Deprecated` | Soon-to-be removed features       |
+| `Removed`    | Removed features                  |
+| `Fixed`      | Bug fixes                         |
+| `Security`   | Vulnerability fixes               |

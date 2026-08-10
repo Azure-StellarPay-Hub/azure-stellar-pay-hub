@@ -30,7 +30,9 @@ describe('createAdapter', () => {
   });
 
   it('throws for an unknown provider', () => {
-    expect(() => createAdapter('UNKNOWN' as unknown as Parameters<typeof createAdapter>[0])).toThrow('Unsupported wallet provider');
+    expect(() =>
+      createAdapter('UNKNOWN' as unknown as Parameters<typeof createAdapter>[0]),
+    ).toThrow('Unsupported wallet provider');
   });
 
   it('each call creates a new instance', () => {
