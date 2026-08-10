@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ToastProvider } from '@stellar-pay/ui/dist/components/toast';
+import NavSidebar from './_nav-sidebar';
 import './globals.css';
 
 export const dynamic = 'force-dynamic';
@@ -13,7 +14,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="dark">
       <body>
         <ToastProvider>
-          <main className="mx-auto max-w-6xl p-6 md:p-8">{children}</main>
+          <div className="flex min-h-screen">
+            <NavSidebar />
+            <div className="flex-1 md:pl-60">
+              <main className="mx-auto max-w-6xl p-6 md:p-8">{children}</main>
+            </div>
+          </div>
         </ToastProvider>
       </body>
     </html>
