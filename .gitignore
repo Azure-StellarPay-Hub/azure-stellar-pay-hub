@@ -15,7 +15,11 @@ coverage/
 # Rust / Soroban
 contracts/target/
 contracts/**/target/
+contracts/**/test_snapshots/
 *.wasm
+
+# npm (project uses pnpm)
+package-lock.json
 
 # Environment
 .env
