@@ -7,6 +7,7 @@ describe('cn', () => {
   });
 
   it('filters out falsy values', () => {
+    // eslint-disable-next-line no-constant-binary-expression -- testing falsy filter
     expect(cn('text-sm', false && 'hidden', undefined, null, '', 0, 'block')).toBe('text-sm block');
   });
 
