@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState, useEffect } from 'react';
 import { LogOut, Wallet, ChevronDown, Check, Loader2 } from 'lucide-react';
-import { Button } from '@stellar-pay/ui';
+import { Button } from '@stellar-pay/ui/dist/components/button';
 import { SUPPORTED_WALLETS, useWallet } from '@stellar-pay/wallet';
 import { useAuth } from '@/lib/auth';
 import { shortKey } from '@/lib/format';

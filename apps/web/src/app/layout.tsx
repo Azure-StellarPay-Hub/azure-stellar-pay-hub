@@ -1,7 +1,7 @@
 'use client';
 
 import { WalletProvider } from '@stellar-pay/wallet';
-import { ToastProvider } from '@stellar-pay/ui';
+import { ToastProvider } from '@stellar-pay/ui/dist/components/toast';
 import { AuthProvider } from '@/lib/auth';
 import { Header } from '@/components/header';
 import { RealtimeProvider } from '@/components/realtime-provider';
