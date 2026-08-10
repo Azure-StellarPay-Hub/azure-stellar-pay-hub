@@ -13,6 +13,7 @@ Built for real-world commerce, not just demos.
 [![Stellar](https://img.shields.io/badge/Stellar-7B3FE4?logo=stellar&logoColor=white)](https://stellar.org/developers)
 [![Soroban SDK](https://img.shields.io/badge/Soroban_SDK-21.7.1-7B3FE4?logo=stellar&logoColor=white)](https://soroban.stellar.org/docs)
 [![CI](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/actions/workflows/ci.yml)
+[![Testnet](https://img.shields.io/badge/Testnet-8_contracts_deployed-34d399?logo=stellar&logoColor=white)](docs/testnet-deploy.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-131_passing-34d399?logo=jest&logoColor=white)](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/actions/workflows/ci.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-818cf8.svg)](CONTRIBUTING.md)
@@ -118,6 +119,7 @@ Deployed and publicly accessible on Vercel:
 | **Admin Dashboard** | [azure-stellar-pay-hub-admin.vercel.app](https://azure-stellar-pay-hub-admin-kfc3.vercel.app) | ![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white) |
 | **Web App**         | (preview builds on push)                                                                      | —                                                                                 |
 | **Explorer**        | (preview builds on push)                                                                      | —                                                                                 |
+| **Soroban Contracts** | [Stellar Testnet](docs/testnet-deploy.md)                                                   | [![Testnet](https://img.shields.io/badge/Testnet-8_contracts_deployed-34d399?logo=stellar&logoColor=white)](docs/testnet-deploy.md) |
 
 ### Admin Dashboard
 
