@@ -5,7 +5,7 @@ use soroban_sdk::testutils::Address as AddressUtils;
 use soroban_sdk::{token, Address, Env, String};
 
 fn create_token<'e>(env: &'e Env, admin: &Address) -> (token::Client<'e>, Address) {
-    let id = env.register_stellar_asset_contract(admin.clone());
+    let id = env.register_stellar_asset_contract_v2(admin.clone()).address();
     (token::Client::new(env, &id), id)
 }
 
