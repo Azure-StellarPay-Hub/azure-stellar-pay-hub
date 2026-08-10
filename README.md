@@ -283,7 +283,7 @@ azure-stellar-pay-hub/
 - **Node.js** ≥ 20.9 (use `nvm install` — `.nvmrc` included)
 - **pnpm** ≥ 9 (run `corepack enable`)
 - **Docker** (for local Postgres + Redis)
-- **Rust** stable + `wasm32-unknown-unknown` target (for Soroban contracts — optional)
+- **Rust** stable + `wasm32v1-none` target (for Soroban contracts — optional)
 
 ### Setup
 

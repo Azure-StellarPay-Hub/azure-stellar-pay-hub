@@ -30,7 +30,7 @@
     "db:push": "pnpm --filter @stellar-pay/database db:push",
     "db:seed": "pnpm --filter @stellar-pay/database db:seed",
     "db:studio": "pnpm --filter @stellar-pay/database db:studio",
-    "contracts:build": "cargo build --manifest-path contracts/Cargo.toml --workspace --release --target wasm32-unknown-unknown",
+    "contracts:build": "cargo build --manifest-path contracts/Cargo.toml --workspace --release --target wasm32v1-none",
     "contracts:test": "cargo test --manifest-path contracts/Cargo.toml --workspace",
     "generate:env": "bash scripts/generate-env.sh",
     "setup": "bash scripts/setup.sh",
@@ -47,5 +47,8 @@
     "tsx": "^4.23.8",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.66.0"
+  },
+  "dependencies": {
+    "soroban-client": "^1.0.1"
   }
 }

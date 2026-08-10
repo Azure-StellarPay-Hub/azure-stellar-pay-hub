@@ -17,7 +17,7 @@ self-contained with events, typed errors, unit tests and documentation.
 ## Requirements
 
 - Rust stable (`rustup`)
-- `wasm32-unknown-unknown` target: `rustup target add wasm32-unknown-unknown`
+- `wasm32v1-none` target: `rustup target add wasm32v1-none`
 - [Soroban CLI](https://soroban.stellar.org/docs/cli) (optional, for `soroban contract build`)
 
 ## Build & test
@@ -25,7 +25,7 @@ self-contained with events, typed errors, unit tests and documentation.
 ```bash
 # Compile all contracts to wasm (optimized release profile)
 pnpm contracts:build
-# or: cargo build --manifest-path contracts/Cargo.toml --workspace --release --target wasm32-unknown-unknown
+# or: cargo build --manifest-path contracts/Cargo.toml --workspace --release --target wasm32v1-none
 
 # Run all unit tests (native host)
 pnpm contracts:test
@@ -34,7 +34,7 @@ pnpm contracts:test
 ## Deploy
 
 ```bash
-soroban contract deploy --wasm target/wasm32-unknown-unknown/release/stellar_pay_payment.wasm \
+stellar contract deploy --wasm target/wasm32v1-none/release/stellar_pay_payment.wasm \
   --source <admin-secret> --network testnet
 ```
 

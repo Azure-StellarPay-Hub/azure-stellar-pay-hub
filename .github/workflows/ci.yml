@@ -95,11 +95,11 @@ jobs:
       - uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # v1
         with:
           toolchain: stable
-          targets: wasm32-unknown-unknown
+          targets: wasm32v1-none
       - name: Build contracts
-        run: pnpm contracts:build
+        run: cargo build --manifest-path contracts/Cargo.toml --workspace --release --target wasm32v1-none
       - name: Test contracts
-        run: pnpm contracts:test
+        run: cargo test --manifest-path contracts/Cargo.toml --workspace
 
   build-apps:
     name: Build apps & packages

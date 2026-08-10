@@ -7,7 +7,7 @@ description: The seven Soroban contracts, their interfaces, events, and deployme
 
 All contracts live in `contracts/` and are written in Rust with
 [Soroban](https://soroban.stellar.org). They are workspace members of `contracts/Cargo.toml`
-(target: `wasm32-unknown-unknown`).
+(target: `wasm32v1-none`).
 
 ## Contracts
 
@@ -39,13 +39,13 @@ pnpm contracts:build
 pnpm contracts:test
 ```
 
-Artifacts: `contracts/*/target/wasm32-unknown-unknown/release/*.wasm`
+Artifacts: `contracts/target/wasm32v1-none/release/*.wasm`
 
 ## Deploy (testnet)
 
 ```bash
 soroban contract deploy \
-  --wasm contracts/payment/target/wasm32-unknown-unknown/release/payment.wasm \
+  --wasm contracts/target/wasm32v1-none/release/stellar_pay_payment.wasm \
   --source ADMIN \
   --network testnet
 ```
