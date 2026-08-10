@@ -7,6 +7,7 @@ use soroban_sdk::{contract, contracterror, contractimpl, contracttype, symbol_sh
 pub enum MultisigError {
     Unauthorized = 1, NotASigner = 2, InvalidThreshold = 3, ProposalNotFound = 4,
     AlreadyVoted = 5, AlreadyExecuted = 6, QuorumNotReached = 7, NotInitialized = 8,
+    AlreadyInitialized = 9,
 }
 
 #[contracttype]
@@ -42,7 +43,7 @@ pub struct MultisigContract;
 #[contractimpl]
 impl MultisigContract {
     pub fn initialize(env: Env, signers: Vec<Address>, threshold: u32) -> Result<(), MultisigError> {
-        if env.storage().instance().has(&DataKey::Signers) { panic!("already initialized"); }
+        if env.storage().instance().has(&DataKey::Signers) { return Err(MultisigError::AlreadyInitialized); }
         if threshold == 0 || threshold > signers.len() as u32 { return Err(MultisigError::InvalidThreshold); }
         env.storage().instance().set(&DataKey::Signers, &signers);
         env.storage().instance().set(&DataKey::Threshold, &threshold);

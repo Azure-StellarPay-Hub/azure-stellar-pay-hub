@@ -11,6 +11,7 @@ pub enum PaymentError {
     TokenNotAllowed = 4,
     NotInitialized = 5,
     EmptyRecipients = 6,
+    AlreadyInitialized = 7,
 }
 
 #[contracttype]
@@ -59,7 +60,7 @@ pub struct PaymentContract;
 impl PaymentContract {
     pub fn initialize(env: Env, admin: Address) -> Result<(), PaymentError> {
         if env.storage().instance().has(&DataKey::Admin) {
-            panic!("already initialized");
+            return Err(PaymentError::AlreadyInitialized);
         }
         env.storage().instance().set(&DataKey::Admin, &admin);
         env.storage().instance().set(&DataKey::Paused, &false);

@@ -7,6 +7,7 @@ use soroban_sdk::{contract, contracterror, contractimpl, contracttype, symbol_sh
 pub enum MerchantError {
     Unauthorized = 1, InvalidAmount = 2, MerchantNotFound = 3, InactiveMerchant = 4,
     NotInitialized = 5, InvalidCommission = 6, NoBalance = 7,
+    AlreadyInitialized = 8,
 }
 
 #[contracttype]
@@ -39,7 +40,7 @@ pub struct MerchantContract;
 #[contractimpl]
 impl MerchantContract {
     pub fn initialize(env: Env, admin: Address) -> Result<(), MerchantError> {
-        if env.storage().instance().has(&DataKey::Admin) { panic!("already initialized"); }
+        if env.storage().instance().has(&DataKey::Admin) { return Err(MerchantError::AlreadyInitialized); }
         env.storage().instance().set(&DataKey::Admin, &admin);
         env.storage().instance().set(&DataKey::NextMerchant, &1u64);
         env.storage().instance().set(&DataKey::Merchants, &Map::<u64, MerchantProfile>::new(&env));

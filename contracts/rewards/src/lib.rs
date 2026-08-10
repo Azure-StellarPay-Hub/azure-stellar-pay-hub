@@ -7,6 +7,7 @@ use soroban_sdk::{contract, contracterror, contractimpl, contracttype, symbol_sh
 pub enum RewardsError {
     Unauthorized = 1, InvalidAmount = 2, TierNotFound = 3, InsufficientPoints = 4,
     InvalidRate = 5, NotInitialized = 6, TierAlreadyExists = 7,
+    AlreadyInitialized = 8,
 }
 
 #[contracttype]
@@ -46,7 +47,7 @@ pub struct RewardsContract;
 #[contractimpl]
 impl RewardsContract {
     pub fn initialize(env: Env, admin: Address, reward_token: Address) -> Result<(), RewardsError> {
-        if env.storage().instance().has(&DataKey::Admin) { panic!("already initialized"); }
+        if env.storage().instance().has(&DataKey::Admin) { return Err(RewardsError::AlreadyInitialized); }
         env.storage().instance().set(&DataKey::Admin, &admin);
         env.storage().instance().set(&DataKey::RewardToken, &reward_token);
         env.storage().instance().set(&DataKey::Tiers, &Map::<u32, Tier>::new(&env));
