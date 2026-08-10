@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      soroban-client:
+        specifier: ^1.0.1
+        version: 1.0.1
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.5
@@ -4786,6 +4790,10 @@ packages:
   sonic-boom@4.2.1:
     resolution: {integrity: sha512-w6AxtubXa2wTXAUsZMMWERrsIRAdrK0Sc+FUytWvYAhBJLyuI4llrMIC1DtlNSdI99EI86KZum2MMq3EAZlF9Q==}
 
+  soroban-client@1.0.1:
+    resolution: {integrity: sha512-GdLgMuJ/riVnLvjEXFi7NqSwAZXsT6H55vITq5c+v15rTlbzGXvW2v/yA+K1zOXMFh0JAZ1IR+6S4CJMQXOcPA==}
+    deprecated: '⚠️ This package is now deprecated: transition to @stellar/stellar-sdk@latest, instead! 🚚 All future updates and bug fixes will happen there. Please refer to the migration guide for details on porting your codebase: https://github.com/stellar/js-soroban-client/tree/main/docs/migration.md'
+
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -4817,6 +4825,10 @@ packages:
   statuses@2.0.2:
     resolution: {integrity: sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==}
     engines: {node: '>= 0.8'}
+
+  stellar-base@10.0.0:
+    resolution: {integrity: sha512-WQhxGXQLSwwmIxWbZqv0HcJtlSOiaUgv7yKCCEwP+OoYDHKBjPjQiZWyAkuEY+mRFX9L+hnejLaBorc3P2rk0g==}
+    deprecated: ⚠️ This package has moved to @stellar/stellar-base! 🚚
 
   streamsearch@1.1.0:
     resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
@@ -10010,6 +10022,18 @@ snapshots:
     dependencies:
       atomic-sleep: 1.0.0
 
+  soroban-client@1.0.1:
+    dependencies:
+      axios: 1.19.0
+      bignumber.js: 9.3.1
+      buffer: 6.0.3
+      stellar-base: 10.0.0
+      urijs: 1.19.11
+    transitivePeerDependencies:
+      - bare-url
+      - debug
+      - supports-color
+
   source-map-js@1.2.1: {}
 
   source-map-support@0.5.13:
@@ -10032,6 +10056,19 @@ snapshots:
   standard-as-callback@2.1.0: {}
 
   statuses@2.0.2: {}
+
+  stellar-base@10.0.0:
+    dependencies:
+      '@stellar/js-xdr': 3.1.2
+      base32.js: 0.1.0
+      bignumber.js: 9.3.1
+      buffer: 6.0.3
+      sha.js: 2.4.12
+      tweetnacl: 1.0.3
+    optionalDependencies:
+      sodium-native: 4.3.3
+    transitivePeerDependencies:
+      - bare-url
 
   streamsearch@1.1.0: {}
 

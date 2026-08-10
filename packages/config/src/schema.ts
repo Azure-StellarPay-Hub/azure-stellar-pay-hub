@@ -23,7 +23,7 @@ export const envSchema = z
       ),
 
     // Auth
-    JWT_SECRET: z.string().min(16).default('development-only-secret-change-me'),
+    JWT_SECRET: z.string().min(16),
     JWT_EXPIRES_IN: z.string().default('7d'),
     SESSION_TTL_SECONDS: z.coerce.number().int().positive().default(604800),
 

@@ -37,12 +37,14 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Post('refresh')
   refresh(@Body(new ZodValidationPipe({ body: refreshTokenSchema })) body: RefreshToken) {
     return this.auth.refresh(body.refreshToken);
   }
 
   @Public()
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
   @Post('admin/login')
   adminLogin(@Body(new ZodValidationPipe({ body: adminLoginSchema })) body: AdminLogin) {
     return this.auth.adminLogin(body);
