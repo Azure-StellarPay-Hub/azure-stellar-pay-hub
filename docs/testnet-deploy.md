@@ -17,8 +17,8 @@ and frontend apps — to Stellar testnet.
 | **Secret key**              | Save the secret key (starts with `S...`) — you'll need it for contract deployment                                                                                |
 | **Node.js ≥ 20.9**          | `nvm install && nvm use`                                                                                                                                         |
 | **pnpm ≥ 9**                | `corepack enable`                                                                                                                                                |
-| **Rust + wasm32 target**    | `rustup target add wasm32-unknown-unknown`                                                                                                                       |
-| **soroban-cli**             | `cargo install soroban-cli`                                                                                                                                      |
+| **Rust + wasm32v1-none target** | `rustup target add wasm32v1-none`                                                                                                                              |
+| **stellar-cli**             | `cargo install stellar-cli`                                                                                                                                      |
 | **Docker**                  | For local Postgres + Redis                                                                                                                                       |
 
 ## Quick Deploy (One Command)
@@ -33,7 +33,7 @@ bash scripts/deploy-testnet.sh
 
 The script will:
 
-1. Verify prerequisites (soroban-cli, Node, pnpm, Docker, funded account)
+1. Verify prerequisites (stellar-cli, Node, pnpm, Docker, funded account)
 2. Install dependencies
 3. Start Postgres + Redis
 4. Create and seed the database
@@ -88,16 +88,21 @@ pnpm db:seed                # Creates admin user + demo data
 ### 4. Build Contracts
 
 ```bash
-pnpm contracts:build
+cd contracts
+stellar contract build
+cd ..
 ```
+
+> **Note**: Use `stellar contract build` (not `cargo build`) which targets
+> `wasm32v1-none` (WASM MVP) for maximum Soroban testnet compatibility.
 
 ### 5. Deploy Contracts
 
 ```bash
 # Deploy each contract to testnet
-soroban contract deploy \
-  --wasm target/wasm32-unknown-unknown/release/stellar_pay_payment.wasm \
-  --source SXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \
+stellar contract deploy \
+  --wasm contracts/target/wasm32v1-none/release/stellar_pay_payment.wasm \
+  --source-account SXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \
   --network testnet
 
 # Repeat for: escrow, multisig, treasury, subscriptions, invoices, merchant, rewards
@@ -111,9 +116,9 @@ Some contracts require initialization after deployment:
 
 ```bash
 # Example: initialize multisig with signers and threshold
-soroban contract invoke \
+stellar contract invoke \
   --id <MULTISIG_ADDRESS> \
-  --source S... \
+  --source-account S... \
   --network testnet \
   -- initialize --signers '["G...","G..."]' --threshold 2
 ```
@@ -160,6 +165,21 @@ curl -X POST http://localhost:4000/api/payments \
   -d '{"to":"G...","amount":"10","assetCode":"XLM"}'
 ```
 
+## Deployed Contract Addresses (Current Testnet)
+
+| Contract | Address |
+|----------|---------|
+| Payment | [`CC5UU...VHLCA`](https://stellar.expert/explorer/testnet/contract/CC5UUVJCU3WRXDPDE3MEP65BN7XASQDV6O5IWVQRT53D5UKJ63UVHLCA) |
+| Escrow | [`CA2KM...M23GOY`](https://stellar.expert/explorer/testnet/contract/CA2KMJRW3VDB65U5CLN7VF7AKDQXZ7OYIVUEDBA673UAECUYR6M23GOY) |
+| Multisig | [`CAPHT...J6TGUH`](https://stellar.expert/explorer/testnet/contract/CAPHTEX57F3P5DHX67TV7CDHEHEC5COHQ7TDBSYYNN4MN6PCF6J6TGUH) |
+| Treasury | [`CB3FI...KY2TH`](https://stellar.expert/explorer/testnet/contract/CB3FI5CKQAO2INOWFIMFLZXCXDUK3EMJNA5B5WEPRMGSP75NTX3KY2TH) |
+| Subscriptions | [`CDU4A...7QK46K`](https://stellar.expert/explorer/testnet/contract/CDU4ANSQWZMVPZDNSE2FWCXSOBIVJWGODC3CLCZGIILKUIMW3M7QK46K) |
+| Invoices | [`CCQFA...2QBGR5`](https://stellar.expert/explorer/testnet/contract/CCQFABKSRSVAZGAXHQIR5FPPMFPNS5BHTKYRLAVKMMJE76546Q2QBGR5) |
+| Merchant | [`CBT3H...Q3SX3I7`](https://stellar.expert/explorer/testnet/contract/CBT3HOK5WJ6UTO6S3I5ZE3JHB5IPIJBWCFXZZGO26T6T7OXPWQ3SX3I7) |
+| Rewards | [`CBE3J...B37Z4IU`](https://stellar.expert/explorer/testnet/contract/CBE3JCWEH4D6INRELW62CPVK4ZHFUZRPGLKCTGAH2B4IALINFB37Z4IU) |
+
+Full addresses are in [`.deployed-contracts.env`](../.deployed-contracts.env).
+
 ## Funding Test Accounts
 
 Stellar testnet uses Friendbot to fund accounts:
@@ -190,11 +210,11 @@ Then re-deploy contracts to mainnet and update the contract addresses in `.env`.
 
 ## Troubleshooting
 
-### "soroban: command not found"
+### "stellar: command not found"
 
 ```bash
-cargo install soroban-cli
-# Or: npm install -g soroban-cli
+cargo install stellar-cli
+# Or download from: https://github.com/stellar/stellar-cli/releases
 ```
 
 ### "Account not found" during deploy
@@ -225,6 +245,13 @@ pnpm docker:down && pnpm docker:up  # restart if needed
 
 ```bash
 rustup update stable
-rustup target add wasm32-unknown-unknown
-pnpm contracts:build
+rustup target add wasm32v1-none
+cd contracts && stellar contract build
 ```
+
+### "reference-types not enabled" error
+
+If you see this error during deployment, ensure you're using `stellar contract build`
+which targets `wasm32v1-none` (WASM MVP). Do NOT use `cargo build --target wasm32-unknown-unknown`
+as it enables `reference-types` by default on modern Rust toolchains, which the Soroban
+testnet validator rejects.

@@ -35,7 +35,7 @@ echo " Azure StellarPay Hub — Testnet Deployment"
 echo "=============================================="
 echo ""
 
-command -v soroban >/dev/null 2>&1 || err "soroban-cli not found. Install: cargo install soroban-cli"
+command -v stellar >/dev/null 2>&1 || err "stellar-cli not found. Install: cargo install stellar-cli"
 command -v node >/dev/null 2>&1   || err "Node.js not found"
 command -v pnpm >/dev/null 2>&1  || err "pnpm not found"
 command -v docker >/dev/null 2>&1 || err "Docker not found"
@@ -47,7 +47,7 @@ fi
 STELLAR_SECRET_KEY="${STELLAR_SECRET_KEY}"
 
 # Derive public key from secret
-DEPLOYER_PUBLIC=$(soroban keys address --secret-key "$STELLAR_SECRET_KEY" 2>/dev/null || \
+DEPLOYER_PUBLIC=$(stellar keys address "$STELLAR_SECRET_KEY" 2>/dev/null || \
   node -e "const {Keypair}=require('@stellar/stellar-sdk');console.log(Keypair.fromSecret('$STELLAR_SECRET_KEY').publicKey())")
 log "Deployer: $DEPLOYER_PUBLIC"
 
@@ -84,13 +84,15 @@ log "Database ready"
 # ── 5. Build Soroban contracts ───────────────────────────────────────────────
 
 log "Building Soroban contracts..."
-rustup target add wasm32-unknown-unknown 2>/dev/null || true
-pnpm contracts:build 2>&1 | tail -3
+rustup target add wasm32v1-none 2>/dev/null || true
+cd "$ROOT/contracts"
+stellar contract build 2>&1 | tail -5
+cd "$ROOT"
 log "Contracts compiled"
 
 # ── 6. Deploy contracts to testnet ───────────────────────────────────────────
 
-CONTRACTS_DIR="$ROOT/target/wasm32-unknown-unknown/release"
+CONTRACTS_DIR="$ROOT/contracts/target/wasm32v1-none/release"
 DEPLOY_LOG="$ROOT/.deployed-contracts.env"
 
 echo "# Deployed contract addresses — $(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$DEPLOY_LOG"
@@ -113,13 +115,19 @@ for contract in "${CONTRACTS[@]}"; do
     continue
   fi
   log "Deploying $contract..."
-  ADDRESS=$(soroban contract deploy \
+  ADDRESS=$(stellar contract deploy \
     --wasm "$WASM" \
-    --source "$STELLAR_SECRET_KEY" \
-    --network testnet \
-    --fee 10000 2>&1)
-  echo "CONTRACT_$(echo "$contract" | tr '[:lower:]' '[:upper:]')=$ADDRESS" >> "$DEPLOY_LOG"
-  log "  $contract → $ADDRESS"
+    --source-account "$STELLAR_SECRET_KEY" \
+    --network testnet 2>&1 | tail -1)
+  # Only save if it looks like a contract address (56 chars, starts with C)
+  if [[ "$ADDRESS" =~ ^C[A-Z0-9]{55}$ ]]; then
+    echo "CONTRACT_$(echo "$contract" | tr '[:lower:]' '[:upper:]')=$ADDRESS" >> "$DEPLOY_LOG"
+    log "  $contract → $ADDRESS"
+  else
+    warn "  $contract deployment may have failed: $ADDRESS"
+    echo "# $contract: $ADDRESS" >> "$DEPLOY_LOG"
+  fi
+  sleep 3
 done
 
 log "Contract addresses saved to $DEPLOY_LOG"
