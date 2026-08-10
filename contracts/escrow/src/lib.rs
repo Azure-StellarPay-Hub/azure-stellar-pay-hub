@@ -48,7 +48,7 @@ impl EscrowContract {
 
     pub fn create(env: Env, initiator: Address, counterparty: Address, token: Address, amount: i128, release_time: u64, expiry: Option<u64>) -> Result<u64, EscrowError> {
         if amount <= 0 { return Err(EscrowError::InvalidAmount); }
-        if expiry.is_some() && expiry.unwrap() <= release_time { return Err(EscrowError::InvalidAmount); }
+        if expiry.map_or(false, |e| e <= release_time) { return Err(EscrowError::InvalidAmount); }
         initiator.require_auth();
         let mut escrows: Map<u64, Escrow> = env.storage().instance().get(&DataKey::Escrows).unwrap_or_else(|| Map::new(&env));
         let mut next_id: u64 = env.storage().instance().get(&DataKey::NextId).unwrap_or(1);

@@ -139,7 +139,7 @@ impl RewardsContract {
         let tiers: Map<u32, Tier> = env.storage().instance().get(&DataKey::Tiers).unwrap_or_else(|| Map::new(&env));
         let tier = tiers.get(account_points.current_tier_id).unwrap_or(Tier { id: 0, name: String::from_str(&env, "Base"), min_points: 0, earn_multiplier: 1, reward_rate: 1, expiry_seconds: 0, active: true });
         let reward_amount = (points as i128) * tier.reward_rate;
-        let reward_token: Address = env.storage().instance().get(&DataKey::RewardToken).unwrap();
+        let reward_token: Address = env.storage().instance().get(&DataKey::RewardToken).ok_or(RewardsError::NotInitialized)?;
         let contract_balance = token::Client::new(&env, &reward_token).balance(&env.current_contract_address());
         if contract_balance < reward_amount { return Err(RewardsError::InvalidAmount); }
         token::Client::new(&env, &reward_token).transfer(&env.current_contract_address(), &customer, &reward_amount);

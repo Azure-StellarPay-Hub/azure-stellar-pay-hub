@@ -134,7 +134,7 @@ impl MerchantContract {
         if contract_balance < net + commission { return Err(MerchantError::NoBalance); }
         token::Client::new(&env, &token).transfer(&env.current_contract_address(), &to, &net);
         if commission > 0 {
-            let admin: Address = env.storage().instance().get(&DataKey::Admin).unwrap();
+            let admin: Address = env.storage().instance().get(&DataKey::Admin).ok_or(MerchantError::NotInitialized)?;
             token::Client::new(&env, &token).transfer(&env.current_contract_address(), &admin, &commission);
         }
         env.events().publish((symbol_short!("settle"),), SettledEvent { id, token, amount: net, commission, to });
