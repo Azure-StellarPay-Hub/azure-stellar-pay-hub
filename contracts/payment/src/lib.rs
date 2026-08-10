@@ -172,3 +172,6 @@ impl PaymentContract {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod test;

@@ -162,3 +162,6 @@ impl MultisigContract {
         count
     }
 }
+
+#[cfg(test)]
+mod test;

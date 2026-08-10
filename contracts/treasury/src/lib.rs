@@ -91,3 +91,6 @@ impl TreasuryContract {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod test;

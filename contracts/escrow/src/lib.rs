@@ -104,3 +104,6 @@ impl EscrowContract {
         env.storage().instance().get::<_, Map<u64, Escrow>>(&DataKey::Escrows).map(|e| e.keys()).unwrap_or_else(|| Vec::new(&env))
     }
 }
+
+#[cfg(test)]
+mod test;

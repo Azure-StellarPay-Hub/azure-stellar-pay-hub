@@ -29,7 +29,7 @@ fn setup<'e>(env: &'e Env) -> Setup<'e> {
     let (token, token_id) = create_token(env, &admin);
     let contract_id = env.register_contract(None, InvoicesContract);
     let client = InvoicesContractClient::new(env, &contract_id);
-    mint(env, &token_id, &customer, &10_000);
+    mint(env, &token_id, &customer, 10_000i128);
     (merchant, customer, token, token_id, client)
 }
 
@@ -122,7 +122,7 @@ fn test_pay_rejects_wrong_payer() {
     let id = create_invoice(&env, &client, &merchant, &customer, &token_id, 500, 0);
 
     let stranger = Address::generate(&env);
-    mint(&env, &token_id, &stranger, &1000);
+    mint(&env, &token_id, &stranger, 1000i128);
     let result = client.try_pay(&stranger, &id);
     assert_eq!(result, Err(Ok(InvoiceError::PayerMismatch)));
 }

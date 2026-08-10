@@ -156,3 +156,6 @@ impl MerchantContract {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod test;

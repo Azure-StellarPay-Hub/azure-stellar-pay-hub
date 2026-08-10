@@ -16,12 +16,8 @@ fn setup<'e>(env: &'e Env) -> (Vec<Address>, MultisigContractClient<'e>) {
     (signers, client)
 }
 
-fn payload(env: &Env, bytes: &[u8]) -> Vec<u8> {
-    let mut v = Vec::new(env);
-    for b in bytes {
-        v.push_back(*b);
-    }
-    v
+fn payload(env: &Env, bytes: &[u8]) -> soroban_sdk::Bytes {
+    soroban_sdk::Bytes::from_slice(env, bytes)
 }
 
 #[test]

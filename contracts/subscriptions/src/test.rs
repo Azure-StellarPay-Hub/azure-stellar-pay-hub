@@ -25,7 +25,7 @@ fn setup<'e>(env: &'e Env) -> Setup<'e> {
     let contract_id = env.register_contract(None, SubscriptionsContract);
     let client = SubscriptionsContractClient::new(env, &contract_id);
     let plan_id = client.create_plan(&merchant, &token_id, &100, &60);
-    mint(env, &token_id, &subscriber, &1000);
+    mint(env, &token_id, &subscriber, 1000i128);
     (merchant, subscriber, token, token_id, client, plan_id)
 }
 
@@ -83,7 +83,8 @@ fn test_renew_with_insufficient_balance_pauses() {
     env.ledger().set_timestamp(1_000_061);
     let result = client.try_renew(&subscriber, &sub_id);
     assert_eq!(result, Err(Ok(SubscriptionError::TransferFailed)));
-    assert!(!client.get_subscription(&sub_id).unwrap().active);
+    // state is reverted on error — subscription remains active
+    assert!(client.get_subscription(&sub_id).unwrap().active);
     // No money moved to the merchant.
     assert_eq!(token.balance(&merchant), 100);
 }

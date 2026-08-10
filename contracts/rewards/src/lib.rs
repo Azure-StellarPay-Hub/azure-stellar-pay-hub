@@ -166,3 +166,6 @@ impl RewardsContract {
         env.storage().instance().get(&DataKey::Points(account.clone())).unwrap_or(AccountPoints { lifetime: 0, balance: 0, current_tier_id: 1 })
     }
 }
+
+#[cfg(test)]
+mod test;
