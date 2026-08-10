@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { createHmac } from 'node:crypto';
+import { createHmac, randomBytes } from 'node:crypto';
 import { PrismaService } from '@stellar-pay/database';
 import { createLogger } from '@stellar-pay/logger';
 import type { WebhookEventType } from '@stellar-pay/types';
@@ -16,7 +16,7 @@ export class WebhooksService {
     if (!merchant) {
       throw new NotFoundException('Merchant not found');
     }
-    const secret = input.secret ?? merchant.webhookSecret ?? 'generated-webhook-secret';
+    const secret = input.secret ?? merchant.webhookSecret ?? randomBytes(32).toString('hex');
     return this.prisma.webhook.upsert({
       where: { id: `${merchantId}:${input.url}` },
       update: { url: input.url, events: input.events as never, secret },

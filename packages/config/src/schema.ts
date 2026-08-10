@@ -42,7 +42,7 @@ export const envSchema = z
 
     // Admin seed
     ADMIN_EMAIL: z.string().email().default('admin@stellar-pay.dev'),
-    ADMIN_PASSWORD: z.string().min(8).default('ChangeMe123!'),
+    ADMIN_PASSWORD: z.string().min(8),
 
     // Notifications
     NOTIFICATIONS_EMAIL_ENABLED: z

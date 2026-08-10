@@ -75,7 +75,7 @@ export default function LoginPage() {
             </Button>
           </div>
           <p className="text-center text-xs text-muted-foreground">
-            Default seed: admin@stellar-pay.dev / ChangeMe123!
+            Set ADMIN_PASSWORD and run <code>pnpm db:seed</code> to create credentials
           </p>
         </CardContent>
       </Card>
