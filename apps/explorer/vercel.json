@@ -1,6 +1,8 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "buildCommand": "cd ../.. && pnpm --filter @stellar-pay/types --filter @stellar-pay/shared --filter @stellar-pay/sdk --filter @stellar-pay/ui build && pnpm --filter @stellar-pay/explorer build",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm --filter @stellar-pay/types --filter @stellar-pay/shared --filter @stellar-pay/sdk --filter @stellar-pay/ui build && pnpm --filter @stellar-pay/explorer build",
   "outputDirectory": ".next",
   "headers": [
     {
