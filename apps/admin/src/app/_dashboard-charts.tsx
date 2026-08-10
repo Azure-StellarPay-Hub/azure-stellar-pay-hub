@@ -26,8 +26,14 @@ import {
 import type { DashboardMetrics } from '@stellar-pay/types';
 
 const ASSET_COLORS = [
-  '#818cf8', '#c084fc', '#34d399', '#fbbf24',
-  '#f472b6', '#38bdf8', '#fb923c', '#a78bfa',
+  '#818cf8',
+  '#c084fc',
+  '#34d399',
+  '#fbbf24',
+  '#f472b6',
+  '#38bdf8',
+  '#fb923c',
+  '#a78bfa',
 ];
 
 const CHART_THEME = {
@@ -42,7 +48,15 @@ const RANGE_OPTIONS = ['7d', '30d', '90d'] as const;
 
 function ActivityIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
     </svg>
   );
@@ -50,7 +64,15 @@ function ActivityIcon({ className }: { className?: string }) {
 
 function PercentIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <line x1="19" y1="5" x2="5" y2="19" />
       <circle cx="6.5" cy="6.5" r="2.5" />
       <circle cx="17.5" cy="17.5" r="2.5" />
@@ -60,7 +82,15 @@ function PercentIcon({ className }: { className?: string }) {
 
 function GlobeIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <circle cx="12" cy="12" r="10" />
       <line x1="2" y1="12" x2="22" y2="12" />
       <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -70,7 +100,15 @@ function GlobeIcon({ className }: { className?: string }) {
 
 function SparklesIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
       <path d="M20 3v4" />
       <path d="M22 5h-4" />
@@ -82,7 +120,15 @@ function SparklesIcon({ className }: { className?: string }) {
 
 function ArrowUpIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <line x1="12" y1="19" x2="12" y2="5" />
       <polyline points="5 12 12 5 19 12" />
     </svg>
@@ -91,7 +137,15 @@ function ArrowUpIcon({ className }: { className?: string }) {
 
 function ArrowDownIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <line x1="12" y1="5" x2="12" y2="19" />
       <polyline points="19 12 12 19 5 12" />
     </svg>
@@ -100,7 +154,15 @@ function ArrowDownIcon({ className }: { className?: string }) {
 
 function StoreIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7" />
       <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
       <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4" />
@@ -136,13 +198,22 @@ function SuccessGauge({ rate }: { rate: number }) {
         <svg width={120} height={120} className="-rotate-90">
           <circle cx={60} cy={60} r={radius} stroke="#26263a" strokeWidth={8} fill="none" />
           <circle
-            cx={60} cy={60} r={radius} stroke={color} strokeWidth={8} fill="none"
-            strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset}
+            cx={60}
+            cy={60}
+            r={radius}
+            stroke={color}
+            strokeWidth={8}
+            fill="none"
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
             className="transition-all duration-1000 ease-out"
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-2xl font-bold" style={{ color }}>{rate}%</span>
+          <span className="text-2xl font-bold" style={{ color }}>
+            {rate}%
+          </span>
           <span className="text-[10px] text-muted-foreground">success</span>
         </div>
       </div>
@@ -160,7 +231,12 @@ interface DashboardChartsProps {
 }
 
 export default function DashboardCharts({
-  metrics, volume, range, loading, volumeLoading, onRangeChange,
+  metrics,
+  volume,
+  range,
+  loading,
+  volumeLoading,
+  onRangeChange,
 }: DashboardChartsProps) {
   const assetPieData = useMemo(() => {
     if (!metrics?.assetUsage) return [];
@@ -188,15 +264,23 @@ export default function DashboardCharts({
             </CardTitle>
             <div className="flex items-center gap-2">
               {volume.length > 0 && (
-                <span className={`flex items-center gap-0.5 text-xs ${volumeTrend >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                  {volumeTrend >= 0 ? <ArrowUpIcon className="h-3 w-3" /> : <ArrowDownIcon className="h-3 w-3" />}
+                <span
+                  className={`flex items-center gap-0.5 text-xs ${volumeTrend >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}
+                >
+                  {volumeTrend >= 0 ? (
+                    <ArrowUpIcon className="h-3 w-3" />
+                  ) : (
+                    <ArrowDownIcon className="h-3 w-3" />
+                  )}
                   {Math.abs(volumeTrend)}%
                 </span>
               )}
               <Tabs value={range} onValueChange={(v) => onRangeChange(v as '7d' | '30d' | '90d')}>
                 <TabsList className="h-7">
                   {RANGE_OPTIONS.map((r) => (
-                    <TabsTrigger key={r} value={r} className="px-2.5 text-xs">{r}</TabsTrigger>
+                    <TabsTrigger key={r} value={r} className="px-2.5 text-xs">
+                      {r}
+                    </TabsTrigger>
                   ))}
                 </TabsList>
               </Tabs>
@@ -226,14 +310,42 @@ export default function DashboardCharts({
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke={CHART_THEME.grid} />
-                  <XAxis dataKey="date" stroke={CHART_THEME.axis} fontSize={11}
-                    tickFormatter={(v: string) => { const d = new Date(v); return `${d.getMonth() + 1}/${d.getDate()}`; }} />
+                  <XAxis
+                    dataKey="date"
+                    stroke={CHART_THEME.axis}
+                    fontSize={11}
+                    tickFormatter={(v: string) => {
+                      const d = new Date(v);
+                      return `${d.getMonth() + 1}/${d.getDate()}`;
+                    }}
+                  />
                   <YAxis stroke={CHART_THEME.axis} fontSize={11} />
-                  <Tooltip contentStyle={{ background: CHART_THEME.tooltip.bg, border: `1px solid ${CHART_THEME.tooltip.border}`, borderRadius: 12, fontSize: 13 }}
+                  <Tooltip
+                    contentStyle={{
+                      background: CHART_THEME.tooltip.bg,
+                      border: `1px solid ${CHART_THEME.tooltip.border}`,
+                      borderRadius: 12,
+                      fontSize: 13,
+                    }}
                     labelStyle={{ color: '#f4f4f8', fontWeight: 600 }}
-                    formatter={(val: any) => [`$${Number(val ?? 0).toLocaleString()}`, 'Volume']} />
-                  <Area type="monotone" dataKey="volume" stroke="#818cf8" fill="url(#volumeGrad)" strokeWidth={2} name="Volume" />
-                  <Area type="monotone" dataKey="transactions" stroke="#34d399" fill="url(#countGrad)" strokeWidth={2} name="Transactions" />
+                    formatter={(val: any) => [`$${Number(val ?? 0).toLocaleString()}`, 'Volume']}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="volume"
+                    stroke="#818cf8"
+                    fill="url(#volumeGrad)"
+                    strokeWidth={2}
+                    name="Volume"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="transactions"
+                    stroke="#34d399"
+                    fill="url(#countGrad)"
+                    strokeWidth={2}
+                    name="Transactions"
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             )}
@@ -274,15 +386,21 @@ export default function DashboardCharts({
                 <>
                   <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2.5">
                     <span className="text-xs text-muted-foreground">Volume</span>
-                    <span className="font-mono text-sm font-semibold">{formatCurrency(metrics?.crossBorder.volume)}</span>
+                    <span className="font-mono text-sm font-semibold">
+                      {formatCurrency(metrics?.crossBorder.volume)}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2.5">
                     <span className="text-xs text-muted-foreground">Transactions</span>
-                    <span className="font-mono text-sm font-semibold">{formatInt(metrics?.crossBorder.transactions)}</span>
+                    <span className="font-mono text-sm font-semibold">
+                      {formatInt(metrics?.crossBorder.transactions)}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2.5">
                     <span className="text-xs text-muted-foreground">Countries</span>
-                    <span className="font-mono text-sm font-semibold">{metrics?.crossBorder.countries ?? '\u2014'}</span>
+                    <span className="font-mono text-sm font-semibold">
+                      {metrics?.crossBorder.countries ?? '\u2014'}
+                    </span>
                   </div>
                 </>
               )}
@@ -303,26 +421,54 @@ export default function DashboardCharts({
             {loading ? (
               <Skeleton className="h-[260px] w-full rounded-xl" />
             ) : assetPieData.length === 0 ? (
-              <div className="flex h-[260px] items-center justify-center text-sm text-muted-foreground">No asset data available</div>
+              <div className="flex h-[260px] items-center justify-center text-sm text-muted-foreground">
+                No asset data available
+              </div>
             ) : (
               <div className="flex items-center gap-2">
                 <ResponsiveContainer width="55%" height={220}>
                   <PieChart>
-                    <Pie data={assetPieData} cx="50%" cy="50%" innerRadius={45} outerRadius={85} paddingAngle={3} dataKey="value"
-                      animationBegin={0} animationDuration={800}>
+                    <Pie
+                      data={assetPieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={45}
+                      outerRadius={85}
+                      paddingAngle={3}
+                      dataKey="value"
+                      animationBegin={0}
+                      animationDuration={800}
+                    >
                       {assetPieData.map((_, i) => (
-                        <Cell key={i} fill={ASSET_COLORS[i % ASSET_COLORS.length]} stroke="transparent" />
+                        <Cell
+                          key={i}
+                          fill={ASSET_COLORS[i % ASSET_COLORS.length]}
+                          stroke="transparent"
+                        />
                       ))}
                     </Pie>
-                    <Tooltip contentStyle={{ background: CHART_THEME.tooltip.bg, border: `1px solid ${CHART_THEME.tooltip.border}`, borderRadius: 12, fontSize: 13 }}
-                      formatter={(val: any, name: any) => [`${Number(val ?? 0)} txs`, String(name ?? '')]} />
+                    <Tooltip
+                      contentStyle={{
+                        background: CHART_THEME.tooltip.bg,
+                        border: `1px solid ${CHART_THEME.tooltip.border}`,
+                        borderRadius: 12,
+                        fontSize: 13,
+                      }}
+                      formatter={(val: any, name: any) => [
+                        `${Number(val ?? 0)} txs`,
+                        String(name ?? ''),
+                      ]}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="flex-1 space-y-1.5">
                   {assetPieData.slice(0, 8).map((item, i) => (
                     <div key={item.name} className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2">
-                        <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: ASSET_COLORS[i % ASSET_COLORS.length] }} />
+                        <span
+                          className="h-2.5 w-2.5 rounded-full"
+                          style={{ backgroundColor: ASSET_COLORS[i % ASSET_COLORS.length] }}
+                        />
                         <span className="font-mono font-medium">{item.name}</span>
                       </div>
                       <span className="tabular-nums text-muted-foreground">{item.value}</span>
@@ -344,28 +490,43 @@ export default function DashboardCharts({
           <CardContent>
             {loading ? (
               <div className="space-y-3">
-                <Skeleton className="h-14 w-full" /><Skeleton className="h-14 w-full" /><Skeleton className="h-14 w-full" />
+                <Skeleton className="h-14 w-full" />
+                <Skeleton className="h-14 w-full" />
+                <Skeleton className="h-14 w-full" />
               </div>
             ) : !metrics?.topMerchants?.length ? (
-              <div className="flex h-[200px] items-center justify-center text-sm text-muted-foreground">No active merchants yet</div>
+              <div className="flex h-[200px] items-center justify-center text-sm text-muted-foreground">
+                No active merchants yet
+              </div>
             ) : (
               <div className="space-y-1">
                 {metrics.topMerchants.map((merchant, i) => (
-                  <div key={merchant.merchantId} className="flex items-center gap-3 rounded-lg px-3 py-3 transition-colors hover:bg-accent/50">
-                    <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${i === 0 ? 'bg-amber-500/20 text-amber-400' : i === 1 ? 'bg-slate-400/20 text-slate-300' : i === 2 ? 'bg-orange-700/20 text-orange-400' : 'bg-muted text-muted-foreground'}`}>
+                  <div
+                    key={merchant.merchantId}
+                    className="flex items-center gap-3 rounded-lg px-3 py-3 transition-colors hover:bg-accent/50"
+                  >
+                    <span
+                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${i === 0 ? 'bg-amber-500/20 text-amber-400' : i === 1 ? 'bg-slate-400/20 text-slate-300' : i === 2 ? 'bg-orange-700/20 text-orange-400' : 'bg-muted text-muted-foreground'}`}
+                    >
                       {i + 1}
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{merchant.name}</p>
-                      <p className="truncate font-mono text-[10px] text-muted-foreground">{merchant.merchantId.slice(0, 12)}\u2026</p>
+                      <p className="truncate font-mono text-[10px] text-muted-foreground">
+                        {merchant.merchantId.slice(0, 12)}\u2026
+                      </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-semibold tabular-nums">{formatCurrency(merchant.volume)}</p>
+                      <p className="text-sm font-semibold tabular-nums">
+                        {formatCurrency(merchant.volume)}
+                      </p>
                     </div>
                     <div className="hidden w-16 sm:block">
                       <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                        <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-700"
-                          style={{ width: `${Math.max(5, 100 - i * 20 - Math.random() * 15)}%` }} />
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-700"
+                          style={{ width: `${Math.max(5, 100 - i * 20 - Math.random() * 15)}%` }}
+                        />
                       </div>
                     </div>
                   </div>

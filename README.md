@@ -109,11 +109,11 @@ payment infrastructure:
 
 Deployed and publicly accessible on Vercel:
 
-| App      | URL                                                                     | Status                      |
-| -------- | ----------------------------------------------------------------------- | --------------------------- |
+| App                 | URL                                                                                           | Status                                                                            |
+| ------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | **Admin Dashboard** | [azure-stellar-pay-hub-admin.vercel.app](https://azure-stellar-pay-hub-admin-kfc3.vercel.app) | ![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white) |
-| **Web App** | (preview builds on push) | — |
-| **Explorer** | (preview builds on push) | — |
+| **Web App**         | (preview builds on push)                                                                      | —                                                                                 |
+| **Explorer**        | (preview builds on push)                                                                      | —                                                                                 |
 
 ### Admin Dashboard
 
@@ -428,14 +428,15 @@ See [`docs/deployment.md`](docs/deployment.md) for full instructions.
 - **Monitoring**: `infrastructure/monitoring/` — Prometheus + Grafana + alert rules
 - **Vercel**: All frontends deploy automatically on push via Vercel GitHub integration:
 
-| App      | Vercel URL |
-| -------- | ---------- |
+| App      | Vercel URL                                                                                         |
+| -------- | -------------------------------------------------------------------------------------------------- |
 | Admin    | [azure-stellar-pay-hub-admin-kfc3.vercel.app](https://azure-stellar-pay-hub-admin-kfc3.vercel.app) |
-| Web      | (preview on push) |
-| Explorer | (preview on push) |
-| Docs     | (preview on push) |
+| Web      | (preview on push)                                                                                  |
+| Explorer | (preview on push)                                                                                  |
+| Docs     | (preview on push)                                                                                  |
 
 See [Live Demos](#live-demos) above for interface previews.
+
 - **Testnet (Stellar)**: `bash scripts/deploy-testnet.sh` — one-command deploy to Stellar testnet
 
 ## Documentation
