@@ -105,6 +105,106 @@ payment infrastructure:
 - Freighter wallet integration for transaction signing
 - See [`apps/extension/`](apps/extension/) for install instructions
 
+## Live Demos
+
+Deployed and publicly accessible on Vercel:
+
+| App      | URL                                                                     | Status                      |
+| -------- | ----------------------------------------------------------------------- | --------------------------- |
+| **Admin Dashboard** | [azure-stellar-pay-hub-admin.vercel.app](https://azure-stellar-pay-hub-admin-kfc3.vercel.app) | ![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white) |
+| **Web App** | (preview builds on push) | — |
+| **Explorer** | (preview builds on push) | — |
+
+### Admin Dashboard
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  ┌─────────┐                                                │
+│  │ 🛡️ Logo  │  Analytics Dashboard                           │
+│  │ StellarPay │  Real-time platform metrics and insights      │
+│  │ Admin    │                                                │
+│  ├─────────┤  ┌─────────┐ ┌──────────┐ ┌──────┐ ┌────────┐  │
+│  │ Overview │  │ Daily    │ │ Monthly  │ │Revenue│ │ Users  │  │
+│  │ Users    │  │ $12.4K   │ │ $284.7K  │ │$8.2K │ │ 1.2K   │  │
+│  │ Merchants│  └─────────┘ └──────────┘ └──────┘ └────────┘  │
+│  │ Txs      │  ┌───────────────────┐ ┌──────────┐            │
+│  │ Assets   │  │ 📈 Volume Chart   │ │ ✅ 98.3% │            │
+│  │ Audit    │  │  (7d / 30d / 90d) │ │ Success  │            │
+│  │ Notifs   │  └───────────────────┘ └──────────┘            │
+│  │ Settings │  ┌───────────────────┐ ┌──────────┐            │
+│  └─────────┘  │ 🥧 Asset Dist.    │ │ 🏪 Top   │            │
+│  v0.1.0       │  (Pie chart)     │ │ Merchants│            │
+│               └───────────────────┘ └──────────┘            │
+└──────────────────────────────────────────────────────────────┘
+```
+
+Dark-themed dashboard with fixed sidebar navigation, animated KPI cards, interactive
+volume charts (7d/30d/90d toggle), asset distribution pie chart, top merchants leaderboard,
+and real-time success rate gauge. All icons are inline SVGs — zero external icon dependencies.
+
+### Web App (Landing)
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  ┌──────────────────────────────────────────────────────────┐│
+│  │ 🟢 Powered by Stellar & Soroban smart contracts           ││
+│  │                                                          ││
+│  │       Payments on Stellar, beautifully simple            ││
+│  │  Send XLM and Stellar assets, collect with payment       ││
+│  │  links and invoices, and move money across borders.      ││
+│  │                                                          ││
+│  │        [ Get started → ]    [ Read the docs ]            ││
+│  │                                                          ││
+│  │   < 5s          3             7             1            ││
+│  │ Settlement   Wallet      Soroban        Unified          ││
+│  │   time      providers    contracts        SDK            ││
+│  └──────────────────────────────────────────────────────────┘│
+│  ┌───────────┐ ┌───────────┐ ┌───────────┐                  │
+│  │ 🌐 Multi  │ │ 📱 QR &   │ │ 🔁 Repeat │  ···             │
+│  │  -wallet  │ │  links    │ │  payments │                  │
+│  └───────────┘ └───────────┘ └───────────┘                  │
+│  ┌──────────────────────────────────────────────────────────┐│
+│  │  👥 Bring your favorite wallet                            ││
+│  │  [ Freighter ] [ xBull ] [ Albedo ]                      ││
+│  │                [ ⚡ Launch app ]                          ││
+│  └──────────────────────────────────────────────────────────┘│
+└──────────────────────────────────────────────────────────────┘
+```
+
+Gradient hero section with orb animations, 4-column stat cards, 6-feature grid with
+hover effects, and wallet provider badges. Connects via Freighter, xBull, or Albedo.
+
+### Explorer
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  ┌──────────────────────────────────────────────────────────┐│
+│  │ 🧭 StellarPay Explorer    │ 🔍 Search tx hash or account ││
+│  └──────────────────────────────────────────────────────────┘│
+│                                                              │
+│       StellarPay Explorer                                    │
+│   Search transactions and accounts across the platform.       │
+│                                                              │
+│   ┌──────────┐  ┌──────────┐  ┌──────────┐                 │
+│   │ 📦 12.4K │  │ ✅ 98.3% │  │ ❌ 217   │                 │
+│   │ Txs      │  │ Succeeded│  │ Failed   │                 │
+│   └──────────┘  └──────────┘  └──────────┘                 │
+│                                                              │
+│   ┌──────────────────────────────────────────────────────┐  │
+│   │ Recent transactions                                   │  │
+│   ├──────────────────────────────────────────────────────┤  │
+│   │ tx_a1b2c3… · 500 USDC                                │  │
+│   │ GABCD… → GEFGH… · 2 min ago                SUCCEEDED →│  │
+│   ├──────────────────────────────────────────────────────┤  │
+│   │ tx_d4e5f6… · 100 XLM                                 │  │
+│   │ GHIJK… → GLMNO… · 15 min ago                FAILED  →│  │
+│   └──────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+```
+
+Public blockchain explorer with sticky header search, stat cards (transactions/succeeded/failed),
+and real-time transaction table with hash, amount, addresses, timestamps, and status badges.
+
 ## Tech Stack
 
 | Layer               | Technology                                              |
@@ -326,7 +426,16 @@ See [`docs/deployment.md`](docs/deployment.md) for full instructions.
 - **Kubernetes**: `infrastructure/kubernetes/` — Kustomize bundle with Postgres, Redis, API, Web, Ingress
 - **Terraform (Azure)**: `infrastructure/terraform/` — provisions AKS, managed Postgres, Redis, Key Vault
 - **Monitoring**: `infrastructure/monitoring/` — Prometheus + Grafana + alert rules
-- **Vercel**: `apps/web/vercel.json`, `apps/admin/vercel.json` — frontends can deploy to Vercel
+- **Vercel**: All frontends deploy automatically on push via Vercel GitHub integration:
+
+| App      | Vercel URL |
+| -------- | ---------- |
+| Admin    | [azure-stellar-pay-hub-admin-kfc3.vercel.app](https://azure-stellar-pay-hub-admin-kfc3.vercel.app) |
+| Web      | (preview on push) |
+| Explorer | (preview on push) |
+| Docs     | (preview on push) |
+
+See [Live Demos](#live-demos) above for interface previews.
 - **Testnet (Stellar)**: `bash scripts/deploy-testnet.sh` — one-command deploy to Stellar testnet
 
 ## Documentation
