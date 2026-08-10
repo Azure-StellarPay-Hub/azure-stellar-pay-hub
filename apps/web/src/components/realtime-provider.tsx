@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useToast } from '@stellar-pay/ui/dist/components/toast';
+import { useToast } from '@stellar-pay/ui';
 import { useAuth } from '@/lib/auth';
 import { useRealtime } from '@/lib/ws';
 

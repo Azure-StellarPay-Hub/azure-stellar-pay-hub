@@ -10,8 +10,7 @@ import {
   Users,
   Zap,
 } from 'lucide-react';
-import { Button } from '@stellar-pay/ui/dist/components/button';
-import { Card, CardContent } from '@stellar-pay/ui/dist/components/card';
+import { Button, Card, CardContent } from '@stellar-pay/ui';
 
 // Force dynamic rendering — lucide-react + radix-ui Slot don't play nice with SSR
 export const dynamic = 'force-dynamic';

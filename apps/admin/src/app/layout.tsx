@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { ToastProvider } from '@stellar-pay/ui/dist/components/toast';
+import { ToastProvider } from '@stellar-pay/ui';
 import NavSidebar from './_nav-sidebar';
 import './globals.css';
 
