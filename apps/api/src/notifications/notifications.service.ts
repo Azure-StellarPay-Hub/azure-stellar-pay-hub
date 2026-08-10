@@ -29,7 +29,7 @@ export class NotificationsService {
     private readonly realtime: RealtimeGateway,
     config: ConfigService,
   ) {
-    const webhookSecret = config.get<string>('WEBHOOK_SIGNING_SECRET') ?? 'webhook-secret';
+    const webhookSecret = config.get<string>('WEBHOOK_SIGNING_SECRET')!;
     this.dispatcher = new NotificationDispatcher()
       .addProvider(new ConsoleChannelProvider('EMAIL' as NotificationChannel))
       .addProvider(new ConsoleChannelProvider('SMS' as NotificationChannel))

@@ -56,7 +56,7 @@ export const envSchema = z
     SMS_PROVIDER: z.enum(['console', 'twilio', 'vonage']).default('console'),
     SMS_API_KEY: z.string().optional(),
     PUSH_PROVIDER: z.enum(['console', 'fcm']).default('console'),
-    WEBHOOK_SIGNING_SECRET: z.string().default('webhook-secret'),
+    WEBHOOK_SIGNING_SECRET: z.string().min(16),
 
     // IPFS
     IPFS_PROVIDER: z.enum(['local', 'pinata', 'web3']).default('local'),
