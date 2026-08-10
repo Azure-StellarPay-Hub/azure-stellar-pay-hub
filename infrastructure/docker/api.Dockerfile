@@ -12,9 +12,8 @@ RUN pnpm install --frozen-lockfile --filter @stellar-pay/api... --filter @stella
 
 FROM deps AS build
 WORKDIR /app
-# Generate the Prisma client, then compile packages + api in dependency order.
-RUN pnpm --filter @stellar-pay/database build
-RUN pnpm --filter @stellar-pay/api build
+# Build all workspace dependencies, then the API, in correct order.
+RUN pnpm --filter ...@stellar-pay/api build
 RUN pnpm --filter @stellar-pay/api --prod --legacy deploy /out/node_modules
 
 # --- Runtime stage ----------------------------------------------------------
