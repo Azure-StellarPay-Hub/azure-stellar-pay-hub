@@ -14,6 +14,10 @@ Built for real-world commerce, not just demos.
 [![Soroban SDK](https://img.shields.io/badge/Soroban_SDK-21.7.1-7B3FE4?logo=stellar&logoColor=white)](https://soroban.stellar.org/docs)
 [![CI](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-131_passing-34d399?logo=jest&logoColor=white)](https://github.com/Azure-StellarPay-Hub/azure-stellar-pay-hub/actions/workflows/ci.yml)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-818cf8.svg)](CONTRIBUTING.md)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Rust](https://img.shields.io/badge/Rust-stable-db5a3b?logo=rust&logoColor=white)](https://www.rust-lang.org/)
 
 ---
 
@@ -452,6 +456,7 @@ See [Live Demos](#live-demos) above for interface previews.
 | [`docs/deployment.md`](docs/deployment.md)         | Docker, Kubernetes, Terraform, monitoring           |
 | [`docs/testnet-deploy.md`](docs/testnet-deploy.md) | Step-by-step Stellar testnet deployment guide       |
 | [`contracts/README.md`](contracts/README.md)       | Contract build, test, deploy instructions           |
+| [`CHANGELOG.md`](CHANGELOG.md)                     | Version history and release notes                   |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md)               | Branch strategy, PR checklist, commit conventions   |
 
 ## Contributing
