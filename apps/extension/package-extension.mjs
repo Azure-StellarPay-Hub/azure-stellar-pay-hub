@@ -65,38 +65,38 @@ function buildZip(files) {
     const nameBuf = Buffer.from(name, 'utf-8');
     const crc = crc32(data);
     const localHeader = Buffer.alloc(30);
-    localHeader.writeUInt32LE(0x04034b50, 0);  // local file header signature
-    localHeader.writeUInt16LE(20, 4);           // version needed
-    localHeader.writeUInt16LE(0x0800, 6);       // general purpose bit flag (UTF-8)
-    localHeader.writeUInt16LE(0, 8);            // compression: store
-    localHeader.writeUInt16LE(0, 10);           // mod time
-    localHeader.writeUInt16LE(0, 12);           // mod date
-    localHeader.writeUInt32LE(crc, 14);         // crc-32
+    localHeader.writeUInt32LE(0x04034b50, 0); // local file header signature
+    localHeader.writeUInt16LE(20, 4); // version needed
+    localHeader.writeUInt16LE(0x0800, 6); // general purpose bit flag (UTF-8)
+    localHeader.writeUInt16LE(0, 8); // compression: store
+    localHeader.writeUInt16LE(0, 10); // mod time
+    localHeader.writeUInt16LE(0, 12); // mod date
+    localHeader.writeUInt32LE(crc, 14); // crc-32
     localHeader.writeUInt32LE(data.length, 18); // compressed size
     localHeader.writeUInt32LE(data.length, 22); // uncompressed size
     localHeader.writeUInt16LE(nameBuf.length, 26); // file name length
-    localHeader.writeUInt16LE(0, 28);           // extra field length
+    localHeader.writeUInt16LE(0, 28); // extra field length
 
     chunks.push(localHeader, nameBuf, data);
 
     const cdEntry = Buffer.alloc(46);
-    cdEntry.writeUInt32LE(0x02014b50, 0);      // central directory signature
-    cdEntry.writeUInt16LE(20, 4);               // version made by
-    cdEntry.writeUInt16LE(20, 6);               // version needed
-    cdEntry.writeUInt16LE(0x0800, 8);           // general purpose bit flag
-    cdEntry.writeUInt16LE(0, 10);               // compression: store
-    cdEntry.writeUInt16LE(0, 12);               // mod time
-    cdEntry.writeUInt16LE(0, 14);               // mod date
-    cdEntry.writeUInt32LE(crc, 16);             // crc-32
-    cdEntry.writeUInt32LE(data.length, 20);     // compressed size
-    cdEntry.writeUInt32LE(data.length, 24);     // uncompressed size
-    cdEntry.writeUInt16LE(nameBuf.length, 28);  // file name length
-    cdEntry.writeUInt16LE(0, 30);               // extra field length
-    cdEntry.writeUInt16LE(0, 32);               // file comment length
-    cdEntry.writeUInt16LE(0, 34);               // disk number start
-    cdEntry.writeUInt16LE(0, 36);               // internal file attributes
-    cdEntry.writeUInt32LE(0, 38);               // external file attributes
-    cdEntry.writeUInt32LE(offset, 42);          // relative offset of local header
+    cdEntry.writeUInt32LE(0x02014b50, 0); // central directory signature
+    cdEntry.writeUInt16LE(20, 4); // version made by
+    cdEntry.writeUInt16LE(20, 6); // version needed
+    cdEntry.writeUInt16LE(0x0800, 8); // general purpose bit flag
+    cdEntry.writeUInt16LE(0, 10); // compression: store
+    cdEntry.writeUInt16LE(0, 12); // mod time
+    cdEntry.writeUInt16LE(0, 14); // mod date
+    cdEntry.writeUInt32LE(crc, 16); // crc-32
+    cdEntry.writeUInt32LE(data.length, 20); // compressed size
+    cdEntry.writeUInt32LE(data.length, 24); // uncompressed size
+    cdEntry.writeUInt16LE(nameBuf.length, 28); // file name length
+    cdEntry.writeUInt16LE(0, 30); // extra field length
+    cdEntry.writeUInt16LE(0, 32); // file comment length
+    cdEntry.writeUInt16LE(0, 34); // disk number start
+    cdEntry.writeUInt16LE(0, 36); // internal file attributes
+    cdEntry.writeUInt32LE(0, 38); // external file attributes
+    cdEntry.writeUInt32LE(offset, 42); // relative offset of local header
 
     centralDirectory.push(Buffer.concat([cdEntry, nameBuf]));
     offset += 30 + nameBuf.length + data.length;
@@ -105,14 +105,14 @@ function buildZip(files) {
   const cdBuf = Buffer.concat(centralDirectory);
   const eocd = Buffer.alloc(22);
   const cdOffset = offset;
-  eocd.writeUInt32LE(0x06054b50, 0);           // end of central directory signature
-  eocd.writeUInt16LE(0, 4);                     // disk number
-  eocd.writeUInt16LE(0, 6);                     // disk with central directory
-  eocd.writeUInt16LE(files.length, 8);          // entries on this disk
-  eocd.writeUInt16LE(files.length, 10);         // total entries
-  eocd.writeUInt32LE(cdBuf.length, 12);         // central directory size
-  eocd.writeUInt32LE(cdOffset, 16);             // offset of central directory
-  eocd.writeUInt16LE(0, 20);                    // comment length
+  eocd.writeUInt32LE(0x06054b50, 0); // end of central directory signature
+  eocd.writeUInt16LE(0, 4); // disk number
+  eocd.writeUInt16LE(0, 6); // disk with central directory
+  eocd.writeUInt16LE(files.length, 8); // entries on this disk
+  eocd.writeUInt16LE(files.length, 10); // total entries
+  eocd.writeUInt32LE(cdBuf.length, 12); // central directory size
+  eocd.writeUInt32LE(cdOffset, 16); // offset of central directory
+  eocd.writeUInt16LE(0, 20); // comment length
 
   return Buffer.concat([...chunks, cdBuf, eocd]);
 }
@@ -128,17 +128,79 @@ function generatePlaceholderIcons() {
   // Chrome Web Store will reject these — replace with real icons before submitting.
   // From: https://en.wikipedia.org/wiki/PNG#File_format
   const MINIMAL_PNG = Buffer.from([
-    0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, // PNG signature
-    0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52, // IHDR chunk, 13 bytes
-    0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, // 1×1 pixel
-    0x08, 0x02, 0x00, 0x00, 0x00,                   // RGB, 8-bit
-    0x90, 0x77, 0x53, 0xde,                         // IHDR CRC
-    0x00, 0x00, 0x00, 0x0c, 0x49, 0x44, 0x41, 0x54, // IDAT chunk, 12 bytes
-    0x08, 0xd7, 0x63, 0x68, 0x99, 0xf4, 0x00, 0x00,
-    0x81, 0x9e, 0x01, 0x7f, 0x0a, 0x01, 0x86, 0x68, // compressed purple pixel
-    0xb3, 0xeb, 0x5f, 0xbb,                         // IDAT CRC
-    0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4e, 0x44, // IEND chunk
-    0xae, 0x42, 0x60, 0x82,                         // IEND CRC
+    0x89,
+    0x50,
+    0x4e,
+    0x47,
+    0x0d,
+    0x0a,
+    0x1a,
+    0x0a, // PNG signature
+    0x00,
+    0x00,
+    0x00,
+    0x0d,
+    0x49,
+    0x48,
+    0x44,
+    0x52, // IHDR chunk, 13 bytes
+    0x00,
+    0x00,
+    0x00,
+    0x01,
+    0x00,
+    0x00,
+    0x00,
+    0x01, // 1×1 pixel
+    0x08,
+    0x02,
+    0x00,
+    0x00,
+    0x00, // RGB, 8-bit
+    0x90,
+    0x77,
+    0x53,
+    0xde, // IHDR CRC
+    0x00,
+    0x00,
+    0x00,
+    0x0c,
+    0x49,
+    0x44,
+    0x41,
+    0x54, // IDAT chunk, 12 bytes
+    0x08,
+    0xd7,
+    0x63,
+    0x68,
+    0x99,
+    0xf4,
+    0x00,
+    0x00,
+    0x81,
+    0x9e,
+    0x01,
+    0x7f,
+    0x0a,
+    0x01,
+    0x86,
+    0x68, // compressed purple pixel
+    0xb3,
+    0xeb,
+    0x5f,
+    0xbb, // IDAT CRC
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x49,
+    0x45,
+    0x4e,
+    0x44, // IEND chunk
+    0xae,
+    0x42,
+    0x60,
+    0x82, // IEND CRC
   ]);
 
   let hasRealIcons = false;
@@ -162,7 +224,9 @@ function generatePlaceholderIcons() {
   }
 
   if (!hasRealIcons && CI_MODE) {
-    console.log('  ℹ️  CI mode: using minimal placeholder icons (not suitable for store submission)\n');
+    console.log(
+      '  ℹ️  CI mode: using minimal placeholder icons (not suitable for store submission)\n',
+    );
   }
 }
 

@@ -25,8 +25,8 @@ function blend(a, b, t) {
   ];
 }
 
-const INDIGO = [79, 70, 229, 255];   // #4F46E5
-const PURPLE = [124, 58, 237, 255];  // #7C3AED
+const INDIGO = [79, 70, 229, 255]; // #4F46E5
+const PURPLE = [124, 58, 237, 255]; // #7C3AED
 const WHITE = [255, 255, 255, 255];
 const TRANSPARENT = [0, 0, 0, 0];
 
@@ -56,18 +56,28 @@ function drawPixel(pixels, w, x, y, color) {
 
 function drawLine(pixels, w, x1, y1, x2, y2, color) {
   // Integer Bresenham with max-iteration guard
-  let x = Math.round(x1), y = Math.round(y1);
-  const tx = Math.round(x2), ty = Math.round(y2);
-  const dx = Math.abs(tx - x), dy = -Math.abs(ty - y);
-  const sx = x < tx ? 1 : -1, sy = y < ty ? 1 : -1;
+  let x = Math.round(x1),
+    y = Math.round(y1);
+  const tx = Math.round(x2),
+    ty = Math.round(y2);
+  const dx = Math.abs(tx - x),
+    dy = -Math.abs(ty - y);
+  const sx = x < tx ? 1 : -1,
+    sy = y < ty ? 1 : -1;
   let err = dx + dy;
   const maxIter = Math.max(dx, -dy) + 2;
   for (let i = 0; i < maxIter; i++) {
     drawPixel(pixels, w, x, y, color);
     if (x === tx && y === ty) break;
     const e2 = 2 * err;
-    if (e2 >= dy) { err += dy; x += sx; }
-    if (e2 <= dx) { err += dx; y += sy; }
+    if (e2 >= dy) {
+      err += dy;
+      x += sx;
+    }
+    if (e2 <= dx) {
+      err += dx;
+      y += sy;
+    }
   }
 }
 
@@ -105,7 +115,11 @@ function antiAlias(pixels, w, h, passes = 1) {
       for (let x = 1; x < w - 1; x++) {
         const idx = (y * w + x) * 4;
         if (copy[idx + 3] === 0) continue; // transparent, skip
-        let r = 0, g = 0, b = 0, a = 0, count = 0;
+        let r = 0,
+          g = 0,
+          b = 0,
+          a = 0,
+          count = 0;
         for (let dy = -1; dy <= 1; dy++) {
           for (let dx = -1; dx <= 1; dx++) {
             const nidx = ((y + dy) * w + (x + dx)) * 4;
@@ -159,8 +173,10 @@ function drawDesign(pixels, w) {
     drawFilledCircle(pixels, w, cx, cy, 4, [255, 255, 255, 230]);
     // Corner sparkles
     const sparkles = [
-      [cx - 30, cy - 30, 3.0], [cx + 28, cy - 32, 2.5],
-      [cx - 35, cy + 27, 2.0], [cx + 33, cy + 30, 2.8],
+      [cx - 30, cy - 30, 3.0],
+      [cx + 28, cy - 32, 2.5],
+      [cx - 35, cy + 27, 2.0],
+      [cx + 33, cy + 30, 2.8],
     ];
     for (const [sx, sy, sr] of sparkles) {
       drawFilledCircle(pixels, w, sx, sy, sr, [200, 210, 255, 200]);
@@ -205,7 +221,7 @@ function encodePNG(pixels, w, h) {
     row[0] = 0; // filter: None
     for (let x = 0; x < w; x++) {
       const idx = (y * w + x) * 4;
-      row[1 + x * 4] = pixels[idx];       // R
+      row[1 + x * 4] = pixels[idx]; // R
       row[1 + x * 4 + 1] = pixels[idx + 1]; // G
       row[1 + x * 4 + 2] = pixels[idx + 2]; // B
       row[1 + x * 4 + 3] = pixels[idx + 3]; // A
@@ -222,8 +238,8 @@ function encodePNG(pixels, w, h) {
   const ihdrData = Buffer.alloc(13);
   ihdrData.writeUInt32BE(w, 0);
   ihdrData.writeUInt32BE(h, 4);
-  ihdrData[8] = 8;  // bit depth
-  ihdrData[9] = 6;  // color type: RGBA
+  ihdrData[8] = 8; // bit depth
+  ihdrData[9] = 6; // color type: RGBA
   ihdrData[10] = 0; // compression
   ihdrData[11] = 0; // filter
   ihdrData[12] = 0; // interlace

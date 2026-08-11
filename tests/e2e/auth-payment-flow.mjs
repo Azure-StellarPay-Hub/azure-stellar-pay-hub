@@ -169,7 +169,11 @@ async function run() {
     try {
       const fbResp = await fetch(`https://friendbot.stellar.org?addr=${kp.publicKey()}`);
       const fbData = await fbResp.json();
-      check('Friendbot funded account', fbData?.successful === true, `hash=${fbData?.hash?.slice(0, 8)}…`);
+      check(
+        'Friendbot funded account',
+        fbData?.successful === true,
+        `hash=${fbData?.hash?.slice(0, 8)}…`,
+      );
       // Wait for the ledger to close so the account is visible on Horizon
       if (fbData?.successful) {
         await delay(3_000);
@@ -195,9 +199,7 @@ async function run() {
       payment = await authClient.payments.create({
         type: 'SEND',
         fromPublicKey: kp.publicKey(),
-        destinations: [
-          { publicKey: destKp.publicKey(), amount: '10', memo: 'e2e-test-payment' },
-        ],
+        destinations: [{ publicKey: destKp.publicKey(), amount: '10', memo: 'e2e-test-payment' }],
         assetCode: 'XLM',
         memo: 'e2e-test-payment',
       });
@@ -231,7 +233,11 @@ async function run() {
         method: 'POST',
         headers: { Authorization: `Bearer ${authResult.accessToken}` },
       });
-      check('Logout succeeded', logoutResp.status === 204 || logoutResp.ok, `HTTP ${logoutResp.status}`);
+      check(
+        'Logout succeeded',
+        logoutResp.status === 204 || logoutResp.ok,
+        `HTTP ${logoutResp.status}`,
+      );
     } catch (err) {
       check('Logout succeeded', false, err.message);
     }

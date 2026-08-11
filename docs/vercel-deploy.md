@@ -14,10 +14,10 @@ This monorepo deploys two Next.js apps to Vercel: **web** and **admin**.
 
 Create two projects in the Vercel dashboard, both pointing to the same GitHub repository:
 
-| Project      | Framework | Root Directory  |
-| ------------ | --------- | --------------- |
-| stellar-pay-web   | Next.js   | `apps/web`      |
-| stellar-pay-admin | Next.js   | `apps/admin`    |
+| Project           | Framework | Root Directory |
+| ----------------- | --------- | -------------- |
+| stellar-pay-web   | Next.js   | `apps/web`     |
+| stellar-pay-admin | Next.js   | `apps/admin`   |
 
 Vercel auto-detects the monorepo root from the `pnpm-workspace.yaml` and installs
 dependencies from the repo root, even when the Root Directory is set to a subdirectory.
@@ -26,12 +26,13 @@ dependencies from the repo root, even when the Root Directory is set to a subdir
 
 Set these in **each** project's Settings → Environment Variables:
 
-| Variable                     | Value                            | Notes                                    |
-| ---------------------------- | -------------------------------- | ---------------------------------------- |
-| `NEXT_PUBLIC_API_URL`       | `https://your-api.railway.app`   | **Required** — your Railway API URL      |
-| `NEXT_PUBLIC_STELLAR_NETWORK` | `testnet` or `public`           | Defaults to `testnet` in vercel.json     |
+| Variable                      | Value                          | Notes                                |
+| ----------------------------- | ------------------------------ | ------------------------------------ |
+| `NEXT_PUBLIC_API_URL`         | `https://your-api.railway.app` | **Required** — your Railway API URL  |
+| `NEXT_PUBLIC_STELLAR_NETWORK` | `testnet` or `public`          | Defaults to `testnet` in vercel.json |
 
 For the admin app, also consider:
+
 - Restricting access via [Vercel Authentication](https://vercel.com/docs/security/deployment-protection) or a middleware auth check.
 
 ### 3. Node.js Version
@@ -76,12 +77,14 @@ vercel --prod
 ### Build fails with `useContext` error
 
 This is a Node.js version mismatch. Ensure:
+
 - `.node-version` files are present with `22`
 - Vercel project settings have Node.js version set to 22 (not "Latest")
 
 ### `pnpm install` fails
 
 Ensure the Vercel project's Root Directory is set correctly:
+
 - **web**: `apps/web`
 - **admin**: `apps/admin`
 
@@ -91,6 +94,7 @@ Vercel auto-detects the monorepo root from `pnpm-workspace.yaml`.
 
 Verify `NEXT_PUBLIC_API_URL` is set in Vercel dashboard and points to your
 running Railway API instance. The health endpoint should respond:
+
 ```bash
 curl https://your-api.railway.app/api/health
 # {"status":"ok","service":"stellar-pay-api","database":"up",...}
