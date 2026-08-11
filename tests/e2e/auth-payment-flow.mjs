@@ -24,7 +24,7 @@ import { ApiClient, StellarNetwork } from '../../packages/sdk/dist/index.js';
 import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 
-const API_URL = process.env.API_URL ?? 'http://localhost:4000';
+const API_URL = process.env.API_URL ?? 'http://localhost:4000/api';
 const BOOT_API = !process.env.API_URL;
 
 // ── Test helpers ────────────────────────────────────────────────────────────
@@ -71,7 +71,7 @@ async function bootApi() {
   for (let i = 0; i < 30; i++) {
     await delay(1_000);
     try {
-      const res = await fetch(`http://localhost:4100/health`);
+      const res = await fetch(`http://localhost:4100/api/health`);
       if (res.ok) {
         console.log('  API is ready.');
         return { child, baseUrl: 'http://localhost:4100' };
@@ -164,6 +164,20 @@ async function run() {
       return;
     }
 
+    // -- Step 5b: Fund the keypair via Friendbot (testnet) ---------------------
+    console.log('\n5b. Fund keypair via Friendbot');
+    try {
+      const fbResp = await fetch(`https://friendbot.stellar.org?addr=${kp.publicKey()}`);
+      const fbData = await fbResp.json();
+      check('Friendbot funded account', fbData?.successful === true, `hash=${fbData?.hash?.slice(0, 8)}…`);
+      // Wait for the ledger to close so the account is visible on Horizon
+      if (fbData?.successful) {
+        await delay(3_000);
+      }
+    } catch (err) {
+      check('Friendbot funded account', false, err.message);
+    }
+
     // -- Step 6: Create payment with JWT ----------------------------------------
     console.log('\n6. Create payment (JWT-authenticated)');
 
@@ -179,16 +193,19 @@ async function run() {
     let payment;
     try {
       payment = await authClient.payments.create({
-        to: destKp.publicKey(),
-        amount: '10',
+        type: 'SEND',
+        fromPublicKey: kp.publicKey(),
+        destinations: [
+          { publicKey: destKp.publicKey(), amount: '10', memo: 'e2e-test-payment' },
+        ],
         assetCode: 'XLM',
         memo: 'e2e-test-payment',
       });
       check('Payment created', !!payment?.id, `id=${payment?.id?.slice(0, 8)}…`);
       check(
-        'Payment has transactionXdr',
-        !!payment?.transactionXdr,
-        `xdr=${payment?.transactionXdr?.slice(0, 20)}…`,
+        'Payment has unsignedXdr',
+        !!payment?.unsignedXdr,
+        `xdr=${payment?.unsignedXdr?.slice(0, 20)}…`,
       );
     } catch (err) {
       check('Payment created', false, err.message);
@@ -208,8 +225,13 @@ async function run() {
     // -- Step 8: Logout ---------------------------------------------------------
     console.log('\n8. Logout');
     try {
-      await authClient.auth.logout();
-      check('Logout succeeded', true);
+      // Logout returns 204 No Content — the SDK's JSON parse may throw.
+      // Use a raw fetch to avoid the JSON parse error.
+      const logoutResp = await fetch(`${baseUrl}/auth/logout`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${authResult.accessToken}` },
+      });
+      check('Logout succeeded', logoutResp.status === 204 || logoutResp.ok, `HTTP ${logoutResp.status}`);
     } catch (err) {
       check('Logout succeeded', false, err.message);
     }

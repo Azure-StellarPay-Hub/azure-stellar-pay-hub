@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import { Public, CurrentUser, type AuthenticatedUser } from '../common/decorators';
+import { Public, CurrentUser, CsrfBypass, type AuthenticatedUser } from '../common/decorators';
 import { ZodValidationPipe } from '../common/zod-validation.pipe';
 import {
   adminLoginSchema,
@@ -23,6 +23,7 @@ export class AuthController {
   ) {}
 
   @Public()
+  @CsrfBypass()
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Post('challenge')
   challenge(@Body(new ZodValidationPipe({ body: challengeRequestSchema })) body: ChallengeRequest) {
@@ -30,6 +31,7 @@ export class AuthController {
   }
 
   @Public()
+  @CsrfBypass()
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Post('verify')
   verify(@Body(new ZodValidationPipe({ body: verifyRequestSchema })) body: VerifyRequest) {
@@ -37,6 +39,7 @@ export class AuthController {
   }
 
   @Public()
+  @CsrfBypass()
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Post('refresh')
   refresh(@Body(new ZodValidationPipe({ body: refreshTokenSchema })) body: RefreshToken) {
@@ -44,6 +47,7 @@ export class AuthController {
   }
 
   @Public()
+  @CsrfBypass()
   @Throttle({ default: { limit: 5, ttl: 60_000 } })
   @Post('admin/login')
   adminLogin(@Body(new ZodValidationPipe({ body: adminLoginSchema })) body: AdminLogin) {

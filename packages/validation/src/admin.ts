@@ -9,7 +9,6 @@ export const roleAssignmentSchema = z.object({
 export type RoleAssignment = z.infer<typeof roleAssignmentSchema>;
 
 export const userStatusSchema = z.object({
-  userId: z.string().uuid(),
   status: z.enum(['PENDING', 'VERIFIED', 'ACTIVE', 'SUSPENDED']),
   reason: z.string().max(500).optional(),
 });
@@ -17,7 +16,6 @@ export const userStatusSchema = z.object({
 export type UserStatusUpdate = z.infer<typeof userStatusSchema>;
 
 export const merchantStatusSchema = z.object({
-  merchantId: z.string().uuid(),
   status: z.enum(['PENDING', 'ACTIVE', 'SUSPENDED', 'REJECTED']),
   reason: z.string().max(500).optional(),
 });

@@ -24,12 +24,12 @@
     "seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.19.3"
+    "@prisma/client": "^6.19.3",
+    "prisma": "^6.19.3"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "jest": "^30.4.2",
-    "prisma": "^6.19.3",
     "ts-jest": "^29.4.12",
     "tsx": "^4.23.8",
     "typescript": "~5.9.3"
