@@ -2,6 +2,9 @@ name: Release Extension
 
 on:
   push:
+    branches: [main]
+    paths:
+      - 'apps/extension/**'
     tags:
       - 'extension-v*'
   workflow_dispatch:
