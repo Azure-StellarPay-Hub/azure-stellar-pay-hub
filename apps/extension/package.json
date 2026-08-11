@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npx esbuild popup.ts background.ts options.ts --bundle --outdir=. --format=esm --target=es2022",
     "dev": "npx esbuild popup.ts background.ts options.ts --bundle --outdir=. --format=esm --target=es2022 --sourcemap --watch",
-    "pack": "node package-extension.mjs"
+    "pack": "node package-extension.mjs",
+    "pack:ci": "node package-extension.mjs --ci"
   }
 }
