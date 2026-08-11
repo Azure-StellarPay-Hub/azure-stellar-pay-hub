@@ -116,12 +116,12 @@ payment infrastructure:
 
 Deployed and publicly accessible on Vercel:
 
-| App                   | URL                                                                                           |
-| --------------------- | --------------------------------------------------------------------------------------------- |
+| App                   | URL                                                                                                |
+| --------------------- | -------------------------------------------------------------------------------------------------- |
 | **Admin Dashboard**   | [azure-stellar-pay-hub-admin-kfc3.vercel.app](https://azure-stellar-pay-hub-admin-kfc3.vercel.app) |
-| **Web App**           | [web-umber-one-53.vercel.app](https://web-umber-one-53.vercel.app)                           |
-| **Explorer**          | (preview builds on push)                                                                      |
-| **Soroban Contracts** | [Stellar Testnet](docs/testnet-deploy.md)                                                     |
+| **Web App**           | [web-umber-one-53.vercel.app](https://web-umber-one-53.vercel.app)                                 |
+| **Explorer**          | (preview builds on push)                                                                           |
+| **Soroban Contracts** | [Stellar Testnet](docs/testnet-deploy.md)                                                          |
 
 ### Admin Dashboard
 
@@ -415,15 +415,15 @@ Test categories:
 
 ## CI/CD
 
-| Workflow                  | File                                          | Triggers                                         |
-| ------------------------- | --------------------------------------------- | ------------------------------------------------ |
-| **CI**                    | `.github/workflows/ci.yml`                    | Every PR and push to `main`                      |
-| **Deploy to Railway**     | `.github/workflows/deploy-railway.yml`         | Push to `main` (API/Docker changes)               |
-| **Deploy to AKS**         | `.github/workflows/deploy.yml`                | Push to `main` (production)                       |
-| **Release Extension**     | `.github/workflows/publish-extension.yml`     | Push `extension-v*` tag                           |
-| **PR Auto-Labeler**       | `.github/workflows/pr-labeler.yml`            | PR opened/edited                                  |
-| **Badge Updater**         | `.github/workflows/update-badges.yml`         | Push to `main` with Cargo.toml changes            |
-| **Dependabot**            | `.github/dependabot.yml`                      | Weekly (npm + Cargo)                              |
+| Workflow              | File                                      | Triggers                               |
+| --------------------- | ----------------------------------------- | -------------------------------------- |
+| **CI**                | `.github/workflows/ci.yml`                | Every PR and push to `main`            |
+| **Deploy to Railway** | `.github/workflows/deploy-railway.yml`    | Push to `main` (API/Docker changes)    |
+| **Deploy to AKS**     | `.github/workflows/deploy.yml`            | Push to `main` (production)            |
+| **Release Extension** | `.github/workflows/publish-extension.yml` | Push `extension-v*` tag                |
+| **PR Auto-Labeler**   | `.github/workflows/pr-labeler.yml`        | PR opened/edited                       |
+| **Badge Updater**     | `.github/workflows/update-badges.yml`     | Push to `main` with Cargo.toml changes |
+| **Dependabot**        | `.github/dependabot.yml`                  | Weekly (npm + Cargo)                   |
 
 CI runs: lint → typecheck → format check → tests → contract build → contract tests → app builds → security audit (zizmor).
 
@@ -450,15 +450,15 @@ See [`docs/deployment.md`](docs/deployment.md) for full instructions.
 
 ### Environment Variables
 
-| Variable                       | Where                      | Purpose                              |
-| ------------------------------ | -------------------------- | ------------------------------------ |
-| `NEXT_PUBLIC_API_URL`          | Vercel (admin, web)        | Backend API URL                      |
-| `NEXT_PUBLIC_STELLAR_NETWORK`  | Vercel (admin, web)        | `testnet` or `public`                |
-| `RAILWAY_TOKEN`                | GitHub railway environment | Auth for Railway CLI deploys         |
-| `RAILWAY_API_URL`              | GitHub railway environment | API URL for smoke test               |
-| `DATABASE_URL`                 | Railway dashboard          | PostgreSQL connection string         |
-| `JWT_SECRET`                   | Railway dashboard          | Access/refresh token signing secret  |
-| `REDIS_URL`                    | Railway dashboard          | Redis connection string              |
+| Variable                      | Where                      | Purpose                             |
+| ----------------------------- | -------------------------- | ----------------------------------- |
+| `NEXT_PUBLIC_API_URL`         | Vercel (admin, web)        | Backend API URL                     |
+| `NEXT_PUBLIC_STELLAR_NETWORK` | Vercel (admin, web)        | `testnet` or `public`               |
+| `RAILWAY_TOKEN`               | GitHub railway environment | Auth for Railway CLI deploys        |
+| `RAILWAY_API_URL`             | GitHub railway environment | API URL for smoke test              |
+| `DATABASE_URL`                | Railway dashboard          | PostgreSQL connection string        |
+| `JWT_SECRET`                  | Railway dashboard          | Access/refresh token signing secret |
+| `REDIS_URL`                   | Railway dashboard          | Redis connection string             |
 
 - **Testnet (Stellar)**: `bash scripts/deploy-testnet.sh` — one-command deploy to Stellar testnet
 
