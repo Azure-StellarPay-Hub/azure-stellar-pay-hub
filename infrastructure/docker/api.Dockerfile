@@ -53,3 +53,4 @@ RUN chmod +x /app/start.sh
 
 EXPOSE 4000
 CMD ["/app/start.sh"]
+
