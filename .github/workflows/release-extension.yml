@@ -10,9 +10,6 @@ concurrency:
   group: release-extension-${{ github.ref }}
   cancel-in-progress: false
 
-permissions:
-  contents: write
-
 env:
   NODE_VERSION: 22
   PNPM_VERSION: 10.32.1
