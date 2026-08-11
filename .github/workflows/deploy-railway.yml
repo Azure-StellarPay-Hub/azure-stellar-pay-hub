@@ -19,8 +19,9 @@ name: Deploy to Railway
 #
 # ── GitHub Environment secrets & vars ──────────────────────────────────────
 # In repo Settings > Environments > railway, add:
-#   Secrets:  RAILWAY_TOKEN
-#   Vars:     RAILWAY_API_URL  (e.g. https://stellar-pay-api.up.railway.app)
+#   Secrets:  RAILWAY_TOKEN       (project-scoped token from Railway)
+#   Vars:     RAILWAY_API_URL     (e.g. https://stellar-pay-api.up.railway.app)
+#             RAILWAY_PROJECT_ID  (from railway.com/project/<ID>)
 # ────────────────────────────────────────────────────────────────────────────
 
 on:
@@ -57,6 +58,7 @@ jobs:
           npx -y @railway/cli@3 up --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ vars.RAILWAY_PROJECT_ID }}
 
       - name: Smoke test
         env:
