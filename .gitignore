@@ -46,8 +46,6 @@ tmp/
 .vercel
 .env*
 
-# Extension generated icons (created by package-extension.mjs --ci)
-apps/extension/icons/
 # Extension compiled output (esbuild)
 apps/extension/popup.js
 apps/extension/background.js
