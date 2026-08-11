@@ -79,12 +79,14 @@ impl EscrowContract {
         Ok(())
     }
 
-    pub fn refund(env: Env, id: u64) -> Result<(), EscrowError> {
+    pub fn refund(env: Env, id: u64, caller: Address) -> Result<(), EscrowError> {
         let mut escrows: Map<u64, Escrow> = env.storage().instance().get(&DataKey::Escrows).unwrap_or_else(|| Map::new(&env));
         let mut escrow = escrows.get(id).ok_or(EscrowError::EscrowNotFound)?;
         if escrow.released { return Err(EscrowError::AlreadyReleased); }
         if escrow.refunded { return Err(EscrowError::AlreadyRefunded); }
-        escrow.initiator.require_auth();
+        // Either the initiator or the counterparty may initiate a refund after expiry.
+        if caller != escrow.initiator && caller != escrow.counterparty { return Err(EscrowError::Unauthorized); }
+        caller.require_auth();
         let now = env.ledger().timestamp();
         if now >= escrow.release_time && now <= escrow.expiry { return Err(EscrowError::NotExpired); }
         let to = escrow.initiator.clone();

@@ -15,7 +15,8 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "@stellar-pay/types": "workspace:*"
+    "@stellar-pay/types": "workspace:*",
+    "@stellar-pay/logger": "workspace:*"
   },
   "devDependencies": {
     "typescript": "~5.9.3"

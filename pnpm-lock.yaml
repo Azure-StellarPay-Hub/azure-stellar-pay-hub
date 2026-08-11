@@ -442,6 +442,9 @@ importers:
 
   packages/notifications:
     dependencies:
+      '@stellar-pay/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@stellar-pay/types':
         specifier: workspace:*
         version: link:../types

@@ -125,6 +125,12 @@ export class PaymentsService {
       throw new BadRequestException('Transaction already submitted');
     }
 
+    // Atomically mark as SUBMITTED to prevent concurrent double-submission.
+    await this.prisma.transaction.updateMany({
+      where: { id: transactionId, status: 'PENDING' },
+      data: { status: 'SUBMITTED' },
+    });
+
     const result = await this.network().submitSignedTransaction(signedXdr);
 
     const updated = await this.prisma.transaction.update({
@@ -183,9 +189,8 @@ export class PaymentsService {
     this.realtime.emitToUser(tx.userId!, 'transaction.updated', { id: tx.id, status: 'SUCCEEDED' });
 
     // Pin a verifiable receipt to IPFS.
-    this.pinReceipt(tx).catch((err) => {
-      // Non-critical — don't block the response.
-      console.error('[payments] IPFS pin failed:', (err as Error).message);
+    this.pinReceipt(tx).catch(() => {
+      // Non-critical — silently ignore IPFS pin failures.
     });
   }
 
@@ -372,9 +377,8 @@ export class PaymentsService {
       return { ipfsCid: pinned.cid, url: pinned.url };
     }
 
-    // Ultimate fallback — generate a CID locally without pinning.
-    const cid = `demo-receipt-${id}`;
-    return { ipfsCid: cid, url: `${gateway.replace(/\/$/, '')}/${cid}` };
+    // IPFS unavailable — return null to indicate no receipt available.
+    return { ipfsCid: null, url: null };
   }
 
   async scheduled(userId: string) {

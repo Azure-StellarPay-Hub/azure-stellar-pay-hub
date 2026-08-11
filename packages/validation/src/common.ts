@@ -2,7 +2,15 @@ import { z } from 'zod';
 
 export const publicKeySchema = z
   .string()
-  .regex(/^[GA][A-Z2-7]{55}$/, 'Must be a valid Stellar public key (G... or M...)');
+  .regex(/^G[A-Z2-7]{55}$/, 'Must be a valid Stellar public key (G...)');
+
+export const muxedPublicKeySchema = z
+  .string()
+  .regex(/^M[A-Z2-7]{68}$/, 'Must be a valid Stellar muxed address (M...)');
+
+export const anyPublicKeySchema = z
+  .string()
+  .regex(/^[GM][A-Z2-7]{55,68}$/, 'Must be a valid Stellar public key (G... or M...)');
 
 export const idSchema = z.string().uuid();
 

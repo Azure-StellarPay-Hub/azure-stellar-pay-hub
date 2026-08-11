@@ -1,4 +1,7 @@
 import { NotificationChannel as NotifChannel, type NotificationType } from '@stellar-pay/types';
+import { createLogger } from '@stellar-pay/logger';
+
+const log = createLogger('notifications');
 
 export interface NotificationMessage {
   userId?: string;
@@ -23,8 +26,8 @@ export class ConsoleChannelProvider implements ChannelProvider {
     this.channel = channel;
   }
   async send(message: NotificationMessage): Promise<void> {
-    console.log(
-      `[notifications:${this.channel}] ${message.type} — ${message.title}${
+    log.info(
+      `[${this.channel}] ${message.type} — ${message.title}${
         message.body ? `: ${message.body}` : ''
       }`,
     );
@@ -75,9 +78,7 @@ export class SmtpChannelProvider implements ChannelProvider {
   ) {}
   async send(message: NotificationMessage): Promise<void> {
     if (this.config.host === 'smtp.example.com') {
-      console.log(
-        `[notifications:email] would send to ${message.to ?? 'unknown'}: ${message.title}`,
-      );
+      log.info(`[email] would send to ${message.to ?? 'unknown'}: ${message.title}`);
       return;
     }
     // Production: use nodemailer or a service like Resend/SendGrid.
@@ -103,7 +104,7 @@ export class SmtpChannelProvider implements ChannelProvider {
         text: message.body,
       });
     } catch (error) {
-      console.log(`[notifications:email] fallback: ${message.to ?? 'unknown'}: ${message.title}`);
+      log.info(`[email] fallback: ${message.to ?? 'unknown'}: ${message.title}`);
       if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
         return; // nodemailer not installed - graceful fallback
       }
@@ -139,10 +140,7 @@ export class TwilioSmsProvider implements ChannelProvider {
         to: message.to,
       });
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
-        console.log(
-          `[notifications:sms] twilio not installed — would send to ${message.to}: ${message.title}`,
-        );
+      if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {          log.info(`[sms:twilio] not installed — would send to ${message.to}: ${message.title}`);
         return;
       }
       throw error;
@@ -218,10 +216,7 @@ export class VonageSmsProvider implements ChannelProvider {
         text: `${message.title}${message.body ? ` — ${message.body}` : ''}`.slice(0, 1600),
       });
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
-        console.log(
-          `[notifications:sms] vonage not installed — would send to ${message.to}: ${message.title}`,
-        );
+      if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {          log.info(`[sms:vonage] not installed — would send to ${message.to}: ${message.title}`);
         return;
       }
       throw error;
