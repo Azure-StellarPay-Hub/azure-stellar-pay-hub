@@ -1,0 +1,48 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/api/**'
+      - 'packages/**'
+      - 'infrastructure/docker/api.Dockerfile'
+      - 'infrastructure/docker/start.sh'
+      - 'railway.json'
+      - '.github/workflows/deploy-railway.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: railway-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy API to Railway
+    runs-on: ubuntu-latest
+    environment: railway
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Deploy via Railway CLI
+        run: |
+          npm install -g @railway/cli
+          railway up --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Smoke test
+        run: |
+          sleep 15
+          RAILWAY_URL="${{ vars.RAILWAY_API_URL }}"
+          if [ -n "$RAILWAY_URL" ]; then
+            curl -sf "${RAILWAY_URL}/api/health" || echo "⚠️  Health check not reachable (may still be deploying)"
+          else
+            echo "⚠️  RAILWAY_API_URL variable not set — skipping smoke test"
+          fi
+        continue-on-error: true
