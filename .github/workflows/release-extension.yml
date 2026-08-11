@@ -34,10 +34,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install esbuild (extension-only, no workspace deps needed)
+      - name: Install dependencies (extension-only, not in pnpm workspace)
         run: |
           cd apps/extension
-          npm install esbuild@0.25
+          npm install
 
       - name: Build extension
         run: |
