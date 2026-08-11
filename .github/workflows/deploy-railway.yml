@@ -54,14 +54,15 @@ jobs:
 
       - name: Deploy via Railway CLI
         run: |
-          npm install -g @railway/cli
+          npm install -g @railway/cli@3
           railway up --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Smoke test
+        env:
+          RAILWAY_URL: ${{ vars.RAILWAY_API_URL }}
         run: |
-          RAILWAY_URL="${{ vars.RAILWAY_API_URL }}"
           if [ -z "$RAILWAY_URL" ]; then
             echo "⚠️  RAILWAY_API_URL variable not set — skipping smoke test"
             exit 0
