@@ -34,6 +34,7 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: false
 
       - name: Install dependencies (extension-only, not in pnpm workspace)
         run: |
@@ -57,13 +58,20 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          gh release create "${{ github.ref_name }}" \
-            "apps/extension/dist/stellar-pay-extension-${{ steps.version.outputs.version }}.zip" \
-            --title "StellarPay Hub v${{ steps.version.outputs.version }}" \
+          gh release create "$TAG_NAME" \
+            "apps/extension/dist/stellar-pay-extension-${VERSION}.zip" \
+            --title "StellarPay Hub v${VERSION}" \
             --generate-notes
 
       - name: Summary
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          TAG_NAME: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
         run: |
-          echo "## ✅ Extension v${{ steps.version.outputs.version }} released" >> "$GITHUB_STEP_SUMMARY"
-          echo "Download: [stellar-pay-extension-${{ steps.version.outputs.version }}.zip](https://github.com/\${{ github.repository }}/releases/tag/${{ github.ref_name }})" >> "$GITHUB_STEP_SUMMARY"
+          echo "## ✅ Extension v${VERSION} released" >> "$GITHUB_STEP_SUMMARY"
+          echo "Download: [stellar-pay-extension-${VERSION}.zip](https://github.com/${REPO}/releases/tag/${TAG_NAME})" >> "$GITHUB_STEP_SUMMARY"
