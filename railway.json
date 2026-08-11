@@ -1,7 +1,7 @@
 {
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
-    "dockerfilePath": "infrastructure/docker/api.Dockerfile
+    "dockerfilePath": "infrastructure/docker/api.Dockerfile"
   },
   "deploy": {
     "healthcheckPath": "/api/health",
@@ -10,4 +10,3 @@
     "numReplicas": 1
   }
 }
-
