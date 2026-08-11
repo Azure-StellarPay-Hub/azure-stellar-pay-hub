@@ -1,7 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Badge, Button, Card, CardContent, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, useToast } from '@stellar-pay/ui';
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  useToast,
+} from '@stellar-pay/ui';
 import { adminApi } from '@/lib/api';
 import { formatDate, shortKey } from '@/lib/format';
 
@@ -20,7 +32,10 @@ export default function UsersPage() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [search, setSearch] = useState('');
 
-  const load = () => void adminApi.admin.users({ search: search || undefined }).then((res) => setUsers(res.data as AdminUser[]));
+  const load = () =>
+    void adminApi.admin
+      .users({ search: search || undefined })
+      .then((res) => setUsers(res.data as unknown as AdminUser[]));
 
   useEffect(load, []);
 
@@ -74,13 +89,18 @@ export default function UsersPage() {
                     </td>
                     <td className="px-6 py-4">
                       {user.wallets.length ? (
-                        <span className="font-mono text-xs">{shortKey(user.wallets[0].publicKey)}</span>
+                        <span className="font-mono text-xs">
+                          {shortKey(user.wallets[0].publicKey)}
+                        </span>
                       ) : (
                         <span className="text-xs text-muted-foreground">—</span>
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <Select defaultValue={user.role} onValueChange={(role) => void setRole(user.id, role)}>
+                      <Select
+                        defaultValue={user.role}
+                        onValueChange={(role) => void setRole(user.id, role)}
+                      >
                         <SelectTrigger className="h-8 w-28">
                           <SelectValue />
                         </SelectTrigger>
@@ -93,17 +113,35 @@ export default function UsersPage() {
                       </Select>
                     </td>
                     <td className="px-6 py-4">
-                      <Badge variant={user.status === 'ACTIVE' ? 'success' : user.status === 'SUSPENDED' ? 'destructive' : 'warning'}>
+                      <Badge
+                        variant={
+                          user.status === 'ACTIVE'
+                            ? 'success'
+                            : user.status === 'SUSPENDED'
+                              ? 'destructive'
+                              : 'warning'
+                        }
+                      >
                         {user.status}
                       </Badge>
                     </td>
-                    <td className="px-6 py-4 text-xs text-muted-foreground">{formatDate(user.createdAt)}</td>
+                    <td className="px-6 py-4 text-xs text-muted-foreground">
+                      {formatDate(user.createdAt)}
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline" onClick={() => void setStatus(user.id, 'SUSPENDED')}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => void setStatus(user.id, 'SUSPENDED')}
+                        >
                           Suspend
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={() => void setStatus(user.id, 'ACTIVE')}>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => void setStatus(user.id, 'ACTIVE')}
+                        >
                           Activate
                         </Button>
                       </div>
@@ -112,7 +150,9 @@ export default function UsersPage() {
                 ))}
               </tbody>
             </table>
-            {users.length === 0 && <p className="p-8 text-center text-sm text-muted-foreground">No users found</p>}
+            {users.length === 0 && (
+              <p className="p-8 text-center text-sm text-muted-foreground">No users found</p>
+            )}
           </div>
         </CardContent>
       </Card>

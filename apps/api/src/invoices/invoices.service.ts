@@ -26,7 +26,12 @@ export class InvoicesService {
 
     let customerId: string | null = null;
     if (input.customerPublicKey) {
-      customerId = await this.upsertCustomer(merchantId, input.customerPublicKey, input.customerEmail, input.customerName);
+      customerId = await this.upsertCustomer(
+        merchantId,
+        input.customerPublicKey,
+        input.customerEmail,
+        input.customerName,
+      );
     }
 
     return this.prisma.invoice.create({

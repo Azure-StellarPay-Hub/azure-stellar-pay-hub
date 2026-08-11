@@ -4,6 +4,8 @@ import { BookOpen } from 'lucide-react';
 import './globals.css';
 import { listDocs } from '@/lib/docs';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'StellarPay Hub — Documentation',
 };

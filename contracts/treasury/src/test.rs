@@ -5,7 +5,7 @@ use soroban_sdk::testutils::Address as AddressUtils;
 use soroban_sdk::{token, Address, Env};
 
 fn create_token<'e>(env: &'e Env, admin: &Address) -> (token::Client<'e>, Address) {
-    let id = env.register_stellar_asset_contract(admin.clone());
+    let id = env.register_stellar_asset_contract_v2(admin.clone()).address();
     (token::Client::new(env, &id), id)
 }
 
@@ -17,6 +17,7 @@ type Setup<'e> = (
     Address,
     Address,
     token::Client<'e>,
+    Address,
     Address,
     TreasuryContractClient<'e>,
 );
@@ -30,8 +31,8 @@ fn setup<'e>(env: &'e Env) -> Setup<'e> {
     let client = TreasuryContractClient::new(env, &contract_id);
     client.initialize(&admin);
     client.set_allowed(&admin, &token_id, &true);
-    mint(env, &token_id, &depositor, &10_000);
-    (admin, depositor, token, token_id, client)
+    mint(env, &token_id, &depositor, 10_000i128);
+    (admin, depositor, token, token_id, contract_id, client)
 }
 
 // ------------------------------------------------------------------ Deposit
@@ -39,18 +40,18 @@ fn setup<'e>(env: &'e Env) -> Setup<'e> {
 #[test]
 fn test_deposit_transfers_tokens_to_contract() {
     let env = Env::default();
-    let (_admin, depositor, token, token_id, client) = setup(&env);
+    let (_admin, depositor, token, token_id, contract_id, client) = setup(&env);
 
     let before = token.balance(&depositor);
     client.deposit(&depositor, &token_id, &500);
     assert_eq!(token.balance(&depositor), before - 500);
-    assert_eq!(token.balance(&client.address()), 500);
+    assert_eq!(token.balance(&contract_id), 500);
 }
 
 #[test]
 fn test_deposit_rejects_zero() {
     let env = Env::default();
-    let (_admin, depositor, _token, token_id, client) = setup(&env);
+    let (_admin, depositor, _token, token_id, _contract_id, client) = setup(&env);
 
     let result = client.try_deposit(&depositor, &token_id, &0);
     assert_eq!(result, Err(Ok(TreasuryError::InvalidAmount)));
@@ -66,7 +67,7 @@ fn test_deposit_rejects_unlisted_token() {
     let client = TreasuryContractClient::new(&env, &contract_id);
     env.mock_all_auths();
     client.initialize(&admin);
-    mint(&env, &unlisted_id, &depositor, &100);
+    mint(&env, &unlisted_id, &depositor, 100i128);
 
     let result = client.try_deposit(&depositor, &unlisted_id, &10);
     assert_eq!(result, Err(Ok(TreasuryError::TokenNotAllowed)));
@@ -75,13 +76,13 @@ fn test_deposit_rejects_unlisted_token() {
 #[test]
 fn test_deposit_accrues_treasury_balance() {
     let env = Env::default();
-    let (_admin, depositor, _token, token_id, client) = setup(&env);
+    let (_admin, depositor, token, token_id, contract_id, client) = setup(&env);
 
     client.deposit(&depositor, &token_id, &300);
     client.deposit(&depositor, &token_id, &200);
 
     assert_eq!(client.balance(&token_id), 500);
-    assert_eq!(token.balance(&client.address()), 500);
+    assert_eq!(token.balance(&contract_id), 500);
 }
 
 // ------------------------------------------------------------------ Withdraw
@@ -89,7 +90,7 @@ fn test_deposit_accrues_treasury_balance() {
 #[test]
 fn test_withdraw_sends_funds() {
     let env = Env::default();
-    let (admin, depositor, _token, token_id, client) = setup(&env);
+    let (admin, depositor, token, token_id, _contract_id, client) = setup(&env);
     client.deposit(&depositor, &token_id, &1000);
 
     let recipient = Address::generate(&env);
@@ -102,7 +103,7 @@ fn test_withdraw_sends_funds() {
 #[test]
 fn test_withdraw_rejects_zero_amount() {
     let env = Env::default();
-    let (admin, _depositor, _token, token_id, client) = setup(&env);
+    let (admin, _depositor, _token, token_id, _contract_id, client) = setup(&env);
     let recipient = Address::generate(&env);
 
     let result = client.try_withdraw(&admin, &token_id, &recipient, &0);
@@ -112,7 +113,7 @@ fn test_withdraw_rejects_zero_amount() {
 #[test]
 fn test_withdraw_rejects_unauthorized() {
     let env = Env::default();
-    let (_admin, depositor, _token, token_id, client) = setup(&env);
+    let (_admin, depositor, _token, token_id, _contract_id, client) = setup(&env);
     client.deposit(&depositor, &token_id, &500);
 
     let attacker = Address::generate(&env);
@@ -124,7 +125,7 @@ fn test_withdraw_rejects_unauthorized() {
 #[test]
 fn test_withdraw_rejects_exceeding_cap() {
     let env = Env::default();
-    let (admin, depositor, _token, token_id, client) = setup(&env);
+    let (admin, depositor, token, token_id, _contract_id, client) = setup(&env);
     client.deposit(&depositor, &token_id, &1000);
     client.set_max_withdrawal(&admin, &token_id, &200);
 
@@ -141,7 +142,7 @@ fn test_withdraw_rejects_exceeding_cap() {
 #[test]
 fn test_withdraw_rejects_insufficient_balance() {
     let env = Env::default();
-    let (admin, depositor, _token, token_id, client) = setup(&env);
+    let (admin, depositor, _token, token_id, _contract_id, client) = setup(&env);
     client.deposit(&depositor, &token_id, &100);
 
     let recipient = Address::generate(&env);
@@ -154,7 +155,7 @@ fn test_withdraw_rejects_insufficient_balance() {
 #[test]
 fn test_set_allowed_toggle() {
     let env = Env::default();
-    let (admin, _depositor, _token, token_id, client) = setup(&env);
+    let (admin, _depositor, _token, token_id, _contract_id, client) = setup(&env);
 
     assert!(client.allowlisted(&token_id));
 
@@ -168,7 +169,7 @@ fn test_set_allowed_toggle() {
 #[test]
 fn test_set_allowed_rejects_unauthorized() {
     let env = Env::default();
-    let (_admin, _depositor, _token, token_id, client) = setup(&env);
+    let (_admin, _depositor, _token, token_id, _contract_id, client) = setup(&env);
     let attacker = Address::generate(&env);
 
     let result = client.try_set_allowed(&attacker, &token_id, &false);
@@ -178,7 +179,7 @@ fn test_set_allowed_rejects_unauthorized() {
 #[test]
 fn test_set_max_withdrawal_enforces_cap() {
     let env = Env::default();
-    let (admin, depositor, _token, token_id, client) = setup(&env);
+    let (admin, depositor, token, token_id, _contract_id, client) = setup(&env);
     client.deposit(&depositor, &token_id, &1000);
     client.set_max_withdrawal(&admin, &token_id, &300);
 
@@ -195,7 +196,7 @@ fn test_set_max_withdrawal_enforces_cap() {
 #[test]
 fn test_set_max_withdrawal_unauthorized() {
     let env = Env::default();
-    let (_admin, _depositor, _token, token_id, client) = setup(&env);
+    let (_admin, _depositor, _token, token_id, _contract_id, client) = setup(&env);
     let attacker = Address::generate(&env);
 
     let result = client.try_set_max_withdrawal(&attacker, &token_id, &500);

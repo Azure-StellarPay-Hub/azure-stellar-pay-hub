@@ -27,7 +27,9 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<AdminTx[]>([]);
 
   useEffect(() => {
-    void adminApi.admin.transactions().then((res) => setTransactions(res.data as AdminTx[]));
+    void adminApi.admin
+      .transactions()
+      .then((res) => setTransactions(res.data as unknown as AdminTx[]));
   }, []);
 
   return (
@@ -43,17 +45,25 @@ export default function TransactionsPage() {
           ) : (
             <div className="divide-y divide-border/60">
               {transactions.map((tx) => (
-                <div key={tx.id} className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
+                <div
+                  key={tx.id}
+                  className="flex flex-wrap items-center justify-between gap-3 px-6 py-4"
+                >
                   <div className="min-w-0">
                     <p className="font-mono text-sm font-medium">
                       {tx.amount} {tx.assetCode}
                     </p>
                     <p className="truncate text-xs text-muted-foreground">
-                      {shortKey(tx.fromPublicKey ?? '')} → {shortKey(tx.toPublicKey ?? '')} · {formatDateTime(tx.createdAt)} · {tx.kind}
+                      {shortKey(tx.fromPublicKey ?? '')} → {shortKey(tx.toPublicKey ?? '')} ·{' '}
+                      {formatDateTime(tx.createdAt)} · {tx.kind}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    {tx.hash && <span className="font-mono text-xs text-muted-foreground">{shortKey(tx.hash)}</span>}
+                    {tx.hash && (
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {shortKey(tx.hash)}
+                      </span>
+                    )}
                     <Badge variant="outline" className={STATUS_STYLES[tx.status] ?? ''}>
                       {tx.status}
                     </Badge>

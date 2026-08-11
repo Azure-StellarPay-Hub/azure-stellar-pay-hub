@@ -15,7 +15,11 @@ coverage/
 # Rust / Soroban
 contracts/target/
 contracts/**/target/
+contracts/**/test_snapshots/
 *.wasm
+
+# npm (project uses pnpm)
+package-lock.json
 
 # Environment
 .env
@@ -41,3 +45,8 @@ Thumbs.db
 tmp/
 .vercel
 .env*
+
+# Extension compiled output (esbuild)
+apps/extension/popup.js
+apps/extension/background.js
+apps/extension/options.js

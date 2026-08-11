@@ -5,7 +5,7 @@ use soroban_sdk::testutils::Address as AddressUtils;
 use soroban_sdk::{token, Address, Env, String};
 
 fn create_token<'e>(env: &'e Env, admin: &Address) -> (token::Client<'e>, Address) {
-    let id = env.register_stellar_asset_contract(admin.clone());
+    let id = env.register_stellar_asset_contract_v2(admin.clone()).address();
     (token::Client::new(env, &id), id)
 }
 
@@ -18,6 +18,7 @@ type Setup<'e> = (
     Address,
     Address,
     token::Client<'e>,
+    Address,
     Address,
     RewardsContractClient<'e>,
 );
@@ -34,7 +35,7 @@ fn setup<'e>(env: &'e Env) -> Setup<'e> {
     client.initialize(&admin, &token_id);
 
     // Fund the contract so redeems can succeed.
-    mint(env, &token_id, &contract_id, &100_000_000);
+    mint(env, &token_id, &contract_id, 100_000_000i128);
 
     // Configure three tiers (matching the existing rewards test pattern).
     client.create_tier(
@@ -68,7 +69,7 @@ fn setup<'e>(env: &'e Env) -> Setup<'e> {
     // Authorize the merchant as an earner.
     client.set_earner(&admin, &merchant, &true);
 
-    (admin, alice, merchant, token, token_id, client)
+    (admin, alice, merchant, token, token_id, contract_id, client)
 }
 
 // ------------------------------------------------------------------ Tiers
@@ -76,7 +77,7 @@ fn setup<'e>(env: &'e Env) -> Setup<'e> {
 #[test]
 fn test_create_tier() {
     let env = Env::default();
-    let (admin, _alice, _merchant, _token, _token_id, client) = setup(&env);
+    let (admin, _alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     let tier = client.tier(&1u32).unwrap();
     assert_eq!(tier.name, String::from_str(&env, "Bronze"));
@@ -87,7 +88,7 @@ fn test_create_tier() {
 #[test]
 fn test_create_duplicate_tier_fails() {
     let env = Env::default();
-    let (admin, _alice, _merchant, _token, _token_id, client) = setup(&env);
+    let (admin, _alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     let result = client.try_create_tier(
         &admin,
@@ -139,7 +140,7 @@ fn test_create_tier_rejects_invalid_rate() {
 #[test]
 fn test_update_tier() {
     let env = Env::default();
-    let (admin, _alice, _merchant, _token, _token_id, client) = setup(&env);
+    let (admin, _alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     client.update_tier(&admin, &1u32, &100u64, &2u32, &12i128, &3600u64);
 
@@ -152,7 +153,7 @@ fn test_update_tier() {
 #[test]
 fn test_update_tier_not_found() {
     let env = Env::default();
-    let (admin, _alice, _merchant, _token, _token_id, client) = setup(&env);
+    let (admin, _alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     let result = client.try_update_tier(&admin, &99u32, &0u64, &1u32, &10i128, &0u64);
     assert_eq!(result, Err(Ok(RewardsError::TierNotFound)));
@@ -161,7 +162,7 @@ fn test_update_tier_not_found() {
 #[test]
 fn test_update_tier_rejects_invalid_rate() {
     let env = Env::default();
-    let (admin, _alice, _merchant, _token, _token_id, client) = setup(&env);
+    let (admin, _alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     // Zero multiplier should be rejected.
     let result = client.try_update_tier(&admin, &1u32, &0u64, &0u32, &10i128, &0u64);
@@ -175,7 +176,7 @@ fn test_update_tier_rejects_invalid_rate() {
 #[test]
 fn test_set_tier_active_toggle() {
     let env = Env::default();
-    let (admin, _alice, _merchant, _token, _token_id, client) = setup(&env);
+    let (admin, _alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     client.set_tier_active(&admin, &1u32, &false);
     assert!(!client.tier(&1u32).unwrap().active);
@@ -187,7 +188,7 @@ fn test_set_tier_active_toggle() {
 #[test]
 fn test_tiers_returns_all() {
     let env = Env::default();
-    let (_admin, _alice, _merchant, _token, _token_id, client) = setup(&env);
+    let (_admin, _alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     let all = client.tiers();
     assert_eq!(all.len(), 3);
@@ -198,7 +199,7 @@ fn test_tiers_returns_all() {
 #[test]
 fn test_earn_points() {
     let env = Env::default();
-    let (_admin, alice, merchant, _token, _token_id, client) = setup(&env);
+    let (_admin, alice, merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     client.earn(&merchant, &alice, &100u64);
 
@@ -211,7 +212,7 @@ fn test_earn_points() {
 #[test]
 fn test_earn_with_multiplier_after_upgrade() {
     let env = Env::default();
-    let (_admin, alice, merchant, _token, _token_id, client) = setup(&env);
+    let (_admin, alice, merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     // Reach Silver (500 lifetime). Bronze 1x → 500 base → 500 lifetime.
     client.earn(&merchant, &alice, &500u64);
@@ -228,7 +229,7 @@ fn test_earn_with_multiplier_after_upgrade() {
 #[test]
 fn test_earn_tier_progression_to_gold() {
     let env = Env::default();
-    let (_admin, alice, merchant, _token, _token_id, client) = setup(&env);
+    let (_admin, alice, merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     // Reach Silver at 500 lifetime.
     client.earn(&merchant, &alice, &500u64);
@@ -242,7 +243,7 @@ fn test_earn_tier_progression_to_gold() {
 #[test]
 fn test_earn_rejects_unauthorized_earner() {
     let env = Env::default();
-    let (_admin, alice, _merchant, _token, _token_id, client) = setup(&env);
+    let (_admin, alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
     let unauthorized = Address::generate(&env);
 
     let result = client.try_earn(&unauthorized, &alice, &10u64);
@@ -252,7 +253,7 @@ fn test_earn_rejects_unauthorized_earner() {
 #[test]
 fn test_earn_rejects_zero_points() {
     let env = Env::default();
-    let (_admin, alice, merchant, _token, _token_id, client) = setup(&env);
+    let (_admin, alice, merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     let result = client.try_earn(&merchant, &alice, &0u64);
     assert_eq!(result, Err(Ok(RewardsError::InvalidAmount)));
@@ -263,7 +264,7 @@ fn test_earn_rejects_zero_points() {
 #[test]
 fn test_redeem_points() {
     let env = Env::default();
-    let (_admin, alice, merchant, token, _token_id, client) = setup(&env);
+    let (_admin, alice, merchant, token, _token_id, _contract_id, client) = setup(&env);
 
     client.earn(&merchant, &alice, &100u64);
     let before = token.balance(&alice);
@@ -281,7 +282,7 @@ fn test_redeem_points() {
 #[test]
 fn test_redeem_insufficient_points() {
     let env = Env::default();
-    let (_admin, alice, merchant, _token, _token_id, client) = setup(&env);
+    let (_admin, alice, merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     client.earn(&merchant, &alice, &10u64);
     let result = client.try_redeem(&alice, &100u64);
@@ -291,7 +292,7 @@ fn test_redeem_insufficient_points() {
 #[test]
 fn test_redeem_rejects_zero() {
     let env = Env::default();
-    let (_admin, alice, _merchant, _token, _token_id, client) = setup(&env);
+    let (_admin, alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     let result = client.try_redeem(&alice, &0u64);
     assert_eq!(result, Err(Ok(RewardsError::InvalidAmount)));
@@ -302,15 +303,15 @@ fn test_redeem_rejects_zero() {
 #[test]
 fn test_deposit_rewards_funds_contract() {
     let env = Env::default();
-    let (_admin, _alice, _merchant, token, token_id, client) = setup(&env);
+    let (_admin, _alice, _merchant, token, token_id, contract_id, client) = setup(&env);
 
     // Mint tokens to a depositor and deposit into the contract.
     let depositor = Address::generate(&env);
-    mint(&env, &token_id, &depositor, &10_000);
+    mint(&env, &token_id, &depositor, 10_000i128);
 
-    let before = token.balance(&client.address());
+    let before = token.balance(&contract_id);
     client.deposit_rewards(&depositor, &5000);
-    assert_eq!(token.balance(&client.address()), before + 5000);
+    assert_eq!(token.balance(&contract_id), before + 5000);
     assert_eq!(token.balance(&depositor), 5000);
 }
 
@@ -318,7 +319,7 @@ fn test_deposit_rewards_funds_contract() {
 fn test_deposit_rewards_rejects_zero() {
     let env = Env::default();
     let depositor = Address::generate(&env);
-    let (_admin, _alice, _merchant, _token, _token_id, client) = setup(&env);
+    let (_admin, _alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     let result = client.try_deposit_rewards(&depositor, &0);
     assert_eq!(result, Err(Ok(RewardsError::InvalidAmount)));
@@ -329,7 +330,7 @@ fn test_deposit_rewards_rejects_zero() {
 #[test]
 fn test_set_earner_toggle() {
     let env = Env::default();
-    let (admin, alice, merchant, _token, _token_id, client) = setup(&env);
+    let (admin, alice, merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     // Revoke authorization.
     client.set_earner(&admin, &merchant, &false);
@@ -348,7 +349,7 @@ fn test_set_earner_toggle() {
 #[test]
 fn test_is_earner_returns_false_for_unknown() {
     let env = Env::default();
-    let (_admin, _alice, _merchant, _token, _token_id, client) = setup(&env);
+    let (_admin, _alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     assert!(!client.is_earner(&Address::generate(&env)));
 }
@@ -358,7 +359,7 @@ fn test_is_earner_returns_false_for_unknown() {
 #[test]
 fn test_reward_token_returns_configured() {
     let env = Env::default();
-    let (_admin, _alice, _merchant, _token, token_id, client) = setup(&env);
+    let (_admin, _alice, _merchant, _token, token_id, _contract_id, client) = setup(&env);
 
     assert_eq!(client.reward_token(), Some(token_id));
 }
@@ -366,7 +367,7 @@ fn test_reward_token_returns_configured() {
 #[test]
 fn test_set_reward_token() {
     let env = Env::default();
-    let (admin, _alice, _merchant, token, _token_id, client) = setup(&env);
+    let (admin, _alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
 
     let (_, new_token_id) = create_token(&env, &admin);
     client.set_reward_token(&admin, &new_token_id);
@@ -379,7 +380,7 @@ fn test_set_reward_token() {
 #[test]
 fn test_balance_defaults_for_new_account() {
     let env = Env::default();
-    let (_admin, _alice, _merchant, _token, _token_id, client) = setup(&env);
+    let (_admin, _alice, _merchant, _token, _token_id, _contract_id, client) = setup(&env);
     let stranger = Address::generate(&env);
 
     let points = client.balance(&stranger);

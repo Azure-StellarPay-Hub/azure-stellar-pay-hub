@@ -71,9 +71,7 @@ describe('ApiClient', () => {
   it('throws ApiClientError on non-200 responses', async () => {
     let capturedError: unknown;
     const mockFetch = () =>
-      Promise.resolve(
-        new Response(JSON.stringify({ message: 'Not Found' }), { status: 404 }),
-      );
+      Promise.resolve(new Response(JSON.stringify({ message: 'Not Found' }), { status: 404 }));
 
     const client = new ApiClient({ baseUrl, fetchImpl: mockFetch as typeof fetch });
 

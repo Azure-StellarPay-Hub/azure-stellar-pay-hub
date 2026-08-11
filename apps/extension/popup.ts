@@ -59,7 +59,10 @@ async function handleConnect() {
   try {
     // Check if Freighter is available
     const freighter = (window as unknown as Record<string, unknown>).freighterApi as
-      | { getPublicKey: () => Promise<string>; signMessage: (msg: string, key: string) => Promise<string> }
+      | {
+          getPublicKey: () => Promise<string>;
+          signMessage: (msg: string, key: string) => Promise<string>;
+        }
       | undefined;
 
     if (!freighter) {
@@ -147,13 +150,15 @@ async function refreshData() {
   }
 }
 
-function renderTransactions(txs: Array<{
-  id: string;
-  amount: string;
-  assetCode: string;
-  direction: string;
-  createdAt: string;
-}>) {
+function renderTransactions(
+  txs: Array<{
+    id: string;
+    amount: string;
+    assetCode: string;
+    direction: string;
+    createdAt: string;
+  }>,
+) {
   txList.innerHTML = '';
 
   if (txs.length === 0) {
@@ -209,11 +214,7 @@ async function handleSend(e: Event) {
     }
 
     const publicKey = await api.getPublicKey();
-    const signedXdr = await freighter.signTransaction(
-      payment.unsignedXdr,
-      'TESTNET',
-      publicKey!,
-    );
+    const signedXdr = await freighter.signTransaction(payment.unsignedXdr, 'TESTNET', publicKey!);
 
     // Submit signed transaction
     await api.submitPayment({ signedXdr, paymentId: payment.id });

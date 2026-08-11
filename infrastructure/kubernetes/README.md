@@ -10,17 +10,17 @@ kubectl apply -k .
 
 ## Layout
 
-| File | Purpose |
-| ---- | ------- |
-| `namespace.yaml` | `stellar-pay` namespace |
-| `configmap.yaml` | non-secret env configuration |
-| `secret.yaml` | secret env (JWT secret, DB credentials) — use SealedSecrets/External Secrets in prod |
-| `postgres.yaml` | PostgreSQL StatefulSet (dev) |
-| `redis.yaml` | Redis StatefulSet (dev) |
-| `api.yaml` | API Deployment + Service + HPA |
-| `web.yaml` | Web Deployment + Service |
-| `ingress.yaml` | Ingress + TLS |
-| `kustomization.yaml` | resource bundle |
+| File                 | Purpose                                                                              |
+| -------------------- | ------------------------------------------------------------------------------------ |
+| `namespace.yaml`     | `stellar-pay` namespace                                                              |
+| `configmap.yaml`     | non-secret env configuration                                                         |
+| `secret.yaml`        | secret env (JWT secret, DB credentials) — use SealedSecrets/External Secrets in prod |
+| `postgres.yaml`      | PostgreSQL StatefulSet (dev)                                                         |
+| `redis.yaml`         | Redis StatefulSet (dev)                                                              |
+| `api.yaml`           | API Deployment + Service + HPA                                                       |
+| `web.yaml`           | Web Deployment + Service                                                             |
+| `ingress.yaml`       | Ingress + TLS                                                                        |
+| `kustomization.yaml` | resource bundle                                                                      |
 
 ## Production notes
 

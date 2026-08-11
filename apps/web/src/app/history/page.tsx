@@ -18,8 +18,8 @@ export default function HistoryPage() {
       setLoading(false);
       return;
     }
-    void api
-      .payments.list({ page: 1, pageSize: 50 })
+    void api.payments
+      .list({ page: 1, pageSize: 50 })
       .then((res) => setTransactions(res.data))
       .catch(() => undefined)
       .finally(() => setLoading(false));
@@ -59,12 +59,18 @@ export default function HistoryPage() {
                         : 'bg-emerald-500/10 text-emerald-400'
                     }`}
                   >
-                    {tx.direction === 'OUTGOING' ? <ArrowUpRight className="h-5 w-5" /> : <ArrowDownLeft className="h-5 w-5" />}
+                    {tx.direction === 'OUTGOING' ? (
+                      <ArrowUpRight className="h-5 w-5" />
+                    ) : (
+                      <ArrowDownLeft className="h-5 w-5" />
+                    )}
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">
                       {tx.direction === 'OUTGOING' ? 'To' : 'From'}{' '}
-                      <span className="font-mono">{shortKey(tx.toPublicKey ?? tx.fromPublicKey ?? '')}</span>
+                      <span className="font-mono">
+                        {shortKey(tx.toPublicKey ?? tx.fromPublicKey ?? '')}
+                      </span>
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {formatDateTime(tx.createdAt)} · {tx.kind}

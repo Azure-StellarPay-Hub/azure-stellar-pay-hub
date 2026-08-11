@@ -25,8 +25,11 @@ export default function AssetsPage() {
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [open, setOpen] = useState(false);
-
-  const load = () => void adminApi.admin.assets().then(setAssets).catch(() => undefined);
+  const load = () =>
+    void adminApi.admin
+      .assets()
+      .then((res) => setAssets(res.data as unknown as Asset[]))
+      .catch(() => undefined);
   useEffect(load, []);
 
   const create = async () => {
@@ -62,11 +65,21 @@ export default function AssetsPage() {
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <Label>Code</Label>
-                <Input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} maxLength={12} placeholder="MYTOK" className="font-mono" />
+                <Input
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.toUpperCase())}
+                  maxLength={12}
+                  placeholder="MYTOK"
+                  className="font-mono"
+                />
               </div>
               <div className="space-y-1.5">
                 <Label>Name</Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="My Token" />
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="My Token"
+                />
               </div>
               <Button onClick={() => void create()} className="w-full">
                 Register
@@ -83,13 +96,21 @@ export default function AssetsPage() {
               <div>
                 <p className="font-mono text-lg font-bold">{asset.code}</p>
                 <p className="text-sm text-muted-foreground">{asset.name}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{asset.description ?? 'No description'}</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {asset.description ?? 'No description'}
+                </p>
               </div>
               <div className="flex flex-col items-end gap-1">
-                <Badge variant={asset.isNative ? 'info' : asset.isCrossBorder ? 'success' : 'outline'}>
+                <Badge
+                  variant={asset.isNative ? 'info' : asset.isCrossBorder ? 'success' : 'outline'}
+                >
                   {asset.isNative ? 'native' : asset.isCrossBorder ? 'cross-border' : 'stellar'}
                 </Badge>
-                {asset.issuer && <span className="font-mono text-[10px] text-muted-foreground">{asset.issuer.slice(0, 8)}…</span>}
+                {asset.issuer && (
+                  <span className="font-mono text-[10px] text-muted-foreground">
+                    {asset.issuer.slice(0, 8)}…
+                  </span>
+                )}
               </div>
             </CardContent>
           </Card>

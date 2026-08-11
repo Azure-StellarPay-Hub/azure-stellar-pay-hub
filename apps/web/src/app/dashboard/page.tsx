@@ -25,7 +25,9 @@ export default function DashboardPage() {
     setLoadingData(true);
     void Promise.all([
       api.wallet.balances(publicKey).catch(() => [] as AssetBalance[]),
-      api.payments.list({ page: 1, pageSize: 6 }).catch(() => ({ data: [] as TransactionRecord[] })),
+      api.payments
+        .list({ page: 1, pageSize: 6 })
+        .catch(() => ({ data: [] as TransactionRecord[] })),
     ])
       .then(([b, t]) => {
         setBalances(b);
@@ -48,7 +50,12 @@ export default function DashboardPage() {
                 Use Freighter, xBull or Albedo. Your keys never leave your wallet.
               </p>
             </div>
-            <Button variant="gradient" size="lg" onClick={() => void loginWithWallet()} disabled={loading}>
+            <Button
+              variant="gradient"
+              size="lg"
+              onClick={() => void loginWithWallet()}
+              disabled={loading}
+            >
               Sign in with wallet
             </Button>
           </CardContent>
@@ -112,11 +119,15 @@ export default function DashboardPage() {
                       <div>
                         <p className="font-medium">{balance.assetCode}</p>
                         <p className="text-xs text-muted-foreground">
-                          {balance.isNative ? 'Stellar native' : `Issued by ${shortKey(balance.assetIssuer ?? '')}`}
+                          {balance.isNative
+                            ? 'Stellar native'
+                            : `Issued by ${shortKey(balance.assetIssuer ?? '')}`}
                         </p>
                       </div>
                     </div>
-                    <p className="font-mono text-lg font-semibold">{Number(balance.balance).toLocaleString()}</p>
+                    <p className="font-mono text-lg font-semibold">
+                      {Number(balance.balance).toLocaleString()}
+                    </p>
                   </div>
                 ))}
               </div>

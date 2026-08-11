@@ -7,6 +7,7 @@ use soroban_sdk::{contract, contracterror, contractimpl, contracttype, symbol_sh
 pub enum EscrowError {
     Unauthorized = 1, InvalidAmount = 2, EscrowNotFound = 3, TooEarly = 4,
     Expired = 5, NotExpired = 6, AlreadyReleased = 7, AlreadyRefunded = 8, NotInitialized = 9,
+    AlreadyInitialized = 10,
 }
 
 #[contracttype]
@@ -37,7 +38,7 @@ pub struct EscrowContract;
 #[contractimpl]
 impl EscrowContract {
     pub fn initialize(env: Env, admin: Address) -> Result<(), EscrowError> {
-        if env.storage().instance().has(&DataKey::Admin) { panic!("already initialized"); }
+        if env.storage().instance().has(&DataKey::Admin) { return Err(EscrowError::AlreadyInitialized); }
         env.storage().instance().set(&DataKey::Admin, &admin);
         env.storage().instance().set(&DataKey::NextId, &1u64);
         env.storage().instance().set(&DataKey::Escrows, &Map::<u64, Escrow>::new(&env));
@@ -47,7 +48,7 @@ impl EscrowContract {
 
     pub fn create(env: Env, initiator: Address, counterparty: Address, token: Address, amount: i128, release_time: u64, expiry: Option<u64>) -> Result<u64, EscrowError> {
         if amount <= 0 { return Err(EscrowError::InvalidAmount); }
-        if expiry.is_some() && expiry.unwrap() <= release_time { return Err(EscrowError::InvalidAmount); }
+        if expiry.map_or(false, |e| e <= release_time) { return Err(EscrowError::InvalidAmount); }
         initiator.require_auth();
         let mut escrows: Map<u64, Escrow> = env.storage().instance().get(&DataKey::Escrows).unwrap_or_else(|| Map::new(&env));
         let mut next_id: u64 = env.storage().instance().get(&DataKey::NextId).unwrap_or(1);
@@ -103,3 +104,6 @@ impl EscrowContract {
         env.storage().instance().get::<_, Map<u64, Escrow>>(&DataKey::Escrows).map(|e| e.keys()).unwrap_or_else(|| Vec::new(&env))
     }
 }
+
+#[cfg(test)]
+mod test;

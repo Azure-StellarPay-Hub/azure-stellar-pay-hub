@@ -15,15 +15,23 @@ export const envSchema = z
     CORS_ORIGINS: z
       .string()
       .default('http://localhost:3000')
-      .transform((v) => v.split(',').map((s) => s.trim()).filter(Boolean)),
+      .transform((v) =>
+        v
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean),
+      ),
 
     // Auth
-    JWT_SECRET: z.string().min(16).default('development-only-secret-change-me'),
+    JWT_SECRET: z.string().min(16),
     JWT_EXPIRES_IN: z.string().default('7d'),
     SESSION_TTL_SECONDS: z.coerce.number().int().positive().default(604800),
 
     // Database / cache
-    DATABASE_URL: z.string().min(1).default('postgresql://postgres:postgres@localhost:5432/stellar_pay?schema=public'),
+    DATABASE_URL: z
+      .string()
+      .min(1)
+      .default('postgresql://postgres:postgres@localhost:5432/stellar_pay?schema=public'),
     REDIS_URL: z.string().default('redis://localhost:6379'),
 
     // Stellar
@@ -34,7 +42,7 @@ export const envSchema = z
 
     // Admin seed
     ADMIN_EMAIL: z.string().email().default('admin@stellar-pay.dev'),
-    ADMIN_PASSWORD: z.string().min(8).default('ChangeMe123!'),
+    ADMIN_PASSWORD: z.string().min(8),
 
     // Notifications
     NOTIFICATIONS_EMAIL_ENABLED: z
@@ -48,7 +56,7 @@ export const envSchema = z
     SMS_PROVIDER: z.enum(['console', 'twilio', 'vonage']).default('console'),
     SMS_API_KEY: z.string().optional(),
     PUSH_PROVIDER: z.enum(['console', 'fcm']).default('console'),
-    WEBHOOK_SIGNING_SECRET: z.string().default('webhook-secret'),
+    WEBHOOK_SIGNING_SECRET: z.string().min(16),
 
     // IPFS
     IPFS_PROVIDER: z.enum(['local', 'pinata', 'web3']).default('local'),

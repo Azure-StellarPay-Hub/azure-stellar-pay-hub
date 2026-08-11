@@ -1,76 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StellarPay Hub</title>
-  <link rel="stylesheet" href="popup.css" />
-</head>
-<body>
-  <div id="app">
-    <!-- Header -->
-    <header class="header">
-      <h1 class="logo">⚡ StellarPay</h1>
-      <span id="network-badge" class="badge">testnet</span>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StellarPay Hub</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Header -->
+      <header class="header">
+        <h1 class="logo">⚡ StellarPay</h1>
+        <span id="network-badge" class="badge">testnet</span>
+      </header>
 
-    <!-- Connected state -->
-    <div id="connected-view" class="hidden">
-      <!-- Balance card -->
-      <div class="balance-card">
-        <span class="balance-label">Balance</span>
-        <span id="balance-amount" class="balance-amount">—</span>
-        <span id="balance-asset" class="balance-asset">XLM</span>
-      </div>
-
-      <!-- Quick Send form -->
-      <form id="send-form" class="send-form">
-        <input
-          type="text"
-          id="recipient"
-          placeholder="Recipient public key (G…)"
-          autocomplete="off"
-        />
-        <div class="send-row">
-          <input
-            type="number"
-            id="amount"
-            placeholder="Amount"
-            step="any"
-            min="0"
-          />
-          <select id="asset-select">
-            <option value="XLM">XLM</option>
-          </select>
+      <!-- Connected state -->
+      <div id="connected-view" class="hidden">
+        <!-- Balance card -->
+        <div class="balance-card">
+          <span class="balance-label">Balance</span>
+          <span id="balance-amount" class="balance-amount">—</span>
+          <span id="balance-asset" class="balance-asset">XLM</span>
         </div>
-        <button type="submit" id="send-btn" class="btn-primary">
-          Send Payment
-        </button>
-      </form>
 
-      <!-- Status message -->
-      <div id="status" class="status hidden"></div>
+        <!-- Quick Send form -->
+        <form id="send-form" class="send-form">
+          <input
+            type="text"
+            id="recipient"
+            placeholder="Recipient public key (G…)"
+            autocomplete="off"
+          />
+          <div class="send-row">
+            <input type="number" id="amount" placeholder="Amount" step="any" min="0" />
+            <select id="asset-select">
+              <option value="XLM">XLM</option>
+            </select>
+          </div>
+          <button type="submit" id="send-btn" class="btn-primary">Send Payment</button>
+        </form>
 
-      <!-- Recent transactions -->
-      <div class="recent-section">
-        <h3>Recent</h3>
-        <ul id="tx-list" class="tx-list"></ul>
+        <!-- Status message -->
+        <div id="status" class="status hidden"></div>
+
+        <!-- Recent transactions -->
+        <div class="recent-section">
+          <h3>Recent</h3>
+          <ul id="tx-list" class="tx-list"></ul>
+        </div>
       </div>
+
+      <!-- Disconnected state -->
+      <div id="disconnected-view">
+        <p class="connect-prompt">Connect your wallet to get started.</p>
+        <button id="connect-btn" class="btn-primary">Connect Freighter</button>
+      </div>
+
+      <!-- Footer links -->
+      <footer class="footer">
+        <a href="#" id="open-app">Open Web App</a>
+        <a href="#" id="open-options">Settings</a>
+      </footer>
     </div>
 
-    <!-- Disconnected state -->
-    <div id="disconnected-view">
-      <p class="connect-prompt">Connect your wallet to get started.</p>
-      <button id="connect-btn" class="btn-primary">Connect Freighter</button>
-    </div>
-
-    <!-- Footer links -->
-    <footer class="footer">
-      <a href="#" id="open-app">Open Web App</a>
-      <a href="#" id="open-options">Settings</a>
-    </footer>
-  </div>
-
-  <script type="module" src="popup.js"></script>
-</body>
+    <script type="module" src="popup.js"></script>
+  </body>
 </html>

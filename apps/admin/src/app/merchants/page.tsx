@@ -21,7 +21,9 @@ export default function MerchantsPage() {
   const [merchants, setMerchants] = useState<AdminMerchant[]>([]);
 
   const load = () =>
-    void adminApi.admin.merchants().then((res) => setMerchants(res.data as AdminMerchant[]));
+    void adminApi.admin
+      .merchants()
+      .then((res) => setMerchants(res.data as unknown as AdminMerchant[]));
 
   useEffect(load, []);
 
@@ -44,16 +46,31 @@ export default function MerchantsPage() {
           ) : (
             <div className="divide-y divide-border/60">
               {merchants.map((merchant) => (
-                <div key={merchant.id} className="flex flex-wrap items-center justify-between gap-4 px-6 py-4">
+                <div
+                  key={merchant.id}
+                  className="flex flex-wrap items-center justify-between gap-4 px-6 py-4"
+                >
                   <div>
                     <p className="font-medium">{merchant.name}</p>
                     <p className="text-xs text-muted-foreground">
-                      /{merchant.slug} · {merchant.user.email ?? 'no email'} · KYC {merchant.kycStatus}
+                      /{merchant.slug} · {merchant.user.email ?? 'no email'} · KYC{' '}
+                      {merchant.kycStatus}
                     </p>
-                    <p className="text-xs text-muted-foreground">Settles in {merchant.settlementAssetCode} · joined {formatDate(merchant.createdAt)}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Settles in {merchant.settlementAssetCode} · joined{' '}
+                      {formatDate(merchant.createdAt)}
+                    </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge variant={merchant.status === 'ACTIVE' ? 'success' : merchant.status === 'SUSPENDED' ? 'destructive' : 'warning'}>
+                    <Badge
+                      variant={
+                        merchant.status === 'ACTIVE'
+                          ? 'success'
+                          : merchant.status === 'SUSPENDED'
+                            ? 'destructive'
+                            : 'warning'
+                      }
+                    >
                       {merchant.status}
                     </Badge>
                     <div className="flex gap-2">
@@ -63,15 +80,27 @@ export default function MerchantsPage() {
                         </Button>
                       )}
                       {merchant.status !== 'SUSPENDED' ? (
-                        <Button size="sm" variant="outline" onClick={() => void setStatus(merchant.id, 'SUSPENDED')}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => void setStatus(merchant.id, 'SUSPENDED')}
+                        >
                           Suspend
                         </Button>
                       ) : (
-                        <Button size="sm" variant="ghost" onClick={() => void setStatus(merchant.id, 'ACTIVE')}>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => void setStatus(merchant.id, 'ACTIVE')}
+                        >
                           Reinstate
                         </Button>
                       )}
-                      <Button size="sm" variant="ghost" onClick={() => void setStatus(merchant.id, 'REJECTED')}>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => void setStatus(merchant.id, 'REJECTED')}
+                      >
                         Reject
                       </Button>
                     </div>

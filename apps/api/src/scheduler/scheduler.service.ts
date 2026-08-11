@@ -78,7 +78,17 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
           lastRunAt: new Date(),
           nextRunAt: completed
             ? new Date()
-            : new Date(Date.now() + 24 * 3600 * 1000 * (scheduled.interval === 'monthly' ? 30 : scheduled.interval === 'weekly' ? 7 : 1)),
+            : new Date(
+                Date.now() +
+                  24 *
+                    3600 *
+                    1000 *
+                    (scheduled.interval === 'monthly'
+                      ? 30
+                      : scheduled.interval === 'weekly'
+                        ? 7
+                        : 1),
+              ),
         },
       });
       await this.notifications.notify(
@@ -153,11 +163,12 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         },
       });
       // Advance to the next interval.
-      const intervalMs = scheduled.interval === 'daily'
-        ? 24 * 3600 * 1000
-        : scheduled.interval === 'weekly'
-          ? 7 * 24 * 3600 * 1000
-          : 30 * 24 * 3600 * 1000;
+      const intervalMs =
+        scheduled.interval === 'daily'
+          ? 24 * 3600 * 1000
+          : scheduled.interval === 'weekly'
+            ? 7 * 24 * 3600 * 1000
+            : 30 * 24 * 3600 * 1000;
       await this.prisma.scheduledPayment.update({
         where: { id: scheduled.id },
         data: {
@@ -171,7 +182,12 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         scheduled.userId,
         'ACCOUNT_ACTIVITY' as NotificationType,
         `Subscription renewal processed: ${scheduled.amount} ${scheduled.assetCode}`,
-        { transactionId: tx.id, amount: scheduled.amount, assetCode: scheduled.assetCode, run: runs },
+        {
+          transactionId: tx.id,
+          amount: scheduled.amount,
+          assetCode: scheduled.assetCode,
+          run: runs,
+        },
       );
     }
     if (due.length) {
@@ -196,7 +212,10 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         where: { id: settlement.id },
         data: { status: 'PROCESSING' },
       });
-      this.logger.info({ settlementId: settlement.id, amount: settlement.amount }, 'settlement processing started');
+      this.logger.info(
+        { settlementId: settlement.id, amount: settlement.amount },
+        'settlement processing started',
+      );
       // In production: invoke merchant contract settle(), then update to COMPLETED.
     }
   }

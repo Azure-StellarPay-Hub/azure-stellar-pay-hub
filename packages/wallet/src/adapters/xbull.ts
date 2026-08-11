@@ -49,18 +49,12 @@ export class XBullAdapter implements WalletAdapter {
     if (this.bridge) {
       return this.bridge;
     }
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const mod = require('@creit.tech/xbull-wallet-connect') as unknown as Record<string, unknown>;
-      const Ctor =
-        (mod.default as unknown) ?? (mod.XBullWalletConnect as unknown) ?? (mod as unknown);
-      if (typeof Ctor !== 'function') {
-        throw new ProtocolError('xBull wallet SDK could not be loaded');
-      }
-      this.bridge = new (Ctor as new () => XBullBridge)();
-      return this.bridge;
-    } catch (err) {
-      throw handleXBullError(err);
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const mod = require('@creit.tech/xbull-wallet-connect') as unknown as Record<string, unknown>;
+    const Ctor =
+      (mod.default as unknown) ?? (mod.XBullWalletConnect as unknown) ?? (mod as unknown);
+    if (typeof Ctor !== 'function') {
+      throw new Error('xBull wallet SDK could not be loaded');
     }
   }
 

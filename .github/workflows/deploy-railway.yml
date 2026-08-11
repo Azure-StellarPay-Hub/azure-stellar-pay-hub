@@ -1,0 +1,81 @@
+name: Deploy to Railway
+
+# ── Railway environment variables ──────────────────────────────────────────
+# Set these in the Railway dashboard (Service > Variables):
+#
+#   Required:
+#     DATABASE_URL          PostgreSQL connection string
+#     JWT_SECRET            Min 16 chars, used to sign access/refresh tokens
+#     REDIS_URL             Redis connection string (e.g. redis://host:6379)
+#     ADMIN_PASSWORD        Initial admin account password (min 8 chars)
+#     WEBHOOK_SIGNING_SECRET Min 16 chars, for signing merchant webhook payloads
+#
+#   Optional (defaults provided):
+#     STELLAR_NETWORK       'testnet' | 'public' (default: testnet)
+#     CORS_ORIGINS          Comma-separated allowed origins
+#     NOTIFICATIONS_EMAIL_ENABLED 'true' | 'false'
+#     SMTP_HOST / SMTP_PORT / SMTP_USER / SMTP_PASSWORD
+#     IPFS_PROVIDER         'local' | 'pinata' | 'web3'
+#
+# ── GitHub Environment secrets & vars ──────────────────────────────────────
+# In repo Settings > Environments > railway, add:
+#   Secrets:  RAILWAY_TOKEN
+#   Vars:     RAILWAY_API_URL  (e.g. https://stellar-pay-api.up.railway.app)
+# ────────────────────────────────────────────────────────────────────────────
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/api/**'
+      - 'packages/**'
+      - 'infrastructure/docker/api.Dockerfile'
+      - 'infrastructure/docker/start.sh'
+      - 'railway.json'
+      - '.github/workflows/deploy-railway.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: railway-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy API to Railway
+    runs-on: ubuntu-latest
+    environment: railway
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Deploy via Railway CLI
+        run: |
+          npx -y @railway/cli@3 up --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Smoke test
+        env:
+          RAILWAY_URL: ${{ vars.RAILWAY_API_URL }}
+        run: |
+          if [ -z "$RAILWAY_URL" ]; then
+            echo "⚠️  RAILWAY_API_URL variable not set — skipping smoke test"
+            exit 0
+          fi
+
+          echo "Waiting for deployment to become healthy (up to 120s)..."
+          for i in $(seq 1 24); do
+            if curl -sf "${RAILWAY_URL}/api/health" > /dev/null 2>&1; then
+              echo "✅ Health check passed (attempt $i)"
+              exit 0
+            fi
+            echo "  attempt $i/24 — not ready yet, waiting 5s..."
+            sleep 5
+          done
+
+          echo "❌ Health check failed after 24 attempts"
+          exit 1

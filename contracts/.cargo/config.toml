@@ -1,0 +1,9 @@
+# Soroban contract build configuration
+# Uses stellar contract build which targets wasm32v1-none (WASM MVP)
+# for maximum testnet compatibility.
+
+[target.wasm32v1-none]
+# No additional rustflags needed — stellar contract build handles this
+
+[target.wasm32-unknown-unknown]
+rustflags = ["-C", "target-feature=-reference-types"]

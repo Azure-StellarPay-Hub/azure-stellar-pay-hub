@@ -29,7 +29,10 @@ export class PaymentLinksService {
   }
 
   async list(merchantId: string) {
-    return this.prisma.paymentLink.findMany({ where: { merchantId }, orderBy: { createdAt: 'desc' } });
+    return this.prisma.paymentLink.findMany({
+      where: { merchantId },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   /** Public lookup used by the hosted checkout. */

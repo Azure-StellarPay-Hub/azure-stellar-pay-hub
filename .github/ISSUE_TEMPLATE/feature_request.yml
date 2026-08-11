@@ -1,7 +1,7 @@
 name: Feature Request
 description: Propose a new feature or enhancement
-title: "feat: "
-labels: ["enhancement", "triage"]
+title: 'feat: '
+labels: ['enhancement', 'triage']
 body:
   - type: markdown
     attributes:
@@ -33,9 +33,9 @@ body:
       label: Estimated complexity
       description: Your best guess at how complex this is.
       options:
-        - "complexity:low (small change, few files)"
-        - "complexity:medium (new feature, multiple files)"
-        - "complexity:high (major refactor, new contract, new app)"
+        - 'complexity:low (small change, few files)'
+        - 'complexity:medium (new feature, multiple files)'
+        - 'complexity:high (major refactor, new contract, new app)'
   - type: dropdown
     id: component
     attributes:

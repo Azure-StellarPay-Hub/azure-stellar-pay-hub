@@ -22,7 +22,11 @@ export class AdminController {
 
   @Get('users')
   users(@Query() query: { page?: string; pageSize?: string; search?: string }) {
-    return this.admin.users({ page: Number(query.page) || 1, pageSize: Number(query.pageSize) || 20, search: query.search });
+    return this.admin.users({
+      page: Number(query.page) || 1,
+      pageSize: Number(query.pageSize) || 20,
+      search: query.search,
+    });
   }
 
   @Patch('users/:id/status')
@@ -40,7 +44,10 @@ export class AdminController {
 
   @Get('merchants')
   merchants(@Query() query: { page?: string; pageSize?: string }) {
-    return this.admin.merchants({ page: Number(query.page) || 1, pageSize: Number(query.pageSize) || 20 });
+    return this.admin.merchants({
+      page: Number(query.page) || 1,
+      pageSize: Number(query.pageSize) || 20,
+    });
   }
 
   @Patch('merchants/:id/status')
@@ -53,12 +60,19 @@ export class AdminController {
 
   @Get('transactions')
   transactions(@Query() query: { page?: string; pageSize?: string; status?: string }) {
-    return this.admin.transactions({ page: Number(query.page) || 1, pageSize: Number(query.pageSize) || 20, status: query.status });
+    return this.admin.transactions({
+      page: Number(query.page) || 1,
+      pageSize: Number(query.pageSize) || 20,
+      status: query.status,
+    });
   }
 
   @Get('audit-logs')
   auditLogs(@Query() query: { page?: string; pageSize?: string }) {
-    return this.admin.auditLogs({ page: Number(query.page) || 1, pageSize: Number(query.pageSize) || 20 });
+    return this.admin.auditLogs({
+      page: Number(query.page) || 1,
+      pageSize: Number(query.pageSize) || 20,
+    });
   }
 
   @Get('assets')
@@ -73,7 +87,10 @@ export class AdminController {
 
   @Get('notifications')
   notifications(@Query() query: { page?: string; pageSize?: string }) {
-    return this.admin.notifications({ page: Number(query.page) || 1, pageSize: Number(query.pageSize) || 20 });
+    return this.admin.notifications({
+      page: Number(query.page) || 1,
+      pageSize: Number(query.pageSize) || 20,
+    });
   }
 
   @Get('settings')

@@ -8,8 +8,7 @@ import { useAuth } from '@/lib/auth';
 import { shortKey } from '@/lib/format';
 
 export function WalletButton() {
-  const { connected, publicKey, provider, connect, disconnect, switchWallet, connecting } =
-    useWallet();
+  const { connected, publicKey, provider, disconnect, switchWallet, connecting } = useWallet();
   const { authenticated, loginWithWallet, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -43,7 +42,10 @@ export function WalletButton() {
     setOpen(false);
   };
 
-  const activeLabel = useMemo(() => SUPPORTED_WALLETS.find((w) => w.id === provider)?.name ?? '', [provider]);
+  const activeLabel = useMemo(
+    () => SUPPORTED_WALLETS.find((w) => w.id === provider)?.name ?? '',
+    [provider],
+  );
 
   if (connected && publicKey) {
     return (
@@ -93,7 +95,11 @@ export function WalletButton() {
         onClick={() => setOpen((v) => !v)}
         disabled={connecting || busy}
       >
-        {connecting || busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wallet className="h-4 w-4" />}
+        {connecting || busy ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Wallet className="h-4 w-4" />
+        )}
         Connect wallet
       </Button>
       {open && (

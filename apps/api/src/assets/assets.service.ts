@@ -19,10 +19,18 @@ export class AssetsService {
       ];
     }
     const [items, total] = await Promise.all([
-      this.prisma.asset.findMany({ where: where as never, orderBy: { isNative: 'desc' }, skip: (page - 1) * pageSize, take: pageSize }),
+      this.prisma.asset.findMany({
+        where: where as never,
+        orderBy: { isNative: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
       this.prisma.asset.count({ where: where as never }),
     ]);
-    return { data: items, meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) } };
+    return {
+      data: items,
+      meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    };
   }
 
   async getByCode(code: string) {

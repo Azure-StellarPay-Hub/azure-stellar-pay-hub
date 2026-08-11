@@ -32,17 +32,17 @@ payments, merchants, invoices, payment links, subscriptions, escrow, and analyti
 
 ## Repo layout
 
-| Path                      | Purpose                                                  |
-| ------------------------- | -------------------------------------------------------- |
-| `apps/web`                | End-user Next.js app (wallet, send/receive, merchant UI) |
-| `apps/admin`              | Operator Next.js dashboard (RBAC protected)              |
-| `apps/api`                | NestJS backend (REST + WebSockets)                       |
-| `apps/explorer`           | Public transaction/account explorer                      |
-| `apps/docs`               | Documentation site (renders `docs/*.md`)                 |
-| `contracts/*`             | Soroban smart contracts (Rust)                           |
-| `packages/*`              | Shared libraries (SDK, wallet, ui, database, auth, ...)  |
-| `infrastructure/*`        | Docker, Kubernetes, Terraform, monitoring                |
-| `scripts`, `tests`        | Tooling and end-to-end suites                            |
+| Path               | Purpose                                                  |
+| ------------------ | -------------------------------------------------------- |
+| `apps/web`         | End-user Next.js app (wallet, send/receive, merchant UI) |
+| `apps/admin`       | Operator Next.js dashboard (RBAC protected)              |
+| `apps/api`         | NestJS backend (REST + WebSockets)                       |
+| `apps/explorer`    | Public transaction/account explorer                      |
+| `apps/docs`        | Documentation site (renders `docs/*.md`)                 |
+| `contracts/*`      | Soroban smart contracts (Rust)                           |
+| `packages/*`       | Shared libraries (SDK, wallet, ui, database, auth, ...)  |
+| `infrastructure/*` | Docker, Kubernetes, Terraform, monitoring                |
+| `scripts`, `tests` | Tooling and end-to-end suites                            |
 
 ## Layering & dependency rules
 

@@ -120,3 +120,6 @@ impl SubscriptionsContract {
         env.storage().instance().get::<_, Map<u64, Subscription>>(&DataKey::Subscriptions).and_then(|s| s.get(id))
     }
 }
+
+#[cfg(test)]
+mod test;

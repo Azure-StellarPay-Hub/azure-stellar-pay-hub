@@ -6,3 +6,5 @@ coverage
 contracts/target
 pnpm-lock.yaml
 *.wasm
+packages/database/src/generated
+next-env.d.ts

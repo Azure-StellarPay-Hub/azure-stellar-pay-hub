@@ -20,22 +20,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const loginWithWallet = useCallback(async (providerId?: WalletProviderId) => {
-    const activeProvider = providerId ?? provider ?? 'FREIGHTER';
-    const key = await connect(activeProvider);
-    const challenge = await api.auth.challenge(key);
-    const signature = await signMessage(challenge.message);
-    const result = await api.auth.verify({
-      publicKey: key,
-      signature,
-      message: challenge.message,
-      nonce: challenge.nonce,
-      provider: activeProvider,
-      deviceName: navigator.userAgent.slice(0, 120),
-    });
-    setTokens(result.accessToken, result.refreshToken);
-    setUser(result.user);
-  }, [connect, signMessage, provider]);
+  const loginWithWallet = useCallback(
+    async (providerId?: WalletProviderId) => {
+      const activeProvider = providerId ?? provider ?? 'FREIGHTER';
+      const key = await connect(activeProvider);
+      const challenge = await api.auth.challenge(key);
+      const signature = await signMessage(challenge.message);
+      const result = await api.auth.verify({
+        publicKey: key,
+        signature,
+        message: challenge.message,
+        nonce: challenge.nonce,
+        provider: activeProvider,
+        deviceName: navigator.userAgent.slice(0, 120),
+      });
+      setTokens(result.accessToken, result.refreshToken);
+      setUser(result.user);
+    },
+    [connect, signMessage, provider],
+  );
 
   void loading;
 
@@ -56,8 +59,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       return;
     }
-    api
-      .users.me()
+    api.users
+      .me()
       .then(setUser)
       .catch(() => clearTokens())
       .finally(() => setLoading(false));

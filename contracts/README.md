@@ -3,21 +3,21 @@
 Soroban (Rust) smart contracts powering the payment platform. Each contract is
 self-contained with events, typed errors, unit tests and documentation.
 
-| Contract       | Crates.io name             | Purpose                                        |
-| -------------- | -------------------------- | ---------------------------------------------- |
-| `payment`      | `stellar-pay-payment`      | Send XLM/assets, batch & split payments        |
-| `escrow`       | `stellar-pay-escrow`       | Timed escrow with release & refund             |
-| `multisig`     | `stellar-pay-multisig`     | Multi-signature proposal approval & execution  |
-| `treasury`     | `stellar-pay-treasury`     | Allowlisted treasury (deposits/withdrawals)    |
-| `subscriptions`| `stellar-pay-subscriptions`| Recurring payment plans                        |
-| `invoices`     | `stellar-pay-invoices`     | On-chain invoice issuance & payment            |
-| `merchant`     | `stellar-pay-merchant`     | Merchant registry + commission & settlement    |
-| `rewards`      | `stellar-pay-rewards`      | Loyalty tiers, earn & redeem points            |
+| Contract        | Crates.io name              | Purpose                                       |
+| --------------- | --------------------------- | --------------------------------------------- |
+| `payment`       | `stellar-pay-payment`       | Send XLM/assets, batch & split payments       |
+| `escrow`        | `stellar-pay-escrow`        | Timed escrow with release & refund            |
+| `multisig`      | `stellar-pay-multisig`      | Multi-signature proposal approval & execution |
+| `treasury`      | `stellar-pay-treasury`      | Allowlisted treasury (deposits/withdrawals)   |
+| `subscriptions` | `stellar-pay-subscriptions` | Recurring payment plans                       |
+| `invoices`      | `stellar-pay-invoices`      | On-chain invoice issuance & payment           |
+| `merchant`      | `stellar-pay-merchant`      | Merchant registry + commission & settlement   |
+| `rewards`       | `stellar-pay-rewards`       | Loyalty tiers, earn & redeem points           |
 
 ## Requirements
 
 - Rust stable (`rustup`)
-- `wasm32-unknown-unknown` target: `rustup target add wasm32-unknown-unknown`
+- `wasm32v1-none` target: `rustup target add wasm32v1-none`
 - [Soroban CLI](https://soroban.stellar.org/docs/cli) (optional, for `soroban contract build`)
 
 ## Build & test
@@ -25,7 +25,7 @@ self-contained with events, typed errors, unit tests and documentation.
 ```bash
 # Compile all contracts to wasm (optimized release profile)
 pnpm contracts:build
-# or: cargo build --manifest-path contracts/Cargo.toml --workspace --release --target wasm32-unknown-unknown
+# or: cargo build --manifest-path contracts/Cargo.toml --workspace --release --target wasm32v1-none
 
 # Run all unit tests (native host)
 pnpm contracts:test
@@ -34,7 +34,7 @@ pnpm contracts:test
 ## Deploy
 
 ```bash
-soroban contract deploy --wasm target/wasm32-unknown-unknown/release/stellar_pay_payment.wasm \
+stellar contract deploy --wasm target/wasm32v1-none/release/stellar_pay_payment.wasm \
   --source <admin-secret> --network testnet
 ```
 

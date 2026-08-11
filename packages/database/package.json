@@ -5,7 +5,10 @@
   "description": "Prisma schema, generated client and PrismaService for PostgreSQL",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist", "prisma"],
+  "files": [
+    "dist",
+    "prisma"
+  ],
   "scripts": {
     "build": "prisma generate && tsc -p tsconfig.json && cp -r src/generated dist/",
     "typecheck": "prisma generate && tsc --noEmit -p tsconfig.json",
@@ -21,11 +24,26 @@
     "seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.19.3"
+    "@prisma/client": "^6.19.3",
+    "prisma": "^6.19.3"
   },
   "devDependencies": {
-    "prisma": "^6.19.3",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.12",
     "tsx": "^4.23.8",
     "typescript": "~5.9.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/*.test.ts"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ]
   }
 }

@@ -13,6 +13,7 @@ A Chrome browser extension companion for the Azure StellarPay Hub platform.
 ## Install (Development)
 
 1. Build the extension:
+
    ```bash
    cd apps/extension
    pnpm install
@@ -38,6 +39,7 @@ A Chrome browser extension companion for the Azure StellarPay Hub platform.
 ## Icons
 
 Replace the placeholder icon files in `icons/` with actual PNGs:
+
 - `icon16.png` (16×16)
 - `icon48.png` (48×48)
 - `icon128.png` (128×128)

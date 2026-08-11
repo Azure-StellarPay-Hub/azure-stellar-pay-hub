@@ -16,25 +16,32 @@ export class AnalyticsService {
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const [dailyTxs, monthlyTxs, allSucceeded, failedCount, activeUsers, activeMerchants, assetGroups] =
-      await Promise.all([
-        this.prisma.transaction.findMany({
-          where: { status: 'SUCCEEDED', createdAt: { gte: startOfDay } },
-          select: { amount: true },
-        }),
-        this.prisma.transaction.findMany({
-          where: { status: 'SUCCEEDED', createdAt: { gte: startOfMonth } },
-          select: { amount: true },
-        }),
-        this.prisma.transaction.findMany({
-          where: { status: 'SUCCEEDED' },
-          select: { amount: true },
-        }),
-        this.prisma.transaction.count({ where: { status: 'FAILED' } }),
-        this.prisma.user.count({ where: { status: 'ACTIVE' } }),
-        this.prisma.merchant.count({ where: { status: 'ACTIVE' } }),
-        this.prisma.transaction.groupBy({ by: ['assetCode'], _count: true }),
-      ]);
+    const [
+      dailyTxs,
+      monthlyTxs,
+      allSucceeded,
+      failedCount,
+      activeUsers,
+      activeMerchants,
+      assetGroups,
+    ] = await Promise.all([
+      this.prisma.transaction.findMany({
+        where: { status: 'SUCCEEDED', createdAt: { gte: startOfDay } },
+        select: { amount: true },
+      }),
+      this.prisma.transaction.findMany({
+        where: { status: 'SUCCEEDED', createdAt: { gte: startOfMonth } },
+        select: { amount: true },
+      }),
+      this.prisma.transaction.findMany({
+        where: { status: 'SUCCEEDED' },
+        select: { amount: true },
+      }),
+      this.prisma.transaction.count({ where: { status: 'FAILED' } }),
+      this.prisma.user.count({ where: { status: 'ACTIVE' } }),
+      this.prisma.merchant.count({ where: { status: 'ACTIVE' } }),
+      this.prisma.transaction.groupBy({ by: ['assetCode'], _count: true }),
+    ]);
 
     const totalCount = await this.prisma.transaction.count();
     const succeededCount = await this.prisma.transaction.count({ where: { status: 'SUCCEEDED' } });
@@ -58,7 +65,12 @@ export class AnalyticsService {
       assetUsage: Object.fromEntries(assetGroups.map((g) => [g.assetCode, String(g._count)])),
       topMerchants: topMerchants.map((m) => ({ merchantId: m.id, name: m.name, volume: '0' })),
       crossBorder: {
-        volume: this.sumAmounts(await this.prisma.transaction.findMany({ where: { kind: 'cross_border', status: 'SUCCEEDED' }, select: { amount: true } })),
+        volume: this.sumAmounts(
+          await this.prisma.transaction.findMany({
+            where: { kind: 'cross_border', status: 'SUCCEEDED' },
+            select: { amount: true },
+          }),
+        ),
         transactions: await this.prisma.transaction.count({ where: { kind: 'cross_border' } }),
         countries: 3, // demo; enrich from beneficiary country codes in production
       },

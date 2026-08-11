@@ -6,6 +6,7 @@ use soroban_sdk::{contract, contracterror, contractimpl, contracttype, symbol_sh
 #[repr(u32)]
 pub enum TreasuryError {
     Unauthorized = 1, InvalidAmount = 2, TokenNotAllowed = 3, NotInitialized = 4, WithdrawalCapped = 5,
+    AlreadyInitialized = 6,
 }
 
 #[contracttype]
@@ -31,7 +32,7 @@ pub struct TreasuryContract;
 #[contractimpl]
 impl TreasuryContract {
     pub fn initialize(env: Env, admin: Address) -> Result<(), TreasuryError> {
-        if env.storage().instance().has(&DataKey::Admin) { panic!("already initialized"); }
+        if env.storage().instance().has(&DataKey::Admin) { return Err(TreasuryError::AlreadyInitialized); }
         env.storage().instance().set(&DataKey::Admin, &admin);
         env.storage().instance().extend_ttl(5000, 5000);
         Ok(())
@@ -90,3 +91,6 @@ impl TreasuryContract {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod test;

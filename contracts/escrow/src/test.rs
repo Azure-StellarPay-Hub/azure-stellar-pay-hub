@@ -5,7 +5,7 @@ use soroban_sdk::testutils::{Address as AddressUtils, Ledger};
 use soroban_sdk::{token, Address, Env};
 
 fn create_token<'e>(env: &'e Env, admin: &Address) -> (token::Client<'e>, Address) {
-    let id = env.register_stellar_asset_contract(admin.clone());
+    let id = env.register_stellar_asset_contract_v2(admin.clone()).address();
     (token::Client::new(env, &id), id)
 }
 
@@ -13,7 +13,7 @@ fn mint<'e>(env: &'e Env, token_id: &Address, to: &Address, amount: i128) {
     token::StellarAssetClient::new(env, token_id).mint(to, &amount);
 }
 
-type Setup<'e> = (Address, Address, Address, token::Client<'e>, Address, EscrowContractClient<'e>);
+type Setup<'e> = (Address, Address, Address, token::Client<'e>, Address, Address, EscrowContractClient<'e>);
 
 fn setup<'e>(env: &'e Env) -> Setup<'e> {
     env.mock_all_auths();
@@ -24,20 +24,20 @@ fn setup<'e>(env: &'e Env) -> Setup<'e> {
     let contract_id = env.register_contract(None, EscrowContract);
     let client = EscrowContractClient::new(env, &contract_id);
     client.initialize(&admin);
-    mint(env, &token_id, &alice, &10_000);
-    mint(env, &token_id, &bob, &10_000);
-    (admin, alice, bob, token, token_id, client)
+    mint(env, &token_id, &alice, 10_000i128);
+    mint(env, &token_id, &bob, 10_000i128);
+    (admin, alice, bob, token, token_id, contract_id, client)
 }
 
 #[test]
 fn test_create_holds_funds() {
     let env = Env::default();
-    let (_admin, alice, bob, token, token_id, client) = setup(&env);
+    let (_admin, alice, bob, token, token_id, contract_id, client) = setup(&env);
 
     let id = client.create(&alice, &bob, &token_id, &500, &1000, &None);
     assert_eq!(id, 1);
     assert_eq!(token.balance(&alice), 9500);
-    assert_eq!(token.balance(&client.address()), 500);
+    assert_eq!(token.balance(&contract_id), 500);
 
     let escrow = client.get(&id).unwrap();
     assert_eq!(escrow.amount, 500);
@@ -47,7 +47,7 @@ fn test_create_holds_funds() {
 #[test]
 fn test_cannot_release_before_time() {
     let env = Env::default();
-    let (_admin, alice, bob, token, token_id, client) = setup(&env);
+    let (_admin, alice, bob, _token, token_id, _contract_id, client) = setup(&env);
     env.ledger().set_timestamp(100);
 
     let id = client.create(&alice, &bob, &token_id, &500, &1000, &None);
@@ -60,7 +60,7 @@ fn test_cannot_release_before_time() {
 #[test]
 fn test_release_after_time() {
     let env = Env::default();
-    let (_admin, alice, bob, token, token_id, client) = setup(&env);
+    let (_admin, alice, bob, token, token_id, contract_id, client) = setup(&env);
     env.ledger().set_timestamp(100);
 
     let id = client.create(&alice, &bob, &token_id, &500, &1000, &None);
@@ -68,7 +68,7 @@ fn test_release_after_time() {
 
     client.release(&id, &bob);
     assert_eq!(token.balance(&bob), 10500);
-    assert_eq!(token.balance(&client.address()), 0);
+    assert_eq!(token.balance(&contract_id), 0);
 
     // Cannot release twice.
     let result = client.try_release(&id, &bob);
@@ -78,7 +78,7 @@ fn test_release_after_time() {
 #[test]
 fn test_refund_before_release() {
     let env = Env::default();
-    let (_admin, alice, bob, token, token_id, client) = setup(&env);
+    let (_admin, alice, bob, token, token_id, contract_id, client) = setup(&env);
     env.ledger().set_timestamp(100);
 
     let id = client.create(&alice, &bob, &token_id, &500, &1000, &None);
@@ -86,13 +86,13 @@ fn test_refund_before_release() {
 
     client.refund(&id);
     assert_eq!(token.balance(&alice), 10000);
-    assert_eq!(token.balance(&client.address()), 0);
+    assert_eq!(token.balance(&contract_id), 0);
 }
 
 #[test]
 fn test_refund_not_allowed_mid_window() {
     let env = Env::default();
-    let (_admin, alice, bob, token, token_id, client) = setup(&env);
+    let (_admin, alice, bob, _token, token_id, _contract_id, client) = setup(&env);
     env.ledger().set_timestamp(100);
 
     let id = client.create(&alice, &bob, &token_id, &500, &1000, &Some(2000));
@@ -105,7 +105,7 @@ fn test_refund_not_allowed_mid_window() {
 #[test]
 fn test_refund_after_expiry() {
     let env = Env::default();
-    let (_admin, alice, bob, token, token_id, client) = setup(&env);
+    let (_admin, alice, bob, token, token_id, _contract_id, client) = setup(&env);
     env.ledger().set_timestamp(100);
 
     let id = client.create(&alice, &bob, &token_id, &500, &1000, &Some(2000));
@@ -118,7 +118,7 @@ fn test_refund_after_expiry() {
 #[test]
 fn test_unknown_escrow_errors() {
     let env = Env::default();
-    let (_admin, _alice, bob, _token, _token_id, client) = setup(&env);
+    let (_admin, _alice, bob, _token, _token_id, _contract_id, client) = setup(&env);
 
     let result = client.try_release(&999, &bob);
     assert_eq!(result, Err(Ok(EscrowError::EscrowNotFound)));

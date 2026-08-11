@@ -1,7 +1,7 @@
 name: Good First Issue
 description: A beginner-friendly task for new contributors
-title: "good first issue: "
-labels: ["good first issue", "help wanted", "complexity:low"]
+title: 'good first issue: '
+labels: ['good first issue', 'help wanted', 'complexity:low']
 body:
   - type: markdown
     attributes:

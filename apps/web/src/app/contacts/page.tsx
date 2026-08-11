@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import { Star, Trash2, UserPlus } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, useToast } from '@stellar-pay/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  useToast,
+} from '@stellar-pay/ui';
 import { api } from '@/lib/api';
 import { shortKey } from '@/lib/format';
 import type { Contact } from '@stellar-pay/types';
@@ -15,7 +24,10 @@ export default function ContactsPage() {
   const [memo, setMemo] = useState('');
 
   const load = () =>
-    void api.users.contacts().then((res) => setContacts(res.data)).catch(() => undefined);
+    void api.users
+      .contacts()
+      .then((res) => setContacts(res.data))
+      .catch(() => undefined);
 
   useEffect(load, []);
 
@@ -41,7 +53,9 @@ export default function ContactsPage() {
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-10">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Address book</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Saved contacts, favorites and beneficiaries.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Saved contacts, favorites and beneficiaries.
+        </p>
       </div>
 
       <Card>
@@ -56,12 +70,22 @@ export default function ContactsPage() {
             </div>
             <div className="space-y-1.5">
               <Label>Public key</Label>
-              <Input value={publicKey} onChange={(e) => setPublicKey(e.target.value)} placeholder="G..." className="font-mono" />
+              <Input
+                value={publicKey}
+                onChange={(e) => setPublicKey(e.target.value)}
+                placeholder="G..."
+                className="font-mono"
+              />
             </div>
           </div>
           <div className="space-y-1.5">
             <Label>Memo (optional)</Label>
-            <Input value={memo} onChange={(e) => setMemo(e.target.value)} placeholder="invoice" maxLength={28} />
+            <Input
+              value={memo}
+              onChange={(e) => setMemo(e.target.value)}
+              placeholder="invoice"
+              maxLength={28}
+            />
           </div>
           <Button onClick={() => void add()}>
             <UserPlus className="h-4 w-4" /> Add contact
@@ -78,7 +102,9 @@ export default function ContactsPage() {
               {contacts.map((contact) => (
                 <div key={contact.id} className="flex items-center justify-between px-6 py-4">
                   <div className="flex items-center gap-3">
-                    {contact.isFavorite && <Star className="h-4 w-4 fill-amber-400 text-amber-400" />}
+                    {contact.isFavorite && (
+                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                    )}
                     <div>
                       <p className="font-medium">{contact.name}</p>
                       <p className="font-mono text-xs text-muted-foreground">
@@ -86,7 +112,10 @@ export default function ContactsPage() {
                       </p>
                     </div>
                   </div>
-                  <button onClick={() => void remove(contact.id)} className="text-muted-foreground hover:text-destructive">
+                  <button
+                    onClick={() => void remove(contact.id)}
+                    className="text-muted-foreground hover:text-destructive"
+                  >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>

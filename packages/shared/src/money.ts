@@ -30,10 +30,7 @@ export function toStroops(amount: AmountString, decimals = 7): bigint {
   validateAmount(amount);
   const [whole = '0', frac = ''] = amount.split('.');
   const fracPadded = (frac + '0'.repeat(decimals)).slice(0, decimals);
-  return (
-    BigInt(normalizeForBigInt(whole)) * 10n ** BigInt(decimals) +
-    BigInt(fracPadded || '0')
-  );
+  return BigInt(normalizeForBigInt(whole)) * 10n ** BigInt(decimals) + BigInt(fracPadded || '0');
 }
 
 /** Convert stroops into a decimal amount string (trailing zeros trimmed). */

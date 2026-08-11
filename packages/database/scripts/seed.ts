@@ -85,9 +85,17 @@ async function seedRolesAndPermissions(): Promise<void> {
     });
     for (const perm of perms) {
       await prisma.rolePermission.upsert({
-        where: { roleId_permissionId: { roleId: role.id, permissionId: (await prisma.permission.findUnique({ where: { name: perm } }))!.id } },
+        where: {
+          roleId_permissionId: {
+            roleId: role.id,
+            permissionId: (await prisma.permission.findUnique({ where: { name: perm } }))!.id,
+          },
+        },
         update: {},
-        create: { roleId: role.id, permissionId: (await prisma.permission.findUnique({ where: { name: perm } }))!.id },
+        create: {
+          roleId: role.id,
+          permissionId: (await prisma.permission.findUnique({ where: { name: perm } }))!.id,
+        },
       });
     }
   }
@@ -107,7 +115,10 @@ async function seedSettings(): Promise<void> {
 
 async function seedAdmin(): Promise<void> {
   const email = process.env.ADMIN_EMAIL ?? 'admin@stellar-pay.dev';
-  const password = process.env.ADMIN_PASSWORD ?? 'ChangeMe123!';
+  const password = process.env.ADMIN_PASSWORD ?? randomBytes(16).toString('hex');
+  if (!process.env.ADMIN_PASSWORD) {
+    console.log(`⚠ Generated random admin password: ${password}`);
+  }
   await prisma.user.upsert({
     where: { email },
     update: {},
@@ -221,7 +232,7 @@ async function seedDemoMerchant(): Promise<void> {
       status: 'ACTIVE',
       kycStatus: 'VERIFIED',
       webhookUrl: 'https://example.com/webhooks/payments',
-      webhookSecret: 'demo-webhook-secret',
+      webhookSecret: randomBytes(24).toString('hex'),
     },
   });
 

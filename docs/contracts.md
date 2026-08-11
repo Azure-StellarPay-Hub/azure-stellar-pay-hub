@@ -7,19 +7,19 @@ description: The seven Soroban contracts, their interfaces, events, and deployme
 
 All contracts live in `contracts/` and are written in Rust with
 [Soroban](https://soroban.stellar.org). They are workspace members of `contracts/Cargo.toml`
-(target: `wasm32-unknown-unknown`).
+(target: `wasm32v1-none`).
 
 ## Contracts
 
-| Contract        | Purpose                                                        |
-| --------------- | -------------------------------------------------------------- |
-| `payment`       | Direct XLM/asset transfers with memo and receipt events        |
-| `escrow`        | Conditional escrow with depositor/beneficiary/arbiter          |
-| `multisig`      | Threshold-signature transactions and treasury control          |
-| `treasury`      | Custody of funds with member spending limits and voting        |
-| `subscriptions` | Recurring billing with plan management and cancellation        |
-| `invoices`      | On-chain invoice registry with paid/expired states             |
-| `merchant`      | Merchant registry + settlement distribution to multiple wallets|
+| Contract        | Purpose                                                         |
+| --------------- | --------------------------------------------------------------- |
+| `payment`       | Direct XLM/asset transfers with memo and receipt events         |
+| `escrow`        | Conditional escrow with depositor/beneficiary/arbiter           |
+| `multisig`      | Threshold-signature transactions and treasury control           |
+| `treasury`      | Custody of funds with member spending limits and voting         |
+| `subscriptions` | Recurring billing with plan management and cancellation         |
+| `invoices`      | On-chain invoice registry with paid/expired states              |
+| `merchant`      | Merchant registry + settlement distribution to multiple wallets |
 
 ## Common conventions
 
@@ -39,13 +39,13 @@ pnpm contracts:build
 pnpm contracts:test
 ```
 
-Artifacts: `contracts/*/target/wasm32-unknown-unknown/release/*.wasm`
+Artifacts: `contracts/target/wasm32v1-none/release/*.wasm`
 
 ## Deploy (testnet)
 
 ```bash
 soroban contract deploy \
-  --wasm contracts/payment/target/wasm32-unknown-unknown/release/payment.wasm \
+  --wasm contracts/target/wasm32v1-none/release/stellar_pay_payment.wasm \
   --source ADMIN \
   --network testnet
 ```

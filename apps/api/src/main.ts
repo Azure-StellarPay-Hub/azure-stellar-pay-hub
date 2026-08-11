@@ -13,7 +13,17 @@ async function bootstrap(): Promise<void> {
   });
 
   app.setGlobalPrefix('api');
-  app.use(helmet({ crossOriginResourcePolicy: false }));
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: false,
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'none'"],
+          frameAncestors: ["'none'"],
+        },
+      },
+    }),
+  );
 
   const config = app.get(ConfigService);
   const corsOrigins = config.get<string[]>('CORS_ORIGINS') ?? ['http://localhost:3000'];
@@ -43,7 +53,6 @@ async function bootstrap(): Promise<void> {
 }
 
 void bootstrap().catch((err) => {
-  // eslint-disable-next-line no-console
   console.error(err);
   process.exit(1);
 });

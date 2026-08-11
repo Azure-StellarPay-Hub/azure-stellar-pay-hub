@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 48">
+  <defs>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#d946ef"/>
+    </linearGradient>
+    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#a5b4fc"/>
+      <stop offset="45%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="40" height="40" rx="10" fill="url(#mark)"/>
+  <path d="M27 9.5 14.5 27h7.4L20.4 38.5 33 21.5h-7.4z" fill="#ffffff"/>
+  <text x="56" y="27.5" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="19" font-weight="700" fill="#f4f4f8" letter-spacing="-0.3">StellarPay</text>
+  <text x="56" y="42.5" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="19" font-weight="700" fill="url(#word)" letter-spacing="-0.3">Hub</text>
+</svg>

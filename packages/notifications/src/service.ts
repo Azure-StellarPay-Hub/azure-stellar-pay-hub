@@ -1,4 +1,4 @@
-import type { NotificationChannel, NotificationType } from '@stellar-pay/types';
+import type { NotificationType } from '@stellar-pay/types';
 import type { ChannelProvider, NotificationMessage } from './providers';
 
 export interface NotificationTemplates {
@@ -15,10 +15,13 @@ const DEFAULT_TITLES: Record<NotificationType, string> = {
 };
 
 const DEFAULT_BODIES: Record<NotificationType, (m: NotificationMessage) => string> = {
-  PAYMENT_SENT: (m) => `Your payment of ${String(m.payload?.amount ?? '')} ${String(m.payload?.assetCode ?? '')} was sent.`,
-  PAYMENT_RECEIVED: (m) => `You received ${String(m.payload?.amount ?? '')} ${String(m.payload?.assetCode ?? '')}.`,
+  PAYMENT_SENT: (m) =>
+    `Your payment of ${String(m.payload?.amount ?? '')} ${String(m.payload?.assetCode ?? '')} was sent.`,
+  PAYMENT_RECEIVED: (m) =>
+    `You received ${String(m.payload?.amount ?? '')} ${String(m.payload?.assetCode ?? '')}.`,
   INVOICE_PAID: (m) => `Invoice ${String(m.payload?.invoiceNumber ?? '')} was paid.`,
-  FAILED_TRANSACTION: (m) => String(m.payload?.reason ?? 'Your transaction could not be completed.'),
+  FAILED_TRANSACTION: (m) =>
+    String(m.payload?.reason ?? 'Your transaction could not be completed.'),
   ACCOUNT_ACTIVITY: () => 'There is new activity on your account.',
 };
 
@@ -50,15 +53,12 @@ export class NotificationService {
         ? DEFAULT_BODIES[message.type as keyof typeof DEFAULT_BODIES](message)
         : message.body);
     const enriched: NotificationMessage = { ...message, title, body: body ?? message.body };
-    try {
-      await provider.send(enriched);
-    } catch (error) {
-      // Delivery failures are surfaced to callers via the return value wrapper.
-      throw error;
-    }
+    await provider.send(enriched);
   }
 
-  async dispatchAll(messages: NotificationMessage[]): Promise<Array<{ ok: boolean; error?: string }>> {
+  async dispatchAll(
+    messages: NotificationMessage[],
+  ): Promise<Array<{ ok: boolean; error?: string }>> {
     return Promise.all(
       messages.map(async (message) => {
         try {

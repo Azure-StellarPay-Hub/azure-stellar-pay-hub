@@ -16,6 +16,7 @@ export class FreighterAdapter implements WalletAdapter {
   readonly id = 'FREIGHTER' as const;
 
   private api(): FreighterApi {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     return require('@stellar/freighter-api') as FreighterApi;
   }
 
@@ -48,10 +49,13 @@ export class FreighterAdapter implements WalletAdapter {
   async signMessage(message: string): Promise<string> {
     // Freighter v2: signBlob replaces signMessage. Sign the message as a blob (UTF-8 bytes).
     const result = await this.api().signBlob(message);
-    const signature = typeof result === 'string' ? result : (result as { signature: string }).signature;
+    const signature =
+      typeof result === 'string' ? result : (result as { signature: string }).signature;
     if (!signature) {
       throw new Error(
-        result && typeof result === 'object' && 'error' in result ? (result as unknown as { error: string }).error : 'Message signing was rejected',
+        result && typeof result === 'object' && 'error' in result
+          ? (result as unknown as { error: string }).error
+          : 'Message signing was rejected',
       );
     }
     return signature;
@@ -61,7 +65,10 @@ export class FreighterAdapter implements WalletAdapter {
     try {
       const network = await this.api().getNetwork();
       // v2: getNetwork returns { network: string; networkPassphrase: string }
-      const passphrase = typeof network === 'string' ? network : (network as { networkPassphrase: string }).networkPassphrase;
+      const passphrase =
+        typeof network === 'string'
+          ? network
+          : (network as { networkPassphrase: string }).networkPassphrase;
       return NETWORK_NAMES[passphrase] ?? 'unknown';
     } catch {
       return 'unknown';

@@ -92,3 +92,6 @@ impl InvoicesContract {
         env.storage().instance().get::<_, Map<Address, Vec<u64>>>(&DataKey::MerchantInvoices).and_then(|m| m.get(merchant)).unwrap_or_else(|| vec![&env])
     }
 }
+
+#[cfg(test)]
+mod test;

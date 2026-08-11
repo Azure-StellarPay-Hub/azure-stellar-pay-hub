@@ -7,13 +7,13 @@ description: Local development guide — prerequisites, install, running each ap
 
 ## Prerequisites
 
-| Tool         | Version             | Notes                              |
-| ------------ | ------------------- | ---------------------------------- |
-| Node.js      | ≥ 20.9 (use `.nvmrc`)| `nvm install && nvm use`          |
-| pnpm         | ≥ 9                 | `corepack enable`                  |
-| Docker       | latest              | Postgres + Redis for local dev     |
-| Rust         | stable              | Soroban contracts (optional)       |
-| soroban-cli  | latest stable       | Contract build/deploy (optional)   |
+| Tool        | Version               | Notes                            |
+| ----------- | --------------------- | -------------------------------- |
+| Node.js     | ≥ 20.9 (use `.nvmrc`) | `nvm install && nvm use`         |
+| pnpm        | ≥ 9                   | `corepack enable`                |
+| Docker      | latest                | Postgres + Redis for local dev   |
+| Rust        | stable                | Soroban contracts (optional)     |
+| soroban-cli | latest stable         | Contract build/deploy (optional) |
 
 ## Install & first run
 
@@ -29,13 +29,13 @@ pnpm dev                 # everything (api, web, admin, explorer, docs)
 
 ## Per-app development
 
-| App            | URL                    | Command          |
-| -------------- | ---------------------- | ---------------- |
-| `web`          | http://localhost:3000  | `pnpm dev:web`   |
-| `admin`        | http://localhost:3001  | `pnpm dev:admin` |
-| `api`          | http://localhost:4000  | `pnpm dev:api`   |
-| `explorer`     | http://localhost:3002  | `pnpm dev:explorer` |
-| `docs`         | http://localhost:3003  | `pnpm dev:docs`  |
+| App        | URL                   | Command             |
+| ---------- | --------------------- | ------------------- |
+| `web`      | http://localhost:3000 | `pnpm dev:web`      |
+| `admin`    | http://localhost:3001 | `pnpm dev:admin`    |
+| `api`      | http://localhost:4000 | `pnpm dev:api`      |
+| `explorer` | http://localhost:3002 | `pnpm dev:explorer` |
+| `docs`     | http://localhost:3003 | `pnpm dev:docs`     |
 
 ## Testing & quality
 

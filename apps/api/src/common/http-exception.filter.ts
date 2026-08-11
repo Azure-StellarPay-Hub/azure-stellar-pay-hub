@@ -21,11 +21,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       const body = exception.getResponse();
-      response.status(status).json(
-        typeof body === 'string'
-          ? { statusCode: status, code: 'HTTP_ERROR', message: body }
-          : body,
-      );
+      response
+        .status(status)
+        .json(
+          typeof body === 'string'
+            ? { statusCode: status, code: 'HTTP_ERROR', message: body }
+            : body,
+        );
       return;
     }
 

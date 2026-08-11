@@ -46,19 +46,36 @@ export default function LoginPage() {
           <div className="space-y-4">
             <div className="space-y-1.5">
               <Label>Email</Label>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@stellar-pay.dev" />
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@stellar-pay.dev"
+              />
             </div>
             <div className="space-y-1.5">
               <Label>Password</Label>
-              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && void login()} placeholder="••••••••" />
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && void login()}
+                placeholder="••••••••"
+              />
             </div>
-            <Button variant="gradient" className="w-full" size="lg" onClick={() => void login()} disabled={busy}>
+            <Button
+              variant="gradient"
+              className="w-full"
+              size="lg"
+              onClick={() => void login()}
+              disabled={busy}
+            >
               {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Lock className="h-4 w-4" />}
               Sign in
             </Button>
           </div>
           <p className="text-center text-xs text-muted-foreground">
-            Default seed: admin@stellar-pay.dev / ChangeMe123!
+            Set ADMIN_PASSWORD and run <code>pnpm db:seed</code> to create credentials
           </p>
         </CardContent>
       </Card>

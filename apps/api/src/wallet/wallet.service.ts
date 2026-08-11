@@ -68,7 +68,10 @@ export class WalletService {
   }
 
   /** Record a completed trustline locally (called after successful submission). */
-  async recordTrustline(userId: string, input: { assetCode: string; assetIssuer: string; remove?: boolean }) {
+  async recordTrustline(
+    userId: string,
+    input: { assetCode: string; assetIssuer: string; remove?: boolean },
+  ) {
     const asset = await this.prisma.asset.findUnique({
       where: { code_issuer: { code: input.assetCode, issuer: input.assetIssuer } },
     });

@@ -9,6 +9,9 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 env:
   NODE_VERSION: 22
   PNPM_VERSION: 10.32.1
@@ -32,13 +35,15 @@ jobs:
         image: redis:7-alpine
         ports: ['6379:6379']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
         with:
           version: ${{ env.PNPM_VERSION }}
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
@@ -48,6 +53,10 @@ jobs:
 
       - name: Generate Prisma client
         run: pnpm db:generate
+
+      - name: Build packages
+        # Packages resolve via gitignored dist output; build before typecheck/tests.
+        run: pnpm build:packages
 
       - name: Lint
         run: pnpm lint
@@ -66,7 +75,7 @@ jobs:
         continue-on-error: true
 
       - name: Install uv for zizmor
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
       - name: Security scan (zizmor)
         run: uvx zizmor .github/workflows
 
@@ -74,25 +83,35 @@ jobs:
     name: Build Soroban contracts
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          targets: wasm32-unknown-unknown
-      - uses: stellar/soroban-cli-action@v1
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # v1
+        with:
+          toolchain: stable
+          targets: wasm32v1-none
       - name: Build contracts
-        run: pnpm contracts:build
+        run: cargo build --manifest-path contracts/Cargo.toml --workspace --release --target wasm32v1-none
       - name: Test contracts
-        run: pnpm contracts:test
+        run: cargo test --manifest-path contracts/Cargo.toml --workspace
 
   build-apps:
     name: Build apps & packages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
         with:
           version: ${{ env.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm

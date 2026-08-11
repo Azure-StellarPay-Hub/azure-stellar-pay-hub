@@ -65,10 +65,18 @@ export class MerchantsService {
   async products(userId: string, page = 1, pageSize = 50) {
     const merchant = await this.me(userId);
     const [items, total] = await Promise.all([
-      this.prisma.product.findMany({ where: { merchantId: merchant.id }, orderBy: { createdAt: 'desc' }, skip: (page - 1) * pageSize, take: pageSize }),
+      this.prisma.product.findMany({
+        where: { merchantId: merchant.id },
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
       this.prisma.product.count({ where: { merchantId: merchant.id } }),
     ]);
-    return { data: items, meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) } };
+    return {
+      data: items,
+      meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    };
   }
 
   async createProduct(userId: string, input: CreateProduct) {
@@ -94,26 +102,46 @@ export class MerchantsService {
 
   async invoices(userId: string) {
     const merchant = await this.me(userId);
-    return this.prisma.invoice.findMany({ where: { merchantId: merchant.id }, orderBy: { createdAt: 'desc' } });
+    return this.prisma.invoice.findMany({
+      where: { merchantId: merchant.id },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async paymentLinks(userId: string) {
     const merchant = await this.me(userId);
-    return this.prisma.paymentLink.findMany({ where: { merchantId: merchant.id }, orderBy: { createdAt: 'desc' } });
+    return this.prisma.paymentLink.findMany({
+      where: { merchantId: merchant.id },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async settlements(userId: string) {
     const merchant = await this.me(userId);
-    return this.prisma.settlement.findMany({ where: { merchantId: merchant.id }, orderBy: { createdAt: 'desc' } });
+    return this.prisma.settlement.findMany({
+      where: { merchantId: merchant.id },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async customers(userId: string) {
     const merchant = await this.me(userId);
-    return this.prisma.customer.findMany({ where: { merchantId: merchant.id }, orderBy: { totalSpent: 'desc' } });
+    return this.prisma.customer.findMany({
+      where: { merchantId: merchant.id },
+      orderBy: { totalSpent: 'desc' },
+    });
   }
 
   /** POS checkout: sum products (or a custom amount) into a payment URI + QR payload. */
-  async posCheckout(userId: string, input: { productIds?: string[]; amount?: string; assetCode?: string; customerPublicKey?: string }) {
+  async posCheckout(
+    userId: string,
+    input: {
+      productIds?: string[];
+      amount?: string;
+      assetCode?: string;
+      customerPublicKey?: string;
+    },
+  ) {
     const merchant = await this.me(userId);
     let amount = input.amount;
     let assetCode = input.assetCode ?? merchant.settlementAssetCode;

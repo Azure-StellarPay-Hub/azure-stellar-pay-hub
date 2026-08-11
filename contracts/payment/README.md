@@ -4,15 +4,15 @@ Core transfer primitive: single and batch payments of allowlisted tokens.
 
 ## Functions
 
-| Function | Auth | Description |
-| -------- | ---- | ----------- |
-| `initialize(admin)` | – | One-time init |
-| `send(from, to, token, amount, memo)` | `from` | Single payment |
-| `send_batch(from, token, recipients)` | `from` | Batch/split payments |
-| `set_allowed(admin, token, allowed)` | `admin` | Token allowlist |
-| `is_allowed(token)` | – | Allowlist query |
-| `pause(admin)` / `unpause(admin)` | `admin` | Emergency stop |
-| `balance(account, token)` | – | Read-only balance |
+| Function                              | Auth    | Description          |
+| ------------------------------------- | ------- | -------------------- |
+| `initialize(admin)`                   | –       | One-time init        |
+| `send(from, to, token, amount, memo)` | `from`  | Single payment       |
+| `send_batch(from, token, recipients)` | `from`  | Batch/split payments |
+| `set_allowed(admin, token, allowed)`  | `admin` | Token allowlist      |
+| `is_allowed(token)`                   | –       | Allowlist query      |
+| `pause(admin)` / `unpause(admin)`     | `admin` | Emergency stop       |
+| `balance(account, token)`             | –       | Read-only balance    |
 
 ## Events
 

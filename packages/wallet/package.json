@@ -5,7 +5,9 @@
   "description": "Multi-wallet React provider: Freighter, xBull and Albedo",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
@@ -24,8 +26,23 @@
     "react": "^19.0.0"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/react": "^19.2.18",
+    "jest": "^30.4.2",
     "react": "^19.2.8",
+    "ts-jest": "^29.4.12",
     "typescript": "~5.9.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/*.test.ts"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ]
   }
 }

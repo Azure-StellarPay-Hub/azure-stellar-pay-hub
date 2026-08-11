@@ -29,7 +29,7 @@ export class NotificationsService {
     private readonly realtime: RealtimeGateway,
     config: ConfigService,
   ) {
-    const webhookSecret = config.get<string>('WEBHOOK_SIGNING_SECRET') ?? 'webhook-secret';
+    const webhookSecret = config.get<string>('WEBHOOK_SIGNING_SECRET')!;
     this.dispatcher = new NotificationDispatcher()
       .addProvider(new ConsoleChannelProvider('EMAIL' as NotificationChannel))
       .addProvider(new ConsoleChannelProvider('SMS' as NotificationChannel))
@@ -58,11 +58,16 @@ export class NotificationsService {
   }
 
   async paymentFailed(input: PaymentNotificationInput & { reason: string }): Promise<void> {
-    await this.notify(input.userId, 'FAILED_TRANSACTION' as NotificationType, 'Transaction failed', {
-      amount: input.amount,
-      assetCode: input.assetCode,
-      reason: input.reason,
-    });
+    await this.notify(
+      input.userId,
+      'FAILED_TRANSACTION' as NotificationType,
+      'Transaction failed',
+      {
+        amount: input.amount,
+        assetCode: input.assetCode,
+        reason: input.reason,
+      },
+    );
   }
 
   async invoicePaid(input: { merchantId: string; invoiceNumber: string }): Promise<void> {
@@ -114,11 +119,17 @@ export class NotificationsService {
       }),
       this.prisma.notification.count({ where: { userId } }),
     ]);
-    return { data: items, meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) } };
+    return {
+      data: items,
+      meta: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
+    };
   }
 
   async markRead(userId: string, id: string) {
-    await this.prisma.notification.updateMany({ where: { id, userId }, data: { readAt: new Date() } });
+    await this.prisma.notification.updateMany({
+      where: { id, userId },
+      data: { readAt: new Date() },
+    });
     return { ok: true };
   }
 

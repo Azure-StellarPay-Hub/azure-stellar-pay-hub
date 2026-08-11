@@ -52,43 +52,43 @@ POST /auth/logout    (Bearer)
 
 ## Assets, Trustlines & Transactions
 
-| Method | Path                  | Auth | Description                    |
-| ------ | --------------------- | ---- | ------------------------------ |
-| GET    | `/assets`             | ✓    | Known assets + balances        |
-| POST   | `/assets/trustline`   | ✓    | Create a trustline             |
-| POST   | `/assets/trustline/remove` | ✓ | Remove a trustline             |
-| GET    | `/transactions`       | ✓    | Transaction history            |
-| GET    | `/transactions/:id`   | ✓    | Transaction detail             |
+| Method | Path                       | Auth | Description             |
+| ------ | -------------------------- | ---- | ----------------------- |
+| GET    | `/assets`                  | ✓    | Known assets + balances |
+| POST   | `/assets/trustline`        | ✓    | Create a trustline      |
+| POST   | `/assets/trustline/remove` | ✓    | Remove a trustline      |
+| GET    | `/transactions`            | ✓    | Transaction history     |
+| GET    | `/transactions/:id`        | ✓    | Transaction detail      |
 
 ## Merchants, Invoices, Payment Links
 
-| Method | Path                     | Auth | Description                  |
-| ------ | ------------------------ | ---- | ---------------------------- |
-| POST   | `/merchants`             | ✓    | Onboard a merchant           |
-| GET    | `/merchants/me`          | ✓    | Own merchant profile         |
-| PATCH  | `/merchants/:id`         | ✓    | Update profile               |
-| POST   | `/invoices`              | ✓    | Create an invoice            |
-| GET    | `/invoices`              | ✓    | List invoices                |
-| GET    | `/invoices/:number`      |      | Public invoice lookup        |
-| POST   | `/payment-links`         | ✓    | Create a payment link        |
-| GET    | `/payment-links/:code`   |      | Public payment link lookup   |
-| POST   | `/checkout/:code/quote`  |      | Quote for a payment link     |
-| POST   | `/checkout/:code/pay`    |      | Record a checkout payment    |
+| Method | Path                    | Auth | Description                |
+| ------ | ----------------------- | ---- | -------------------------- |
+| POST   | `/merchants`            | ✓    | Onboard a merchant         |
+| GET    | `/merchants/me`         | ✓    | Own merchant profile       |
+| PATCH  | `/merchants/:id`        | ✓    | Update profile             |
+| POST   | `/invoices`             | ✓    | Create an invoice          |
+| GET    | `/invoices`             | ✓    | List invoices              |
+| GET    | `/invoices/:number`     |      | Public invoice lookup      |
+| POST   | `/payment-links`        | ✓    | Create a payment link      |
+| GET    | `/payment-links/:code`  |      | Public payment link lookup |
+| POST   | `/checkout/:code/quote` |      | Quote for a payment link   |
+| POST   | `/checkout/:code/pay`   |      | Record a checkout payment  |
 
 ## Users, Wallet, Notifications, Webhooks
 
-| Method | Path                       | Auth | Description                     |
-| ------ | -------------------------- | ---- | ------------------------------- |
-| GET    | `/users/me`                | ✓    | Current profile                 |
-| PATCH  | `/users/me`                | ✓    | Update profile                  |
-| GET    | `/users/me/contacts`       | ✓    | Address book                    |
-| POST   | `/users/me/contacts`       | ✓    | Add contact                     |
-| GET    | `/wallets/me`              | ✓    | Wallet + balances               |
-| POST   | `/wallets/switch-network`  | ✓    | Change network                  |
-| GET    | `/notifications`           | ✓    | In-app notifications            |
-| PATCH  | `/notifications/:id/read`  | ✓    | Mark read                       |
-| POST   | `/webhooks`                | ✓    | Register webhook endpoint       |
-| POST   | `/webhooks/:id/test`       | ✓    | Send test event                 |
+| Method | Path                      | Auth | Description               |
+| ------ | ------------------------- | ---- | ------------------------- |
+| GET    | `/users/me`               | ✓    | Current profile           |
+| PATCH  | `/users/me`               | ✓    | Update profile            |
+| GET    | `/users/me/contacts`      | ✓    | Address book              |
+| POST   | `/users/me/contacts`      | ✓    | Add contact               |
+| GET    | `/wallets/me`             | ✓    | Wallet + balances         |
+| POST   | `/wallets/switch-network` | ✓    | Change network            |
+| GET    | `/notifications`          | ✓    | In-app notifications      |
+| PATCH  | `/notifications/:id/read` | ✓    | Mark read                 |
+| POST   | `/webhooks`               | ✓    | Register webhook endpoint |
+| POST   | `/webhooks/:id/test`      | ✓    | Send test event           |
 
 ## Admin (RBAC: `admin`)
 

@@ -8,7 +8,16 @@ export class TransactionsController {
 
   @Public()
   @Get()
-  list(@Query() query: { page?: string; pageSize?: string; status?: string; assetCode?: string; search?: string }) {
+  list(
+    @Query()
+    query: {
+      page?: string;
+      pageSize?: string;
+      status?: string;
+      assetCode?: string;
+      search?: string;
+    },
+  ) {
     return this.transactions.list({
       page: Number(query.page) || 1,
       pageSize: Number(query.pageSize) || 20,

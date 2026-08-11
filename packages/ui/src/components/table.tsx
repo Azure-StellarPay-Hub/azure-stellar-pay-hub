@@ -1,4 +1,11 @@
-import { forwardRef, type HTMLAttributes, type ThHTMLAttributes, type TdHTMLAttributes } from 'react';
+'use client';
+
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type ThHTMLAttributes,
+  type TdHTMLAttributes,
+} from 'react';
 import { cn } from '../lib/utils';
 
 export const Table = forwardRef<HTMLTableElement, HTMLAttributes<HTMLTableElement>>(
@@ -10,18 +17,20 @@ export const Table = forwardRef<HTMLTableElement, HTMLAttributes<HTMLTableElemen
 );
 Table.displayName = 'Table';
 
-export const TableHeader = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>(
-  ({ className, ...props }, ref) => (
-    <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />
-  ),
-);
+export const TableHeader = forwardRef<
+  HTMLTableSectionElement,
+  HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />
+));
 TableHeader.displayName = 'TableHeader';
 
-export const TableBody = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>(
-  ({ className, ...props }, ref) => (
-    <tbody ref={ref} className={cn('[&_tr:last-child]:border-0', className)} {...props} />
-  ),
-);
+export const TableBody = forwardRef<
+  HTMLTableSectionElement,
+  HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <tbody ref={ref} className={cn('[&_tr:last-child]:border-0', className)} {...props} />
+));
 TableBody.displayName = 'TableBody';
 
 export const TableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElement>>(
@@ -39,7 +48,10 @@ export const TableHead = forwardRef<HTMLTableCellElement, ThHTMLAttributes<HTMLT
   ({ className, ...props }, ref) => (
     <th
       ref={ref}
-      className={cn('h-11 px-4 text-left align-middle text-xs font-medium uppercase tracking-wider text-muted-foreground', className)}
+      className={cn(
+        'h-11 px-4 text-left align-middle text-xs font-medium uppercase tracking-wider text-muted-foreground',
+        className,
+      )}
       {...props}
     />
   ),

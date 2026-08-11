@@ -1,0 +1,63 @@
+name: Release Extension
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/extension/**'
+    tags:
+      - 'extension-v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & release extension ZIP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Install dependencies (extension-only, not in pnpm workspace)
+        run: |
+          cd apps/extension
+          npm install
+
+      - name: Build extension
+        run: |
+          cd apps/extension
+          node build.mjs
+
+      - name: Package extension (CI mode)
+        run: |
+          cd apps/extension
+          node package-extension.mjs --ci
+
+      - name: Read extension version
+        id: version
+        run: |
+          VERSION=$(node -p "JSON.parse(require('fs').readFileSync('apps/extension/manifest.json','utf8')).version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "$TAG_NAME" \
+            "apps/extension/dist/stellar-pay-extension-${VERSION}.zip" \
+            --title "StellarPay Hub v${VERSION}" \
+            --generate-notes
+
+      - name: Summary
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          TAG_NAME: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "## ✅ Extension v${VERSION} released" >> "$GITHUB_STEP_SUMMARY"
+          echo "Download: [stellar-pay-extension-${VERSION}.zip](https://github.com/${REPO}/releases/tag/${TAG_NAME})" >> "$GITHUB_STEP_SUMMARY"
