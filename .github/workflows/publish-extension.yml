@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   NODE_VERSION: 22
@@ -56,13 +56,12 @@ jobs:
           VERSION=$(node -p "JSON.parse(require('fs').readFileSync('apps/extension/manifest.json','utf8')).version")
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Upload ZIP to release
-        uses: softprops/action-gh-release@da9ff3b4b6cb1a3e7da38e4983ffdd58ffab42eb # v2
-        with:
-          name: StellarPay Hub v${{ steps.version.outputs.version }}
-          files: apps/extension/dist/stellar-pay-extension-${{ steps.version.outputs.version }}.zip
-          generate_release_notes: true
-          fail_on_unmatched_files: true
+      - name: Create GitHub Release
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            "apps/extension/dist/stellar-pay-extension-${{ steps.version.outputs.version }}.zip" \
+            --title "StellarPay Hub v${{ steps.version.outputs.version }}" \
+            --generate-notes
 
       - name: Summary
         run: |
