@@ -13,14 +13,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen">
         <WalletProvider defaultNetwork="testnet">
           <AuthProvider>
-            <RealtimeProvider>
-              <ToastProvider>
+            <ToastProvider>
+              <RealtimeProvider>
                 <div className="relative flex min-h-screen flex-col overflow-x-clip">
                   <Header />
                   <main className="flex-1">{children}</main>
                 </div>
-              </ToastProvider>
-            </RealtimeProvider>
+              </RealtimeProvider>
+            </ToastProvider>
           </AuthProvider>
         </WalletProvider>
       </body>
