@@ -140,7 +140,8 @@ export class TwilioSmsProvider implements ChannelProvider {
         to: message.to,
       });
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {          log.info(`[sms:twilio] not installed — would send to ${message.to}: ${message.title}`);
+      if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
+        log.info(`[sms:twilio] not installed — would send to ${message.to}: ${message.title}`);
         return;
       }
       throw error;
@@ -216,7 +217,8 @@ export class VonageSmsProvider implements ChannelProvider {
         text: `${message.title}${message.body ? ` — ${message.body}` : ''}`.slice(0, 1600),
       });
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {          log.info(`[sms:vonage] not installed — would send to ${message.to}: ${message.title}`);
+      if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
+        log.info(`[sms:vonage] not installed — would send to ${message.to}: ${message.title}`);
         return;
       }
       throw error;

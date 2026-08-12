@@ -84,7 +84,7 @@ fn test_refund_before_release() {
     let id = client.create(&alice, &bob, &token_id, &500, &1000, &None);
     env.ledger().set_timestamp(999);
 
-    client.refund(&id);
+    client.refund(&id, &alice);
     assert_eq!(token.balance(&alice), 10000);
     assert_eq!(token.balance(&contract_id), 0);
 }
@@ -98,7 +98,7 @@ fn test_refund_not_allowed_mid_window() {
     let id = client.create(&alice, &bob, &token_id, &500, &1000, &Some(2000));
     env.ledger().set_timestamp(1500); // between release_time and expiry
 
-    let result = client.try_refund(&id);
+    let result = client.try_refund(&id, &alice);
     assert_eq!(result, Err(Ok(EscrowError::NotExpired)));
 }
 
@@ -111,7 +111,7 @@ fn test_refund_after_expiry() {
     let id = client.create(&alice, &bob, &token_id, &500, &1000, &Some(2000));
     env.ledger().set_timestamp(2001);
 
-    client.refund(&id);
+    client.refund(&id, &alice);
     assert_eq!(token.balance(&alice), 10000);
 }
 

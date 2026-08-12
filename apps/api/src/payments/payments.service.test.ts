@@ -14,9 +14,7 @@ describe('PaymentsService', () => {
 
   beforeEach(() => {
     mockConfig = {
-      get: jest.fn((key: string) =>
-        key === 'STELLAR_NETWORK' ? 'testnet' : undefined,
-      ),
+      get: jest.fn((key: string) => (key === 'STELLAR_NETWORK' ? 'testnet' : undefined)),
     };
     mockPrisma = {
       transaction: {
@@ -70,9 +68,9 @@ describe('PaymentsService', () => {
 
     it('throws NotFoundException when transaction not found', async () => {
       mockPrisma.transaction.findFirst.mockResolvedValue(null);
-      await expect(
-        service.submit(userId, txId, 'fake-xdr'),
-      ).rejects.toThrow('Transaction not found');
+      await expect(service.submit(userId, txId, 'fake-xdr')).rejects.toThrow(
+        'Transaction not found',
+      );
     });
 
     it('throws BadRequestException when already submitted', async () => {
@@ -80,9 +78,9 @@ describe('PaymentsService', () => {
         id: txId,
         status: 'SUCCEEDED',
       });
-      await expect(
-        service.submit(userId, txId, 'fake-xdr'),
-      ).rejects.toThrow('Transaction already submitted');
+      await expect(service.submit(userId, txId, 'fake-xdr')).rejects.toThrow(
+        'Transaction already submitted',
+      );
     });
   });
 

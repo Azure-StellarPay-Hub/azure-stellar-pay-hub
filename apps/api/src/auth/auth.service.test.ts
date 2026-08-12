@@ -22,11 +22,7 @@ describe('AuthService — unit-level validation', () => {
       }),
     };
 
-    service = new AuthService(
-      undefined as any,
-      mockRedis as any,
-      mockConfig as any,
-    );
+    service = new AuthService(undefined as any, mockRedis as any, mockConfig as any);
   });
 
   describe('createChallenge', () => {
