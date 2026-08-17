@@ -13,13 +13,13 @@
     "start": "node dist/main.js"
   },
   "dependencies": {
-    "@nestjs/common": "^11.1.28",
+    "@nestjs/common": "^11.1.29",
     "@nestjs/config": "^4.0.4",
-    "@nestjs/core": "^11.1.28",
-    "@nestjs/platform-express": "^11.1.28",
-    "@nestjs/platform-socket.io": "^11.1.28",
+    "@nestjs/core": "^11.1.29",
+    "@nestjs/platform-express": "^11.1.29",
+    "@nestjs/platform-socket.io": "^11.1.29",
     "@nestjs/throttler": "^6.5.0",
-    "@nestjs/websockets": "^11.1.28",
+    "@nestjs/websockets": "^11.1.29",
     "@stellar-pay/authentication": "workspace:*",
     "@stellar-pay/config": "workspace:*",
     "@stellar-pay/database": "workspace:*",
